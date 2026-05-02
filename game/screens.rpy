@@ -278,49 +278,86 @@ style quick_button_text:
 ##
 ## 该屏幕包含在标题菜单和游戏菜单中，并提供导航到其他菜单，以及启动游戏。
 
-screen navigation():
+screen main_menu_navigation():
 
     vbox:
-        style_prefix "navigation"
+        style "main_menu_sketch_nav"
 
-        xpos gui.navigation_xpos
-        yalign 0.5
+        hbox:
+            style "main_menu_sketch_row"
+            text "♡" style "main_menu_sketch_heart"
+            textbutton _("新的游戏") action Start() style "main_menu_sketch_button"
 
-        spacing gui.navigation_spacing
+        hbox:
+            style "main_menu_sketch_row"
+            text "♡" style "main_menu_sketch_heart"
+            textbutton _("载入") action ShowMenu("load") style "main_menu_sketch_button"
 
-        if main_menu:
+        hbox:
+            style "main_menu_sketch_row"
+            text "♡" style "main_menu_sketch_heart"
+            textbutton _("成就") action ShowMenu("achievements") style "main_menu_sketch_button"
 
-            textbutton _("开始游戏") action Start()
+        hbox:
+            style "main_menu_sketch_row"
+            text "♡" style "main_menu_sketch_heart"
+            textbutton _("记忆长廊") action ShowMenu("memory_gallery") style "main_menu_sketch_button"
 
-        else:
+        hbox:
+            style "main_menu_sketch_row"
+            text "♡" style "main_menu_sketch_heart"
+            textbutton _("设置") action ShowMenu("preferences") style "main_menu_sketch_button"
+
+        if renpy.variant("pc"):
+            hbox:
+                style "main_menu_sketch_row"
+                text "♡" style "main_menu_sketch_heart"
+                textbutton _("退出") action Quit(confirm=False) style "main_menu_sketch_button"
+
+
+screen navigation():
+
+    if main_menu:
+
+        use main_menu_navigation
+
+    else:
+
+        vbox:
+            style_prefix "navigation"
+
+            xpos gui.navigation_xpos
+            yalign 0.5
+
+            spacing gui.navigation_spacing
 
             textbutton _("历史") action ShowMenu("history")
 
             textbutton _("保存") action ShowMenu("save")
 
-        textbutton _("读取游戏") action ShowMenu("load")
+            textbutton _("读取游戏") action ShowMenu("load")
 
-        textbutton _("设置") action ShowMenu("preferences")
+            textbutton _("设置") action ShowMenu("preferences")
 
-        if _in_replay:
+            if _in_replay:
 
-            textbutton _("结束回放") action EndReplay(confirm=True)
+                textbutton _("结束回放") action EndReplay(confirm=True)
 
-        elif not main_menu:
+            else:
 
-            textbutton _("标题菜单") action MainMenu()
+                textbutton _("标题菜单") action MainMenu()
 
-        textbutton _("关于") action ShowMenu("about")
+            textbutton _("关于") action ShowMenu("about")
 
-        if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
+            if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
 
-            ## “帮助”对移动设备来说并非必需或相关。
-            textbutton _("帮助") action ShowMenu("help")
+                ## “帮助”对移动设备来说并非必需或相关。
+                textbutton _("帮助") action ShowMenu("help")
 
-        if renpy.variant("pc"):
+            if renpy.variant("pc"):
 
-            ## 退出按钮在 iOS 上是被禁止使用的，在安卓和网页上也不是必要的。
-            textbutton _("退出") action Quit(confirm=not main_menu)
+                ## 退出按钮在 iOS 上是被禁止使用的，在安卓和网页上也不是必要的。
+                textbutton _("退出") action Quit(confirm=True)
 
 
 style navigation_button is gui_button
@@ -332,6 +369,45 @@ style navigation_button:
 
 style navigation_button_text:
     properties gui.text_properties("navigation_button")
+
+
+style main_menu_sketch_nav is vbox
+style main_menu_sketch_row is hbox
+style main_menu_sketch_heart is gui_text
+style main_menu_sketch_button is button
+style main_menu_sketch_button_text is button_text
+
+style main_menu_sketch_nav:
+    xpos 105
+    ypos 165
+    spacing 36
+
+style main_menu_sketch_row:
+    spacing 24
+    ysize 94
+
+style main_menu_sketch_heart:
+    font "DejaVuSans.ttf"
+    size 72
+    color "#df8f77"
+    yalign 0.5
+
+style main_menu_sketch_button:
+    xsize 430
+    ysize 94
+    background Frame("gui/button/main_menu_sketch_idle.png", 36, 36)
+    hover_background Frame("gui/button/main_menu_sketch_hover.png", 36, 36)
+    insensitive_background Frame("gui/button/main_menu_sketch_idle.png", 36, 36)
+
+style main_menu_sketch_button_text:
+    font gui.interface_text_font
+    size 48
+    color "#d98770"
+    hover_color "#8d493e"
+    insensitive_color "#d987707f"
+    xalign 0.5
+    yalign 0.5
+    textalign 0.5
 
 
 ## 标题菜单屏幕 ######################################################################
@@ -347,23 +423,8 @@ screen main_menu():
 
     add gui.main_menu_background
 
-    ## 此空框可使标题菜单变暗。
-    frame:
-        style "main_menu_frame"
-
     ## use 语句将其他的屏幕包含进此屏幕。标题屏幕的实际内容在导航屏幕中。
-    use navigation
-
-    if gui.show_name:
-
-        vbox:
-            style "main_menu_vbox"
-
-            text "[config.name!t]":
-                style "main_menu_title"
-
-            text "[config.version]":
-                style "main_menu_version"
+    use main_menu_navigation
 
 
 style main_menu_frame is empty
@@ -561,6 +622,79 @@ style about_text is gui_text
 
 style about_label_text:
     size gui.label_text_size
+
+
+screen achievements():
+
+    tag menu
+
+    add gui.main_menu_background
+    use main_menu_navigation
+
+    frame:
+        style "placeholder_panel"
+
+        vbox:
+            style_prefix "placeholder"
+            spacing 24
+
+            label _("成就")
+            text _("这里是成就页面的占位内容。之后可以在这里接入成就列表、解锁状态和完成条件。")
+            textbutton _("返回") action ShowMenu("main_menu") style "placeholder_return_button"
+
+
+screen memory_gallery():
+
+    tag menu
+
+    add gui.main_menu_background
+    use main_menu_navigation
+
+    frame:
+        style "placeholder_panel"
+
+        vbox:
+            style_prefix "placeholder"
+            spacing 24
+
+            label _("记忆长廊")
+            text _("这里是记忆长廊页面的占位内容。之后可以在这里展示回忆、CG、事件片段或收藏内容。")
+            textbutton _("返回") action ShowMenu("main_menu") style "placeholder_return_button"
+
+
+style placeholder_label is gui_label
+style placeholder_label_text is gui_label_text
+style placeholder_text is gui_text
+style placeholder_panel is frame
+style placeholder_return_button is gui_button
+style placeholder_return_button_text is gui_button_text
+
+style placeholder_panel:
+    xpos 760
+    ypos 260
+    xsize 850
+    padding (45, 38, 45, 38)
+    background Solid("#ffe8b5cc")
+
+style placeholder_label_text:
+    size gui.label_text_size
+
+style placeholder_text:
+    color "#6c3a30"
+    xmaximum 760
+
+style placeholder_return_button:
+    xsize 180
+    ysize 64
+    background Frame("gui/button/main_menu_sketch_idle.png", 36, 36)
+    hover_background Frame("gui/button/main_menu_sketch_hover.png", 36, 36)
+
+style placeholder_return_button_text:
+    color "#d98770"
+    hover_color "#8d493e"
+    xalign 0.5
+    yalign 0.5
+    textalign 0.5
 
 
 ## 读取和保存屏幕 #####################################################################
