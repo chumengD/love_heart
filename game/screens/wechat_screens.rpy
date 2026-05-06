@@ -109,7 +109,9 @@ screen wx_chat_page():
         vbox:
             xfill True
             spacing 28
-            padding (30, 28, 30, 40)
+            xoffset 30
+            yoffset 28
+            xmaximum 1110
 
             for message in wx_chat_messages:
                 use wx_chat_message(message)
@@ -250,7 +252,9 @@ screen wx_moments_page():
         vbox:
             xfill True
             spacing 0
-            padding (38, 18, 38, 44)
+            xoffset 38
+            yoffset 18
+            xmaximum 1094
 
             for post in wx_moment_posts:
                 use wx_moment_post(post)

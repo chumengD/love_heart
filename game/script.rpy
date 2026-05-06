@@ -31,6 +31,24 @@ label start:
 
     e "艾琳就可以了"
 
+    e "接下来打开剧本微信聊天示例。点击右上角齿轮可以返回主流程。"
+
+    $ wx_start_scripted_chat("1", "1")
+
+    call screen wx_phone
+
+    e "接下来打开自由输入微信聊天示例。"
+
+    $ wx_start_free_chat("91")
+
+    call screen wx_phone
+
+    e "最后打开朋友圈示例。"
+
+    $ wx_set_view("moments")
+
+    call screen wx_phone
+
     # 此处为游戏结尾。
 
     return
