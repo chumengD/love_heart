@@ -67,35 +67,59 @@ screen wx_sidebar():
             xfill True
             spacing 0
 
-            textbutton "●\nWeChat":
+            button:
                 xsize 110
                 ysize 145
-                background Solid("#3d3d43")
+                background (Solid("#4b4b55") if wx_current_view == "chat" else Solid("#3d3d43"))
                 hover_background Solid("#484850")
-                selected_background Solid("#4b4b55")
-                selected wx_current_view == "chat"
                 action Function(wx_set_view, "chat")
-                text_size 23
-                text_color "#989ba2"
-                text_hover_color "#18b02d"
-                text_selected_color "#18b02d"
-                text_xalign 0.5
-                text_yalign 0.5
 
-            textbutton "◉\n朋友圈":
+                vbox:
+                    xalign 0.5
+                    yalign 0.5
+                    spacing 6
+
+                    if wx_image_loadable("images/wechat/wechat_icon.png"):
+                        add "images/wechat/wechat_icon.png":
+                            xalign 0.5
+                            xysize (58, 58)
+                    else:
+                        text "●":
+                            xalign 0.5
+                            size 42
+                            color "#18b02d"
+
+                    text "WeChat":
+                        xalign 0.5
+                        size 23
+                        color ("#18b02d" if wx_current_view == "chat" else "#989ba2")
+
+            button:
                 xsize 110
                 ysize 145
-                background Solid("#3d3d43")
+                background (Solid("#4b4b55") if wx_current_view == "moments" else Solid("#3d3d43"))
                 hover_background Solid("#484850")
-                selected_background Solid("#4b4b55")
-                selected wx_current_view == "moments"
                 action Function(wx_set_view, "moments")
-                text_size 23
-                text_color "#989ba2"
-                text_hover_color "#4285f4"
-                text_selected_color "#4285f4"
-                text_xalign 0.5
-                text_yalign 0.5
+
+                vbox:
+                    xalign 0.5
+                    yalign 0.5
+                    spacing 6
+
+                    if wx_image_loadable("images/wechat/moments_icon.png"):
+                        add "images/wechat/moments_icon.png":
+                            xalign 0.5
+                            xysize (58, 58)
+                    else:
+                        text "◉":
+                            xalign 0.5
+                            size 42
+                            color "#4285f4"
+
+                    text "朋友圈":
+                        xalign 0.5
+                        size 23
+                        color ("#4285f4" if wx_current_view == "moments" else "#989ba2")
 
 
 screen wx_chat_page():

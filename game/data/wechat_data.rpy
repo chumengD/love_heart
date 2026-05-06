@@ -1,7 +1,7 @@
 # WeChat module static data.
 #
 # Image paths should point to files under game/, for example:
-# "images/wechat/heroine_avatar.png".
+# "images/wechat/heroine_avatar.jpg".
 
 define WX_PLAYER_CONTACT_ID = "player"
 define WX_DEFAULT_CONTACT_ID = "heroine"
@@ -9,14 +9,14 @@ define WX_DEFAULT_CONTACT_ID = "heroine"
 define wx_contacts = {
     "heroine": {
         "name": "一只女主角",
-        "avatar": "images/wechat/heroine_avatar.png",
-        "side": "left",
+        "avatar": "images/wechat/heroine_avatar.jpg",
+        "side": "right",
         "fallback_color": "#f47f9a",
     },
     "player": {
         "name": "男主",
         "avatar": "images/wechat/player_avatar.png",
-        "side": "right",
+        "side": "left",
         "fallback_color": "#9fb5c6",
     },
 }
