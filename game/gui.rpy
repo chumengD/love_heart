@@ -9,7 +9,7 @@ init offset = -2
 ## 调用 gui.init 会将样式重置为合理的默认值，并设置游戏的宽度和高度（基准分辨
 ## 率）。
 init python:
-    gui.init(1920, 1080)
+    gui.init(1800, 1080)
 
 ## 启用对屏幕或变换中无效或不稳定属性的检查
 define config.check_conflicting_properties = True

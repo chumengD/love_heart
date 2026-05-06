@@ -378,7 +378,7 @@ style main_menu_sketch_button is button
 style main_menu_sketch_button_text is button_text
 
 style main_menu_sketch_nav:
-    xpos 145
+    xpos 180
     ypos 165
     spacing 36
 
