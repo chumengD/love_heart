@@ -513,7 +513,7 @@ screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
 
                 transclude
 
-    textbutton _("返回"):
+    imagebutton "images\左箭头.png":
         style "return_button"
 
         action Return()
@@ -852,6 +852,9 @@ screen preferences():
                     label _("自动前进时间")
 
                     bar value Preference("auto-forward time")
+
+                    textbutton _("返回主菜单"):
+                        menu
 
                 vbox:
 
