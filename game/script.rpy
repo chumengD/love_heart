@@ -2,8 +2,20 @@
 
 # 声明此游戏使用的角色。颜色参数可使角色姓名着色。
 
-define m = Character("男主",image="images/Characters/_asuka.png")
-define g = Character("女主",image="images/Characters/_ayalin.png")
+image m normal ="images/Characters/_asuka.png1"
+image g normal = "images/Characters/_ayalin.png1"
+
+transform left_half:
+
+    zoom 0.6
+
+    xalign 0.0
+    yalign 1.0
+
+    xpos -50
+
+define m = Character("男主", image="m")
+define g = Character("女主", image="g")
 
 image bird= "images/Act1/鸽子.png"
 image wedding ="images/Act1/婚礼现场.png"
@@ -23,7 +35,7 @@ image chapter1:
 
     contains:
         Text(
-            "婚礼初遇・心动伊始",
+            "初遇・心动伊始",
             color="#000000",
             size=120,
             font="fonts/aa幸运星.ttf"
@@ -37,7 +49,7 @@ image chapter1:
             color="#000000",
             size=80
         )
-        xalign 0.5
+        xalign 0.435
         yalign 0.52
 
 image logo ="images/logo.png"
@@ -82,7 +94,7 @@ label splashscreen:
 
 # 游戏在此开始。
 label start:
-    call Act1
+    # call Act1
 
     $ wx_start_scripted_chat()
 
@@ -118,7 +130,9 @@ label Act1:
     "宾客们穿着得体的衣服，三三两两交谈着，脸上都带着笑意"
     "今天是表哥的婚礼"
     "我在一周前就收到了邀请"
+    show m normal at left_half
     m "啊，又要被迫吃一波狗粮了啊......"
+    hide m normal
 
     hide bird
     with dissolve
@@ -162,8 +176,10 @@ label Act1:
     "她先反应过来，轻轻松开扶着我肩膀的手"
     "往后退了半步，脸上带着歉意的笑容，声音软软的说道"
     
+    show g normal
     g "对不起对不起！"
     g "我刚才太急着往前凑了，没看到你转身，没撞疼你吧？"
+    hide g normal
 
     "我这才回过神来，脸颊瞬间涨红"
     m "没、没撞疼我,应该是我说对不起才对，我转身太急了，没注意到你。"
@@ -182,7 +198,7 @@ label Act1:
     "她抬起头，眼里闪过一丝笑意"
     "又轻轻点了点头，拿出手机，解锁屏幕"
     "好呀，确实挺有缘分的。"
-    "你来扫我吧"
+    g "你来扫我吧"
     hide bird 
     with dissolve
 

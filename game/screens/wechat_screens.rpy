@@ -179,7 +179,7 @@ screen wx_chat_message(message):
     if side == "right":
         # 右侧气泡：主视角男主。文本右对齐，绿色气泡。
         hbox at wx_message_dissolve:
-            xfill True
+            xalign 1.0
             spacing 16
 
             null:
@@ -201,7 +201,6 @@ screen wx_chat_message(message):
     else:
         # 左侧气泡：女主。文本左对齐，白色气泡。
         hbox at wx_message_dissolve:
-            xfill True
             spacing 16
 
             use wx_avatar(speaker)
