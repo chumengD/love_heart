@@ -1,6 +1,6 @@
 # 微信模块运行状态和行为函数。
 # 数据怎么写看 data/wechat_data.rpy，界面怎么画看 screens/wechat_screens.rpy。
-# 这里负责把“点击选项、输入文本、切换朋友圈、点赞”等动作转成 Ren'Py 状态变化。
+# 这里负责把“点击推进、点击选项、输入文本、切换朋友圈、点赞”等动作转成 Ren'Py 状态变化。
 
 # 当前左侧栏显示哪个页面："chat" 是聊天页，"moments" 是朋友圈页。
 default wx_current_view = "chat"
@@ -8,15 +8,20 @@ default wx_current_view = "chat"
 # 当前聊天模式："scripted" 是剧本选项推进版，"free" 是输入框自由聊天版。
 default wx_active_chat_mode = "scripted"
 
-# 当前聊天 id。对应 data/wechat_data.rpy 里的 wx_scripted_chats 或 wx_free_chats 的 key。
-default wx_active_chat_id = "1"
-
-# 当前剧本节点 id。只在 scripted 模式下使用，对应 wx_scripted_chats[chat_id]["nodes"] 的 key。
+# 当前剧本节点 id。对应 wx_scripted_chat["nodes"] 的 key。
 default wx_active_node_id = "1"
+
+# 当前节点已经显示到第几条消息。
+# 剧本聊天不再一次性 show 全部消息，而是玩家每点击一次默认文本框推进一条。
+default wx_active_message_index = 0
 
 # 当前屏幕上已经出现的聊天记录。
 # 用 default 保存，是为了让存档和回滚能记录当前聊天进度。
 default wx_chat_messages = []
+
+# 最近一条微信消息对应的旁白或男主心理。
+# 演示流程会把它放进 Ren'Py 默认文本框里显示。
+default wx_last_narration = ""
 
 # 自由输入框里的临时文本。
 default wx_free_input_text = ""
@@ -83,7 +88,7 @@ init python:
 
 
     # 联系人聊天气泡方向。
-    # 现在按你的要求：女主 right，男主 left；如果以后想恢复常见微信布局，只改数据表 side 字段。
+    # 当前按微信主视角：男主 player 在右侧，女主 heroine 在左侧；如果以后想反过来，只改数据表 side 字段。
     def wx_contact_side(contact_id):
         return wx_get_contact(contact_id).get("side", "left")
 
@@ -107,17 +112,11 @@ init python:
         return wx_contact_side(message.get("speaker", WX_DEFAULT_CONTACT_ID))
 
 
-    # 读取剧本聊天。
-    # chat_id 对应 data/wechat_data.rpy 里的 wx_scripted_chats key。
-    def wx_get_scripted_chat(chat_id):
-        return wx_scripted_chats.get(str(chat_id), {})
-
-
-    # 读取剧本聊天节点。
-    # node_id 对应 wx_scripted_chats[chat_id]["nodes"] 里的 key。
-    def wx_get_scripted_node(chat_id, node_id):
-        chat = wx_get_scripted_chat(chat_id)
-        return chat.get("nodes", {}).get(str(node_id), {})
+    # 读取当前剧本聊天节点。
+    # node_id 对应 wx_scripted_chat["nodes"] 里的 key。
+    def wx_get_scripted_node(node_id=None):
+        target_node_id = str(node_id or wx_active_node_id)
+        return wx_scripted_chat.get("nodes", {}).get(target_node_id, {})
 
 
     # 追加一条聊天消息到当前聊天记录。
@@ -136,46 +135,89 @@ init python:
         wx_chat_messages = next_messages
 
 
-    # 批量追加消息。剧本节点的 messages 和选项后的 reply_messages 都走这里。
+    # 批量追加消息。选项后的 reply_messages 会走这里。
     def wx_append_messages(messages):
+        global wx_last_narration
+
         for message in messages or []:
             wx_append_message(
                 message.get("speaker", WX_DEFAULT_CONTACT_ID),
                 message.get("text", ""),
             )
+            wx_last_narration = message.get("narration", "")
 
 
     # 打开剧本选项推进聊天。
     # 剧情里调用示例：
-    # $ wx_start_scripted_chat("1", "1")
-    # call screen wx_phone
-    # 第一个参数是 chat_id，第二个参数是 node_id；不传 node_id 时会用数据里的 start_node。
-    def wx_start_scripted_chat(chat_id="1", node_id=None):
+    # $ wx_start_scripted_chat()
+    # show screen wx_phone
+    # call wx_scripted_chat_flow
+    # 不再传入编号；如果以后要换起始节点，可以传 node_id。
+    def wx_start_scripted_chat(node_id=None):
         global wx_current_view
         global wx_active_chat_mode
-        global wx_active_chat_id
         global wx_active_node_id
+        global wx_active_message_index
         global wx_chat_messages
+        global wx_last_narration
 
-        chat_key = str(chat_id)
-        chat = wx_get_scripted_chat(chat_key)
-        start_node = str(node_id or chat.get("start_node", "1"))
+        start_node = str(node_id or wx_scripted_chat.get("start_node", "1"))
 
         wx_current_view = "chat"
         wx_active_chat_mode = "scripted"
-        wx_active_chat_id = chat_key
         wx_active_node_id = start_node
+        wx_active_message_index = 0
         wx_chat_messages = []
-        wx_append_messages(wx_get_scripted_node(chat_key, start_node).get("messages", []))
+        wx_last_narration = ""
+
+
+    # 当前节点是否还有未显示的微信消息。
+    # 演示流程用它决定下一次点击是继续出消息，还是进入选项。
+    def wx_scripted_has_next_message():
+        node = wx_get_scripted_node()
+        return wx_active_message_index < len(node.get("messages", []))
+
+
+    # 显示当前节点的下一条微信消息。
+    # 这个函数只追加一条，所以能做到玩家点击一次推进一条。
+    # 返回 True 表示成功显示了消息；返回 False 表示当前节点已经没有消息。
+    def wx_reveal_next_scripted_message():
+        global wx_active_message_index
+        global wx_last_narration
+
+        node = wx_get_scripted_node()
+        messages = node.get("messages", [])
+
+        if wx_active_message_index >= len(messages):
+            wx_last_narration = ""
+            return False
+
+        message = messages[wx_active_message_index]
+        wx_active_message_index += 1
+        wx_append_message(
+            message.get("speaker", WX_DEFAULT_CONTACT_ID),
+            message.get("text", ""),
+        )
+        wx_last_narration = message.get("narration", "")
+        return True
+
+
+    # 读取最近一条微信消息对应的旁白或男主心理。
+    # Ren'Py label 会把这个字符串交给默认文本框显示。
+    def wx_get_last_narration():
+        return wx_last_narration
 
 
     # 获取当前节点底部可点选项。
-    # screen wx_scripted_choice_bar() 会调用它来生成按钮。
+    # 只有当前节点 messages 全部显示完后才返回 choices；否则返回空列表，不会一直占着底部。
     def wx_current_scripted_choices():
         if wx_active_chat_mode != "scripted":
             return []
 
-        node = wx_get_scripted_node(wx_active_chat_id, wx_active_node_id)
+        if wx_scripted_has_next_message():
+            return []
+
+        node = wx_get_scripted_node()
         return node.get("choices", [])
 
 
@@ -187,6 +229,7 @@ init python:
     # 4. 如果配置了 next_label，直接跳剧情 label；否则按 next 切到下一个聊天节点。
     def wx_choose_scripted_option(choice_index):
         global wx_active_node_id
+        global wx_active_message_index
 
         choices = wx_current_scripted_choices()
 
@@ -202,11 +245,7 @@ init python:
         if affection_delta:
             lc_add_affection(
                 affection_delta,
-                source="wechat:{0}:{1}:choice:{2}".format(
-                    wx_active_chat_id,
-                    wx_active_node_id,
-                    choice_index,
-                ),
+                source="wechat:choice:{0}".format(choice_index),
             )
 
         wx_append_messages(choice.get("reply_messages", []))
@@ -219,48 +258,42 @@ init python:
             renpy.jump(next_label)
             return
 
-        # next 是同一个 chat_id 内部的下一个 node_id。
-        # 切换后会自动把新节点 messages 追加到聊天记录。
+        # next 是当前剧本内部的下一个 node_id。
+        # 切换后不会立刻显示新节点消息，下一次点击默认文本框时才逐条显示。
         next_node = choice.get("next", "")
         if next_node:
             wx_active_node_id = str(next_node)
-            wx_append_messages(wx_get_scripted_node(wx_active_chat_id, wx_active_node_id).get("messages", []))
-
-
-    # 读取自由聊天配置。
-    def wx_get_free_chat(chat_id):
-        return wx_free_chats.get(str(chat_id), {})
+            wx_active_message_index = 0
 
 
     # 打开自由输入聊天。
     # 剧情里调用示例：
-    # $ wx_start_free_chat("91")
+    # $ wx_start_free_chat()
     # call screen wx_phone
-    # chat_id 对应 data/wechat_data.rpy 里的 wx_free_chats key。
-    def wx_start_free_chat(chat_id="91"):
+    # 不再传入编号；当前只有一套自由聊天配置。
+    def wx_start_free_chat():
         global wx_current_view
         global wx_active_chat_mode
-        global wx_active_chat_id
         global wx_active_node_id
+        global wx_active_message_index
         global wx_chat_messages
         global wx_free_input_text
-
-        chat_key = str(chat_id)
-        chat = wx_get_free_chat(chat_key)
+        global wx_last_narration
 
         wx_current_view = "chat"
         wx_active_chat_mode = "free"
-        wx_active_chat_id = chat_key
         wx_active_node_id = ""
+        wx_active_message_index = 0
         wx_chat_messages = []
         wx_free_input_text = ""
-        wx_append_messages(chat.get("initial_messages", []))
+        wx_last_narration = ""
+        wx_append_messages(wx_free_chat.get("initial_messages", []))
 
 
     # 当前自由聊天上下文。
     # 评分函数和 AI 回复函数都接收同一份 context，后续接 Ollama 时可以把 scene/scoring_rule 作为提示词材料。
     def wx_active_free_context():
-        return wx_get_free_chat(wx_active_chat_id).get("context", {})
+        return wx_free_chat.get("context", {})
 
 
     # 自由输入评分函数。
@@ -346,7 +379,7 @@ init python:
         if affection_delta:
             lc_add_affection(
                 affection_delta,
-                source="wechat:{0}:free_input".format(wx_active_chat_id),
+                source="wechat:free_input",
             )
 
         wx_append_message(WX_DEFAULT_CONTACT_ID, wx_generate_ai_reply(player_text, context))
@@ -373,17 +406,9 @@ init python:
         wx_moment_likes = next_likes
 
 
-    # 查询某条朋友圈是否已点赞，供屏幕决定显示白心还是红心。
+    # 查询某条朋友圈是否已点赞，供屏幕决定显示空心还是实心爱心图片。
     def wx_is_moment_liked(post_id):
         return bool(wx_moment_likes.get(str(post_id), False))
-
-
-    # 计算网格行数。当前保留为图片网格布局工具，后续如果要显示页脚高度可复用。
-    def wx_grid_rows(item_count, columns):
-        if columns <= 0:
-            return 0
-
-        return (item_count + columns - 1) // columns
 
 
     # 把图片列表切成每行 size 张。
@@ -396,12 +421,43 @@ init python:
 
 
     # 打开 wx_phone 屏幕时的兜底初始化。
-    # 如果剧情忘了先调用 wx_start_scripted_chat() 或 wx_start_free_chat()，这里会按当前模式加载默认聊天。
+    # 如果剧情忘了先初始化，这里会按当前模式加载默认聊天。
     def wx_ensure_default_state():
         if wx_chat_messages:
             return
 
         if wx_active_chat_mode == "free":
-            wx_start_free_chat(wx_active_chat_id)
+            wx_start_free_chat()
         else:
-            wx_start_scripted_chat(wx_active_chat_id, wx_active_node_id)
+            wx_start_scripted_chat()
+
+
+# 剧本聊天演示流程。
+# 这里负责把“微信屏幕显示”和“默认文本框点击推进”串起来。
+# 进入方式：
+# $ wx_start_scripted_chat()
+# show screen wx_phone
+# call wx_scripted_chat_flow
+label wx_scripted_chat_flow:
+    while True:
+        while wx_scripted_has_next_message():
+            $ wx_reveal_next_scripted_message()
+            with dissolve
+            $ wx_narration = wx_get_last_narration()
+            if wx_narration:
+                "[wx_narration]"
+            else:
+                pause
+
+        $ wx_choices = wx_current_scripted_choices()
+
+        if wx_choices:
+            $ wx_choice_result = renpy.call_screen("wx_scripted_choice_bar")
+            if wx_choice_result == "wechat_close":
+                return
+            with dissolve
+            $ wx_narration = wx_get_last_narration()
+            if wx_narration:
+                "[wx_narration]"
+        else:
+            return

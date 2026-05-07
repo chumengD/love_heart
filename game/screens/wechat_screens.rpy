@@ -1,14 +1,45 @@
 # 微信模块界面。
-# 这里只负责“画出来”：左侧栏、聊天记录、底部选项/输入框、朋友圈列表。
+# 这里只负责“画出来”：左侧栏、聊天记录、自由输入框、朋友圈列表。
 # 数据来源在 data/wechat_data.rpy，点击后的行为函数在 systems/wechat_system.rpy。
 
+# 新微信消息出现时的淡入效果。
+# 每条消息对应的 hbox show 时都会从透明过渡到不透明，满足“微信聊天信息 show 时 dissolve”的需求。
+transform wx_message_dissolve:
+    on show:
+        alpha 0.0
+        linear 0.25 alpha 1.0
+
+
+# 右上角关闭按钮。
+# scripted 演示用 show screen wx_phone 时，Hide 会隐藏微信界面；
+# free 模式用 call screen wx_phone 时，Return 会回到剧情流程。
+screen wx_close_button():
+    textbutton "X":
+        xpos 1495
+        ypos 18
+        xsize 48
+        ysize 48
+        background Solid("#dfe6ee")
+        hover_background Solid("#f1f4f8")
+        action [ Hide("wx_phone"), Return("wechat_close") ]
+        text_size 30
+        text_color "#333333"
+        text_hover_color "#000000"
+        text_xalign 0.5
+        text_yalign 0.5
+
+
 # 主微信屏幕。
-# 剧情里调用：
-# $ wx_start_scripted_chat("1", "1")  或  $ wx_start_free_chat("91")
+# 剧本聊天演示：
+# $ wx_start_scripted_chat()
+# show screen wx_phone
+# call wx_scripted_chat_flow
+# 自由聊天演示：
+# $ wx_start_free_chat()
 # call screen wx_phone
 screen wx_phone():
     tag wx_phone
-    modal True
+    modal False
 
     # 如果剧情没有提前初始化聊天，这里会自动加载默认聊天，避免空白。
     on "show" action Function(wx_ensure_default_state)
@@ -17,7 +48,6 @@ screen wx_phone():
     add Solid("#000000")
 
     # 中间微信主体：左侧栏 110px + 内容区 1170px。
-    # 以后想改变整体宽高，优先改这里的 xsize/ysize，并同步调底部栏宽度。
     hbox:
         xalign 0.5
         yalign 0.0
@@ -38,37 +68,11 @@ screen wx_phone():
             else:
                 use wx_chat_page()
 
-    # 底部区域。
-    # 聊天页显示选项或输入框；朋友圈页不显示底部操作栏内容。
-    frame:
-        xalign 0.5
-        yalign 1.0
-        xfill True
-        ysize 260
-        padding (0, 0)
-        background Solid("#7f91a8")
+    # 只有自由聊天需要输入框。剧本聊天阶段使用 Ren'Py 默认文本框显示旁白/心理，不再画常驻底栏。
+    if wx_current_view == "chat" and wx_active_chat_mode == "free":
+        use wx_free_chat_bar()
 
-        if wx_current_view == "chat":
-            if wx_active_chat_mode == "free":
-                use wx_free_chat_bar()
-            else:
-                use wx_scripted_choice_bar()
-
-    # 右上角齿轮：现在作为“返回当前微信 screen”的出口。
-    # call screen wx_phone 后，点击这里会 Return("wechat_settings") 回到剧情流程。
-    textbutton "⚙":
-        xpos 1675
-        ypos 45
-        xsize 90
-        ysize 90
-        background None
-        hover_background None
-        action Return("wechat_settings")
-        text_size 74
-        text_color "#5b6875"
-        text_hover_color "#7f91a8"
-        text_xalign 0.5
-        text_yalign 0.5
+    use wx_close_button()
 
 
 # 左侧导航栏。
@@ -97,7 +101,6 @@ screen wx_sidebar():
                     yalign 0.5
                     spacing 6
 
-                    # 图片存在时显示真实微信图标；缺图时显示文字兜底，方便开发阶段排查路径。
                     if wx_image_loadable("images/wechat/wechat_icon.png"):
                         add "images/wechat/wechat_icon.png":
                             xalign 0.5
@@ -126,7 +129,6 @@ screen wx_sidebar():
                     yalign 0.5
                     spacing 6
 
-                    # 朋友圈图标路径在这里；以后换图片只改这个 add 路径或替换文件。
                     if wx_image_loadable("images/wechat/moments_icon.png"):
                         add "images/wechat/moments_icon.png":
                             xalign 0.5
@@ -168,35 +170,37 @@ screen wx_chat_page():
 # 单条聊天气泡。
 # side 来自 wx_contacts[contact_id]["side"]：
 # right 表示头像和气泡靠右；left 表示靠左。
-# 以后想改“谁在左谁在右”，不要改这里，改 data/wechat_data.rpy 的 side 字段。
+# 当前男主 player 是主视角，在右侧；女主 heroine 在左侧。
 screen wx_chat_message(message):
     $ speaker = message.get("speaker", WX_DEFAULT_CONTACT_ID)
     $ side = wx_message_side(message)
     $ message_text = message.get("text", "")
 
-    # 右侧气泡：当前用于女主。绿色气泡颜色在 background Solid("#b9e99d")。
     if side == "right":
-        hbox:
+        # 右侧气泡：主视角男主。文本右对齐，绿色气泡。
+        hbox at wx_message_dissolve:
             xfill True
             spacing 16
 
-            null width 250
+            null:
+                xfill True
 
             frame:
                 xmaximum 610
                 padding (28, 18)
                 background Solid("#b9e99d")
-                xalign 1.0
 
                 text message_text:
                     size 31
                     color "#2d3338"
                     xmaximum 550
+                    text_align 1.0
+                    xalign 1.0
 
             use wx_avatar(speaker)
     else:
-        # 左侧气泡：当前用于男主。白色气泡颜色在 background Solid("#ffffff")。
-        hbox:
+        # 左侧气泡：女主。文本左对齐，白色气泡。
+        hbox at wx_message_dissolve:
             xfill True
             spacing 16
 
@@ -211,8 +215,11 @@ screen wx_chat_message(message):
                     size 31
                     color "#2d3338"
                     xmaximum 660
+                    text_align 0.0
+                    xalign 0.0
 
-            null width 200
+            null:
+                xfill True
 
 
 # 头像组件。
@@ -237,69 +244,95 @@ screen wx_avatar(contact_id):
 
 
 # 剧本选项底栏。
-# 按钮来自当前节点 choices；点击后调用 wx_choose_scripted_option(choice_index)。
+# 只有当前节点消息全部显示完并且有 choices 时，流程才 call 这个 screen。
 screen wx_scripted_choice_bar():
+    modal True
+
     $ choices = wx_current_scripted_choices()
 
-    if choices:
-        hbox:
-            xalign 0.5
-            yalign 0.5
-            spacing 80
+    use wx_close_button()
 
-            for choice_index, choice in enumerate(choices):
-                textbutton choice.get("text", ""):
-                    xsize 800
-                    ysize 92
-                    # 选项按钮颜色。以后想贴近截图的描边/背景，优先改这里。
-                    background Solid("#ffffff")
-                    hover_background Solid("#edf5ff")
-                    action Function(wx_choose_scripted_option, choice_index)
-                    text_size 30
-                    text_color "#111111"
-                    text_hover_color "#111111"
-                    text_xalign 0.5
-                    text_yalign 0.5
-    else:
-        text "暂无可选回复":
-            xalign 0.5
-            yalign 0.5
-            size 30
-            color "#263344"
+    frame:
+        xalign 0.5
+        yalign 1.0
+        xfill True
+        ysize 260
+        padding (0, 0)
+        background Solid("#7f91a8")
+
+        if choices:
+            hbox:
+                xalign 0.5
+                yalign 0.5
+                spacing 80
+
+                for choice_index, choice in enumerate(choices):
+                    textbutton choice.get("text", ""):
+                        xsize 800
+                        ysize 92
+                        background Solid("#ffffff")
+                        hover_background Solid("#edf5ff")
+                        action [ Function(wx_choose_scripted_option, choice_index), Return(choice_index) ]
+                        text_size 30
+                        text_color "#111111"
+                        text_hover_color "#111111"
+                        text_xalign 0.5
+                        text_yalign 0.5
+        else:
+            textbutton "继续":
+                xalign 0.5
+                yalign 0.5
+                xsize 300
+                ysize 92
+                background Solid("#ffffff")
+                hover_background Solid("#edf5ff")
+                action Return("continue")
+                text_size 30
+                text_color "#111111"
+                text_xalign 0.5
+                text_yalign 0.5
 
 
 # 自由输入底栏。
 # input 绑定 default wx_free_input_text；发送按钮和回车都会调用 wx_send_free_chat()。
 screen wx_free_chat_bar():
-    hbox:
+    frame:
         xalign 0.5
-        yalign 0.5
-        spacing 22
+        yalign 1.0
+        xfill True
+        ysize 260
+        padding (0, 0)
+        background Solid("#7f91a8")
 
-        frame:
-            xsize 1320
-            ysize 92
-            padding (26, 18)
-            background Solid("#ffffff")
+        hbox:
+            xalign 0.5
+            yalign 0.5
+            spacing 22
 
-            input:
-                value VariableInputValue("wx_free_input_text")
-                # 单次输入最大长度。以后觉得玩家回复太短/太长，就改 length。
-                length 80
-                size 31
-                color "#111111"
-                xfill True
+            frame:
+                xsize 1320
+                ysize 92
+                padding (26, 18)
+                background Solid("#ffffff")
 
-        textbutton "发送":
-            xsize 170
-            ysize 92
-            background Solid("#e9f2ff")
-            hover_background Solid("#d7e9ff")
-            action Function(wx_send_free_chat)
-            text_size 31
-            text_color "#111111"
-            text_xalign 0.5
-            text_yalign 0.5
+                input:
+                    value VariableInputValue("wx_free_input_text")
+                    # 单次输入最大长度。以后觉得玩家回复太短/太长，就改 length。
+                    length 80
+                    size 31
+                    color "#111111"
+                    xfill True
+
+            textbutton "发送":
+                xsize 170
+                ysize 92
+                background Solid("#e9f2ff")
+                hover_background Solid("#d7e9ff")
+                action Function(wx_send_free_chat)
+                text_size 31
+                text_color "#111111"
+                text_xalign 0.5
+                text_yalign 0.5
 
     key "K_RETURN" action Function(wx_send_free_chat)
 
@@ -331,6 +364,7 @@ screen wx_moment_post(post):
     $ author_id = post.get("author", WX_DEFAULT_CONTACT_ID)
     $ post_id = post.get("post_id", "")
     $ images = list(post.get("images", ()))
+    $ heart_image = "images/wechat/heart_full.png" if wx_is_moment_liked(post_id) else "images/wechat/heart_empty.png"
 
     frame:
         xfill True
@@ -361,27 +395,24 @@ screen wx_moment_post(post):
                 if images:
                     use wx_moment_images(images)
 
-                hbox:
+                fixed:
                     xfill True
+                    ysize 58
 
                     text post.get("time", ""):
+                        xpos 0
+                        ypos 9
                         size 25
                         color "#9a9a9a"
 
-                    null width 760
-
-                    # 点赞按钮：白心/红心只看 wx_moment_likes，不调用好感度接口。
-                    textbutton ("♥" if wx_is_moment_liked(post_id) else "♡"):
-                        xsize 72
-                        ysize 56
-                        background None
-                        hover_background None
+                    # 点赞按钮：空心/实心爱心图片只看 wx_moment_likes，不调用好感度接口。
+                    imagebutton:
+                        xalign 1.0
+                        yalign 0.5
+                        xysize (46, 46)
+                        idle heart_image
+                        hover heart_image
                         action Function(wx_toggle_moment_like, post_id)
-                        text_size 42
-                        text_color ("#d94b4b" if wx_is_moment_liked(post_id) else "#8f8f8f")
-                        text_hover_color "#d94b4b"
-                        text_xalign 0.5
-                        text_yalign 0.5
 
                 frame:
                     xfill True

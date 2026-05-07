@@ -27,19 +27,15 @@ label start:
     
     pause 2.0
 
-    $ wx_start_scripted_chat("1", "1")
+    $ wx_start_scripted_chat()
 
-    call screen wx_phone
+    show screen wx_phone
 
-    e "接下来打开自由输入微信聊天示例。"
+    call wx_scripted_chat_flow
 
-    $ wx_start_free_chat("91")
+    hide screen wx_phone
 
-    call screen wx_phone
-
-    e "最后打开朋友圈示例。"
-
-    $ wx_set_view("moments")
+    $ wx_start_free_chat()
 
     call screen wx_phone
 
