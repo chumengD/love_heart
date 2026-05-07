@@ -1,13 +1,23 @@
-# WeChat module screens.
+# 微信模块界面。
+# 这里只负责“画出来”：左侧栏、聊天记录、底部选项/输入框、朋友圈列表。
+# 数据来源在 data/wechat_data.rpy，点击后的行为函数在 systems/wechat_system.rpy。
 
+# 主微信屏幕。
+# 剧情里调用：
+# $ wx_start_scripted_chat("1", "1")  或  $ wx_start_free_chat("91")
+# call screen wx_phone
 screen wx_phone():
     tag wx_phone
     modal True
 
+    # 如果剧情没有提前初始化聊天，这里会自动加载默认聊天，避免空白。
     on "show" action Function(wx_ensure_default_state)
 
+    # 外侧黑色背景，对应截图中手机/窗口两边的黑边。
     add Solid("#000000")
 
+    # 中间微信主体：左侧栏 110px + 内容区 1170px。
+    # 以后想改变整体宽高，优先改这里的 xsize/ysize，并同步调底部栏宽度。
     hbox:
         xalign 0.5
         yalign 0.0
@@ -16,6 +26,7 @@ screen wx_phone():
 
         use wx_sidebar()
 
+        # 内容区。wx_current_view 决定显示聊天还是朋友圈。
         frame:
             xsize 1170
             ysize 820
@@ -27,6 +38,8 @@ screen wx_phone():
             else:
                 use wx_chat_page()
 
+    # 底部区域。
+    # 聊天页显示选项或输入框；朋友圈页不显示底部操作栏内容。
     frame:
         xalign 0.5
         yalign 1.0
@@ -41,6 +54,8 @@ screen wx_phone():
             else:
                 use wx_scripted_choice_bar()
 
+    # 右上角齿轮：现在作为“返回当前微信 screen”的出口。
+    # call screen wx_phone 后，点击这里会 Return("wechat_settings") 回到剧情流程。
     textbutton "⚙":
         xpos 1675
         ypos 45
@@ -56,6 +71,8 @@ screen wx_phone():
         text_yalign 0.5
 
 
+# 左侧导航栏。
+# 图标文件在 game/images/wechat/；以后换图标只替换图片或改 add 路径。
 screen wx_sidebar():
     frame:
         xsize 110
@@ -67,6 +84,7 @@ screen wx_sidebar():
             xfill True
             spacing 0
 
+            # 聊天按钮：点击后只切换 wx_current_view，不会重置聊天记录。
             button:
                 xsize 110
                 ysize 145
@@ -79,6 +97,7 @@ screen wx_sidebar():
                     yalign 0.5
                     spacing 6
 
+                    # 图片存在时显示真实微信图标；缺图时显示文字兜底，方便开发阶段排查路径。
                     if wx_image_loadable("images/wechat/wechat_icon.png"):
                         add "images/wechat/wechat_icon.png":
                             xalign 0.5
@@ -94,6 +113,7 @@ screen wx_sidebar():
                         size 23
                         color ("#18b02d" if wx_current_view == "chat" else "#989ba2")
 
+            # 朋友圈按钮：只切换视图，不影响好感度和剧情进度。
             button:
                 xsize 110
                 ysize 145
@@ -106,6 +126,7 @@ screen wx_sidebar():
                     yalign 0.5
                     spacing 6
 
+                    # 朋友圈图标路径在这里；以后换图片只改这个 add 路径或替换文件。
                     if wx_image_loadable("images/wechat/moments_icon.png"):
                         add "images/wechat/moments_icon.png":
                             xalign 0.5
@@ -122,6 +143,8 @@ screen wx_sidebar():
                         color ("#4285f4" if wx_current_view == "moments" else "#989ba2")
 
 
+# 聊天记录区域。
+# viewport 支持鼠标滚轮和拖动；yinitial 1.0 尽量让新消息后保持底部可见。
 screen wx_chat_page():
     viewport:
         xfill True
@@ -133,6 +156,7 @@ screen wx_chat_page():
         vbox:
             xfill True
             spacing 28
+            # xoffset/yoffset 是聊天内容内边距。不要在 vbox 上写 padding，Ren'Py 不支持。
             xoffset 30
             yoffset 28
             xmaximum 1110
@@ -141,11 +165,16 @@ screen wx_chat_page():
                 use wx_chat_message(message)
 
 
+# 单条聊天气泡。
+# side 来自 wx_contacts[contact_id]["side"]：
+# right 表示头像和气泡靠右；left 表示靠左。
+# 以后想改“谁在左谁在右”，不要改这里，改 data/wechat_data.rpy 的 side 字段。
 screen wx_chat_message(message):
     $ speaker = message.get("speaker", WX_DEFAULT_CONTACT_ID)
     $ side = wx_message_side(message)
     $ message_text = message.get("text", "")
 
+    # 右侧气泡：当前用于女主。绿色气泡颜色在 background Solid("#b9e99d")。
     if side == "right":
         hbox:
             xfill True
@@ -166,6 +195,7 @@ screen wx_chat_message(message):
 
             use wx_avatar(speaker)
     else:
+        # 左侧气泡：当前用于男主。白色气泡颜色在 background Solid("#ffffff")。
         hbox:
             xfill True
             spacing 16
@@ -185,6 +215,8 @@ screen wx_chat_message(message):
             null width 200
 
 
+# 头像组件。
+# 优先加载联系人 avatar 图片；缺图时显示 fallback_color 色块和名字首字。
 screen wx_avatar(contact_id):
     $ avatar_path = wx_contact_avatar(contact_id)
 
@@ -204,6 +236,8 @@ screen wx_avatar(contact_id):
                 color "#ffffff"
 
 
+# 剧本选项底栏。
+# 按钮来自当前节点 choices；点击后调用 wx_choose_scripted_option(choice_index)。
 screen wx_scripted_choice_bar():
     $ choices = wx_current_scripted_choices()
 
@@ -217,6 +251,7 @@ screen wx_scripted_choice_bar():
                 textbutton choice.get("text", ""):
                     xsize 800
                     ysize 92
+                    # 选项按钮颜色。以后想贴近截图的描边/背景，优先改这里。
                     background Solid("#ffffff")
                     hover_background Solid("#edf5ff")
                     action Function(wx_choose_scripted_option, choice_index)
@@ -233,6 +268,8 @@ screen wx_scripted_choice_bar():
             color "#263344"
 
 
+# 自由输入底栏。
+# input 绑定 default wx_free_input_text；发送按钮和回车都会调用 wx_send_free_chat()。
 screen wx_free_chat_bar():
     hbox:
         xalign 0.5
@@ -247,6 +284,7 @@ screen wx_free_chat_bar():
 
             input:
                 value VariableInputValue("wx_free_input_text")
+                # 单次输入最大长度。以后觉得玩家回复太短/太长，就改 length。
                 length 80
                 size 31
                 color "#111111"
@@ -266,6 +304,8 @@ screen wx_free_chat_bar():
     key "K_RETURN" action Function(wx_send_free_chat)
 
 
+# 朋友圈页面。
+# 数据来自 wx_moment_posts；滚动区域只显示内容，不会影响好感度。
 screen wx_moments_page():
     viewport:
         xfill True
@@ -276,6 +316,7 @@ screen wx_moments_page():
         vbox:
             xfill True
             spacing 0
+            # 朋友圈内容内边距。不要改成 padding，vbox 不支持。
             xoffset 38
             yoffset 18
             xmaximum 1094
@@ -284,6 +325,8 @@ screen wx_moments_page():
                 use wx_moment_post(post)
 
 
+# 单条朋友圈。
+# post 字段来自 data/wechat_data.rpy：post_id/author/time/text/images。
 screen wx_moment_post(post):
     $ author_id = post.get("author", WX_DEFAULT_CONTACT_ID)
     $ post_id = post.get("post_id", "")
@@ -314,6 +357,7 @@ screen wx_moment_post(post):
                     color "#333333"
                     xmaximum 850
 
+                # images 为空时不调用 wx_moment_images()，所以无图片朋友圈不会出现占位图。
                 if images:
                     use wx_moment_images(images)
 
@@ -326,6 +370,7 @@ screen wx_moment_post(post):
 
                     null width 760
 
+                    # 点赞按钮：白心/红心只看 wx_moment_likes，不调用好感度接口。
                     textbutton ("♥" if wx_is_moment_liked(post_id) else "♡"):
                         xsize 72
                         ysize 56
@@ -345,6 +390,9 @@ screen wx_moment_post(post):
                     background Solid("#dedede")
 
 
+# 朋友圈图片排布。
+# 1 张：大图；2 张：并排；3 张以上：每行 3 张网格。
+# 以后想改图片尺寸，改 wx_moment_image() 调用里的宽高。
 screen wx_moment_images(images):
     if len(images) == 1:
         use wx_moment_image(images[0], 560, 315)
@@ -366,6 +414,9 @@ screen wx_moment_images(images):
                         use wx_moment_image(image_path, 190, 190)
 
 
+# 单张朋友圈图片。
+# 图片存在就显示真实图片；图片路径写了但文件未放入时，显示“图片未放入”提示。
+# 注意：无图片朋友圈不会走到这里，所以不会凭空出现占位图。
 screen wx_moment_image(image_path, image_width, image_height):
     if wx_image_loadable(image_path):
         add wx_clean_image_path(image_path):
