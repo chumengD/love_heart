@@ -298,7 +298,7 @@ screen main_menu_navigation():
             text "♡" style "main_menu_sketch_heart"
             textbutton _("成就") action ShowMenu("achievements") style "main_menu_sketch_button"
 
-        hbox:
+        hbox: 
             style "main_menu_sketch_row"
             text "♡" style "main_menu_sketch_heart"
             textbutton _("记忆回廊") action ShowMenu("memory_gallery") style "main_menu_sketch_button"
@@ -468,10 +468,7 @@ screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
 
     style_prefix "game_menu"
 
-    if main_menu:
-        add gui.main_menu_background
-    else:
-        add gui.game_menu_background
+    add gui.game_menu_background
 
     frame:
         style "game_menu_outer_frame"
