@@ -513,7 +513,8 @@ screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
 
                 transclude
 
-    imagebutton "images\左箭头.png":
+    imagebutton:
+        idle "images/左箭头.png"
         style "return_button"
 
         action Return()
@@ -854,7 +855,7 @@ screen preferences():
                     bar value Preference("auto-forward time")
 
                     textbutton _("返回主菜单"):
-                        menu
+                        action MainMenu()
 
                 vbox:
 
@@ -950,6 +951,13 @@ style check_button_text:
 
 style slider_slider:
     xsize 525
+    ysize gui.slider_size
+    left_bar Frame("gui/slider/progress_[prefix_]left.png", Borders(19, 6, 19, 6), tile=False)
+    right_bar Frame("gui/slider/progress_[prefix_]right.png", Borders(19, 6, 19, 6), tile=False)
+    thumb "gui/slider/progress_[prefix_]thumb.png"
+    thumb_align 0.5
+    thumb_offset 25
+    bar_resizing False
 
 style slider_button:
     properties gui.button_properties("slider_button")
