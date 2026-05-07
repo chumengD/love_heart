@@ -514,9 +514,8 @@ screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
                 transclude
 
     imagebutton:
-        idle "images/左箭头.png"
+        idle Transform("images/左箭头.png", zoom=0.8)
         style "return_button"
-
         action Return()
 
     label title
@@ -952,7 +951,7 @@ style check_button_text:
 style slider_slider:
     xsize 525
     ysize gui.slider_size
-    left_bar Frame("gui/slider/progress_[prefix_]left.png", Borders(19, 6, 19, 6), tile=False)
+    left_bar Frame("gui/slider/progress_[prefix_]left.png", Borders(12, 3, 12, 3), tile=False)
     right_bar Frame("gui/slider/progress_[prefix_]right.png", Borders(19, 6, 19, 6), tile=False)
     thumb "gui/slider/progress_[prefix_]thumb.png"
     thumb_align 0.5
