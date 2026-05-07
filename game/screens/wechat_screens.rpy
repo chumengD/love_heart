@@ -9,26 +9,6 @@ transform wx_message_dissolve:
         alpha 0.0
         linear 0.25 alpha 1.0
 
-
-# 右上角关闭按钮。
-# scripted 演示用 show screen wx_phone 时，Hide 会隐藏微信界面；
-# free 模式用 call screen wx_phone 时，Return 会回到剧情流程。
-screen wx_close_button():
-    textbutton "X":
-        xpos 1495
-        ypos 18
-        xsize 48
-        ysize 48
-        background Solid("#dfe6ee")
-        hover_background Solid("#f1f4f8")
-        action [ Hide("wx_phone"), Return("wechat_close") ]
-        text_size 30
-        text_color "#333333"
-        text_hover_color "#000000"
-        text_xalign 0.5
-        text_yalign 0.5
-
-
 # 主微信屏幕。
 # 剧本聊天演示：
 # $ wx_start_scripted_chat()
@@ -50,7 +30,8 @@ screen wx_phone():
     # 中间微信主体：左侧栏 110px + 内容区 1170px。
     hbox:
         xalign 0.5
-        yalign 0.0
+        ypos 0
+        yanchor 0.0
         xsize 1280
         ysize 820
 
@@ -71,8 +52,6 @@ screen wx_phone():
     # 只有自由聊天需要输入框。剧本聊天阶段使用 Ren'Py 默认文本框显示旁白/心理，不再画常驻底栏。
     if wx_current_view == "chat" and wx_active_chat_mode == "free":
         use wx_free_chat_bar()
-
-    use wx_close_button()
 
 
 # 左侧导航栏。
@@ -247,8 +226,6 @@ screen wx_scripted_choice_bar():
     modal True
 
     $ choices = wx_current_scripted_choices()
-
-    use wx_close_button()
 
     frame:
         xalign 0.5
