@@ -13,7 +13,7 @@ label splashscreen:
     show logo
     with dissolve
     
-    pause 2.0
+    pause 1.0
 
     hide logo
     with dissolve
