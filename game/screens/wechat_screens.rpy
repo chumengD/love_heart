@@ -152,7 +152,6 @@ screen wx_chat_page():
         xfill True
         yfill True
         mousewheel True
-        draggable True
         yinitial 1.0
 
         vbox:
