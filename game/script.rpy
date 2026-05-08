@@ -18,7 +18,9 @@ define m = Character("男主", image="m")
 define g = Character("女主", image="g")
 
 image bird= "images/Act1/鸽子.png"
-image wedding ="images/Act1/婚礼现场.png"
+image wedding ="images/Act1/婚礼现场1.png"
+image flower = "images/Act1/捧花1.png"
+image peng = "images/Act1/撞.png"
 image chapter1:
     contains:
         Solid("#FFFFFF")
@@ -143,10 +145,10 @@ label Act1:
     "看着两位新人眼里的笑意，我突然有点羡慕。"
     "我的那个“她”什么时候会出现呢？"
     
-    # hide wedding
-    # with dissolve
-    # show bird
-    # with dissolve
+    hide wedding
+    with dissolve
+    show flower
+    with dissolve
 
     #PS：这里是抛捧花环节，需要两张图(美工愿意的话可以画3张)，第一张是抛花的场景描写
     #可以不画新娘，注重的是氛围，第二张是男女主相撞，偷懒的话可以不画出角色，甚至不画
@@ -155,20 +157,21 @@ label Act1:
     "新娘誓词结束，主持人笑着宣布激动人心的抛捧花环节。"
     "宴会厅里的女生们纷纷起身，笑着涌向舞台下方"
     "有的整理着裙摆，有的互相推搡着，眼里满是期待。"
-    "ps:为什么这里只写女生，那男主岂不是发现了女主？毕竟后面还描写了女生们的姿态"
-    hide wedding
-    with dissolve
-    show bird
-    with dissolve
+
     "怎么大家都这么积极?"
     "我本就是来凑热闹的......"
     "要不我也去试试看，要是能抢到捧花，说不定还能跟表哥讨个好彩头。"
     #这里少了点动作和对人群的描写
     
-    with vpunch
+    with Vpunch(1.0)
+    show peng
     "! !"
     "(撞到人了！)"
     #经典的惊呼呢，动作的描写呢？
+    hide peng 
+    with dissolve
+    show bird
+    
     "我低头时刚好对上她抬头看过来的，带有一丝慌乱害羞眼睛。"
     "睫毛好长......"
     "她的脸颊也微微泛红，像熟透的桃子。"
