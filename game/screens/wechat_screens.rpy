@@ -224,7 +224,7 @@ screen wx_avatar(contact_id):
 # 只有当前节点消息全部显示完并且有 choices 时，流程才 call 这个 screen。
 screen wx_scripted_choice_bar():
     modal True
-
+    zorder 200
     $ choices = wx_current_scripted_choices()
 
     frame:
