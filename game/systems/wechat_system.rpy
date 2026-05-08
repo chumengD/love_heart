@@ -121,7 +121,7 @@ init python:
 
     # 追加一条聊天消息到当前聊天记录。
     # 注意这里会复制 list 再赋值，方便 Ren'Py 的存档/回滚系统识别状态变化。
-    def wx_append_messag(speaker, text):
+    def wx_append_message(speaker, text):
         global wx_chat_messages
 
         if not text:
