@@ -4,6 +4,13 @@
 
 init offset = -1
 
+#允许滚轮推进剧情
+init python:
+    if "mousedown_5" not in config.keymap["dismiss"]:
+        config.keymap["dismiss"].append("mousedown_5")
+
+    if "mousedown_5" in config.keymap["rollforward"]:
+        config.keymap["rollforward"].remove("mousedown_5")
 
 ################################################################################
 ## 样式
