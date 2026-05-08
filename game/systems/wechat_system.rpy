@@ -286,7 +286,7 @@ init python:
         """
         try:
             # 构建系统提示词
-            system_prompt = context.get("system_prompt", "你是小甜甜，一位可爱温柔的女孩。")
+            system_prompt = context.get("system_prompt", "你是我刚认识的女孩子，不过可能发展为恋人，一位可爱温柔的女孩，也有自己的小脾气。你现在发圈丢了，和我诉苦中。回复如微信聊天一般简洁明了，不要过于正式或生硬。")
             scene_info = context.get("scene", "")
             
             system_message = system_prompt
