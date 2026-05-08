@@ -30,6 +30,9 @@ default wx_free_input_text = ""
 # 这里只影响红心显示，不调用 lc_add_affection()，不会影响剧情和结局。
 default wx_moment_likes = {}
 
+default wx_ai_waiting = False
+
+
 init python:
     import os
     import json
@@ -440,29 +443,43 @@ init python:
     # 4. 调 wx_generate_ai_reply() 得到女主回复并追加气泡。
     # 5. 清空输入框。
     def wx_send_free_chat(text=None):
-        global wx_free_input_text
+    global wx_free_input_text
+    global wx_ai_waiting
 
-        player_text = wx_free_input_text if text is None else text
-        player_text = (player_text or "").strip()
+    if wx_ai_waiting:
+        return
 
-        if not player_text:
-            return
+    player_text = wx_free_input_text if text is None else text
+    player_text = (player_text or "").strip()
 
-        context = wx_active_free_context()
-        wx_append_message(WX_PLAYER_CONTACT_ID, player_text)
+    if not player_text:
+        return
 
-        # 自由输入每次发送的好感变化必须经过评分函数，并限制在 -10 到 +10。
-        # 这里同样只调用 lc_add_affection()，不在微信模块里保存第二套好感度。
-        affection_delta = wx_score_player_input(player_text, context)
-        if affection_delta:
-            lc_add_affection(
-                affection_delta,
-                source="wechat:free_input",
-            )
+    context = wx_active_free_context()
 
-        wx_append_message(WX_DEFAULT_CONTACT_ID, wx_generate_ai_reply(player_text, context))
-        wx_free_input_text = ""
+    wx_append_message(WX_PLAYER_CONTACT_ID, player_text)
+    wx_free_input_text = ""
+    wx_ai_waiting = True
 
+    affection_delta = wx_score_player_input(player_text, context)
+    if affection_delta:
+        lc_add_affection(affection_delta, source="wechat:free_input")
+
+    renpy.restart_interaction()
+    renpy.invoke_in_thread(wx_request_ai_reply_thread, player_text, context)
+
+    #wx_send_free_chat的配套函数1
+    def wx_request_ai_reply_thread(player_text, context):
+    reply = wx_generate_ai_reply(player_text, context)
+    renpy.invoke_in_main_thread(wx_receive_ai_reply, reply)
+
+    #wx_send_free_chat的配套函数2
+    def wx_receive_ai_reply(reply):
+    global wx_ai_waiting
+
+    wx_append_message(WX_DEFAULT_CONTACT_ID, reply)
+    wx_ai_waiting = False
+    renpy.restart_interaction()
 
     # 切换左侧栏页面。
     # "chat" 显示聊天，"moments" 显示朋友圈；其它值会被忽略，避免写错导致空屏。
