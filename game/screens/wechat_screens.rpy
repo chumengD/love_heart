@@ -25,23 +25,23 @@ screen wx_phone():
     on "show" action Function(wx_ensure_default_state)
 
     # 外侧黑色背景，对应截图中手机/窗口两边的黑边。
-    add Solid("#000000")
+    add Solid("#000000c0")
 
     # 中间微信主体：左侧栏 110px + 内容区 1170px。
     hbox:
         xalign 0.5
         ypos 0
         yanchor 0.0
-        xsize 1280
+        xsize 1200
         ysize 820
 
         use wx_sidebar()
 
         # 内容区。wx_current_view 决定显示聊天还是朋友圈。
         frame:
-            xsize 1170
+            xsize 1160
             ysize 820
-            padding (0, 0)
+            padding (25, 20)
             background Solid("#f4f4f4")
 
             if wx_current_view == "moments":
@@ -121,7 +121,7 @@ screen wx_sidebar():
                     text "朋友圈":
                         xalign 0.5
                         size 23
-                        color ("#4285f4" if wx_current_view == "moments" else "#989ba2")
+                        color ("#18b02d" if wx_current_view == "moments" else "#989ba2")
 
 
 # 聊天记录区域。
@@ -137,8 +137,8 @@ screen wx_chat_page():
             xfill True
             spacing 28
             # xoffset/yoffset 是聊天内容内边距。不要在 vbox 上写 padding，Ren'Py 不支持。
-            xoffset 30
-            yoffset 28
+            xoffset 120
+            yoffset 120
             xmaximum 1110
 
             for message in wx_chat_messages:
@@ -385,8 +385,8 @@ screen wx_moment_post(post):
                         xalign 1.0
                         yalign 0.5
                         xysize (46, 46)
-                        idle heart_image
-                        hover heart_image
+                        idle Transform(heart_image, xysize=(46, 46))
+                        hover Transform(heart_image, xysize=(46, 46))
                         action Function(wx_toggle_moment_like, post_id)
 
                 frame:
