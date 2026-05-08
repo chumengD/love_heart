@@ -438,48 +438,55 @@ init python:
     # 自由输入点击“发送”或按回车后的统一入口。
     # 做的事按顺序是：
     # 1. 读取输入框文本。
-    # 2. 追加男主气泡。
+    # 2. 立即追加男主气泡并清空输入框。
     # 3. 调 wx_score_player_input() 计算本次好感变化，并调用 lc_add_affection()。
-    # 4. 调 wx_generate_ai_reply() 得到女主回复并追加气泡。
-    # 5. 清空输入框。
+    # 4. 刷新界面后用后台线程等待 AI 回复。
+    # 5. AI 返回后再从主线程追加女主气泡。
     def wx_send_free_chat(text=None):
-    global wx_free_input_text
-    global wx_ai_waiting
+        global wx_free_input_text
+        global wx_ai_waiting
 
-    if wx_ai_waiting:
-        return
+        if wx_ai_waiting:
+            return
 
-    player_text = wx_free_input_text if text is None else text
-    player_text = (player_text or "").strip()
+        player_text = wx_free_input_text if text is None else text
+        player_text = (player_text or "").strip()
 
-    if not player_text:
-        return
+        if not player_text:
+            return
 
-    context = wx_active_free_context()
+        context = dict(wx_active_free_context())
 
-    wx_append_message(WX_PLAYER_CONTACT_ID, player_text)
-    wx_free_input_text = ""
-    wx_ai_waiting = True
+        wx_append_message(WX_PLAYER_CONTACT_ID, player_text)
+        wx_free_input_text = ""
+        wx_ai_waiting = True
 
-    affection_delta = wx_score_player_input(player_text, context)
-    if affection_delta:
-        lc_add_affection(affection_delta, source="wechat:free_input")
+        affection_delta = wx_score_player_input(player_text, context)
+        if affection_delta:
+            lc_add_affection(affection_delta, source="wechat:free_input")
 
-    renpy.restart_interaction()
-    renpy.invoke_in_thread(wx_request_ai_reply_thread, player_text, context)
+        renpy.restart_interaction()
+        renpy.invoke_in_thread(wx_request_ai_reply_thread, player_text, context)
 
-    #wx_send_free_chat的配套函数1
+
+    # wx_send_free_chat 的配套函数1：后台等待 AI 回复。
     def wx_request_ai_reply_thread(player_text, context):
-    reply = wx_generate_ai_reply(player_text, context)
-    renpy.invoke_in_main_thread(wx_receive_ai_reply, reply)
+        try:
+            reply = wx_generate_ai_reply(player_text, context)
+        except Exception as e:
+            print(f"AI 回复线程异常: {str(e)}")
+            reply = "我现在有点烦，回头再聊吧。"
 
-    #wx_send_free_chat的配套函数2
+        renpy.invoke_in_main_thread(wx_receive_ai_reply, reply)
+
+
+    # wx_send_free_chat 的配套函数2：回到主线程追加女主气泡。
     def wx_receive_ai_reply(reply):
-    global wx_ai_waiting
+        global wx_ai_waiting
 
-    wx_append_message(WX_DEFAULT_CONTACT_ID, reply)
-    wx_ai_waiting = False
-    renpy.restart_interaction()
+        wx_append_message(WX_DEFAULT_CONTACT_ID, reply)
+        wx_ai_waiting = False
+        renpy.restart_interaction()
 
     # 切换左侧栏页面。
     # "chat" 显示聊天，"moments" 显示朋友圈；其它值会被忽略，避免写错导致空屏。
