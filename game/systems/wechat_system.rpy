@@ -32,10 +32,13 @@ default wx_moment_likes = {}
 
 init python:
     import os
-    from openai import OpenAI
-    client = OpenAI(
-    api_key="sk-d099bd19f811464fb98131b9fc084a7d",
-    base_url="https://api.deepseek.com")
+    import json
+    import requests
+
+    # Deepseek API 配置
+    DEEPSEEK_API_KEY = "sk-d099bd19f811464fb98131b9fc084a7d"
+    DEEPSEEK_API_URL = "https://api.deepseek.com/chat/completions"
+
     # 通用数字 clamp 工具。
     # 微信自由输入评分用它限制在 -10 到 +10；剧本选项好感变化也会先转成整数。
     def wx_clamp(value, min_value, max_value):
@@ -290,30 +293,47 @@ init python:
             if scene_info:
                 system_message += f"\n当前场景：{scene_info}"
             
-            # 调用 Deepseek API
-            response = client.chat.completions.create(
-                model="deepseek-chat",
-                messages=[
+            # 直接调用 Deepseek API，使用 requests 库
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {DEEPSEEK_API_KEY}"
+            }
+            
+            payload = {
+                "model": "deepseek-chat",
+                "messages": [
                     {"role": "system", "content": system_message},
                     {"role": "user", "content": player_text},
                 ],
-                stream=False,
-                temperature=0.7,
-                max_tokens=150
-            )
+                "temperature": 0.7,
+                "max_tokens": 150,
+                "stream": False
+            }
+            
+            response = requests.post(DEEPSEEK_API_URL, json=payload, headers=headers, timeout=10)
+            response.raise_for_status()
+            
+            data = response.json()
             
             # 提取回复内容
-            reply = response.choices[0].message.content.strip()
+            if "choices" in data and len(data["choices"]) > 0:
+                reply = data["choices"][0].get("message", {}).get("content", "").strip()
+                
+                # 限制回复长度（微信消息气泡宽度）
+                if len(reply) > 150:
+                    reply = reply[:150]
+                
+                return reply if reply else "嗯，我听着呢。"
             
-            # 限制回复长度（微信消息气泡宽度）
-            if len(reply) > 150:
-                reply = reply[:150]
-            
-            return reply
+            return "嗯，我听着呢。"
         
+        except requests.exceptions.Timeout:
+            return "网络有点慢，等等再说吧。"
+        except requests.exceptions.ConnectionError:
+            return "好像没网了，连不上呢。"
         except Exception as e:
             # 网络错误或 API 异常时，返回备用文本
-            renpy.notify(f"Deepseek 调用出错: {str(e)}")
+            print(f"Deepseek 调用出错: {str(e)}")
             return "我现在有点烦，回头再聊吧。"
 
     # 打开自由输入聊天。
