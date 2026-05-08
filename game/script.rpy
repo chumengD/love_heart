@@ -125,7 +125,7 @@ label Act1:
     hide chapter1
     with dissolve
 
-    show bird
+    show wedding
     with Dissolve(0.8)
 
     "洁白的拱门缠绕着香槟色玫瑰，铺着白色蕾丝的长桌摆着精致的花艺"
@@ -136,9 +136,9 @@ label Act1:
     m "啊，又要被迫吃一波狗粮了啊......"
     hide m normal
 
-    hide bird
-    with dissolve
-    show wedding
+    # hide bird
+    # with dissolve
+    # show wedding
 
     "舞台上，表哥牵着新娘的手，正温柔地说着誓词"
     "阳光透过宴会厅的落地窗，洒在两人身上，连空气里都飘着甜腻的浪漫气息。"
@@ -162,16 +162,16 @@ label Act1:
     "我本就是来凑热闹的......"
     "要不我也去试试看，要是能抢到捧花，说不定还能跟表哥讨个好彩头。"
     #这里少了点动作和对人群的描写
-    
-    with Vpunch(1.0)
+   
     show peng
+    with vpunch 
     "! !"
     "(撞到人了！)"
     #经典的惊呼呢，动作的描写呢？
     hide peng 
     with dissolve
     show bird
-    
+
     "我低头时刚好对上她抬头看过来的，带有一丝慌乱害羞眼睛。"
     "睫毛好长......"
     "她的脸颊也微微泛红，像熟透的桃子。"
@@ -206,5 +206,4 @@ label Act1:
     with dissolve
 
     #我觉得这里不用再描写动作，
-    pause 60.0
     return 
