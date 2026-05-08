@@ -39,7 +39,7 @@ screen wx_phone():
 
         # 内容区。wx_current_view 决定显示聊天还是朋友圈。
         frame:
-            xsize 1160
+            xsize 110
             ysize 820
             padding (25, 20)
             background Solid("#f4f4f4")

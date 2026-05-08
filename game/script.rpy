@@ -94,7 +94,7 @@ label splashscreen:
 
 # 游戏在此开始。
 label start:
-    # call Act1
+    call Act1
 
     $ wx_start_scripted_chat()
 

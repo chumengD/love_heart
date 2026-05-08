@@ -132,6 +132,7 @@ style window:
     yalign gui.textbox_yalign
     ysize gui.textbox_height
 
+    background Image("gui/textbox.png", xalign=0.5, yalign=1.0)
 
 style namebox:
     xpos gui.name_xpos
@@ -198,6 +199,7 @@ style input:
 ## https://doc.renpy.cn/zh-CN/screen_special.html#choice
 
 screen choice(items):
+    zorder 200
     style_prefix "choice"
 
     vbox:
