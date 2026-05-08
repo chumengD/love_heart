@@ -31,6 +31,14 @@ default wx_free_input_text = ""
 default wx_moment_likes = {}
 
 init python:
+    import os
+    import json
+    import requests
+
+    # Deepseek API 配置
+    DEEPSEEK_API_KEY = "sk-d099bd19f811464fb98131b9fc084a7d"
+    DEEPSEEK_API_URL = "https://api.deepseek.com/chat/completions"
+
     # 通用数字 clamp 工具。
     # 微信自由输入评分用它限制在 -10 到 +10；剧本选项好感变化也会先转成整数。
     def wx_clamp(value, min_value, max_value):
@@ -264,7 +272,69 @@ init python:
         if next_node:
             wx_active_node_id = str(next_node)
             wx_active_message_index = 0
-
+    # 调用 Deepseek API 生成女主回复
+    def wx_call_deepseek(player_text, context):
+        """
+        调用 Deepseek API 生成女主的回复。
+        
+        参数：
+            player_text: 玩家输入的文本
+            context: 聊天上下文（包含场景、角色设定等信息）
+        
+        返回：
+            女主的回复文本
+        """
+        try:
+            # 构建系统提示词
+            system_prompt = context.get("system_prompt", "你是我刚认识的女孩子，不过可能发展为恋人，一位可爱温柔的女孩，也有自己的小脾气。你现在发圈丢了，和我诉苦中。回复如微信聊天一般简洁明了，不要过于正式或生硬。")
+            scene_info = context.get("scene", "")
+            
+            system_message = system_prompt
+            if scene_info:
+                system_message += f"\n当前场景：{scene_info}"
+            
+            # 直接调用 Deepseek API，使用 requests 库
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {DEEPSEEK_API_KEY}"
+            }
+            
+            payload = {
+                "model": "deepseek-chat",
+                "messages": [
+                    {"role": "system", "content": system_message},
+                    {"role": "user", "content": player_text},
+                ],
+                "temperature": 0.7,
+                "max_tokens": 150,
+                "stream": False
+            }
+            
+            response = requests.post(DEEPSEEK_API_URL, json=payload, headers=headers, timeout=10)
+            response.raise_for_status()
+            
+            data = response.json()
+            
+            # 提取回复内容
+            if "choices" in data and len(data["choices"]) > 0:
+                reply = data["choices"][0].get("message", {}).get("content", "").strip()
+                
+                # 限制回复长度（微信消息气泡宽度）
+                if len(reply) > 150:
+                    reply = reply[:150]
+                
+                return reply if reply else "嗯，我听着呢。"
+            
+            return "嗯，我听着呢。"
+        
+        except requests.exceptions.Timeout:
+            return "网络有点慢，等等再说吧。"
+        except requests.exceptions.ConnectionError:
+            return "好像没网了，连不上呢。"
+        except Exception as e:
+            # 网络错误或 API 异常时，返回备用文本
+            print(f"Deepseek 调用出错: {str(e)}")
+            return "我现在有点烦，回头再聊吧。"
 
     # 打开自由输入聊天。
     # 剧情里调用示例：
@@ -335,13 +405,21 @@ init python:
     # - 保留 fallback，网络失败时仍能返回一句可显示文本。
     # - 返回值必须是字符串，供 wx_append_message(WX_DEFAULT_CONTACT_ID, reply) 使用。
     def wx_generate_ai_reply(player_text, context):
-        # TODO: Keep Ollama integration outside this placeholder.
-        # This fallback must stay local and deterministic until a later task wires AI.
         normalized_text = (player_text or "").strip()
 
         if not normalized_text:
             return "你刚才是不是没发出去？"
 
+        # 尝试调用 Deepseek 生成回复
+        try:
+            ai_reply = wx_call_deepseek(normalized_text, context)
+            if ai_reply:
+                return ai_reply
+        except Exception as e:
+            # 如果 Deepseek 调用失败，打印错误并使用 fallback
+            print(f"Deepseek 调用异常，使用本地规则: {str(e)}")
+        
+        # Fallback: 使用本地规则库
         if "发圈" in normalized_text or "一起找" in normalized_text:
             return "嗯……谢谢你愿意陪我找。"
 
