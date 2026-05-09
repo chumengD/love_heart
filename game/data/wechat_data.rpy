@@ -20,7 +20,7 @@ define WX_DEFAULT_CONTACT_ID = "heroine"
 define wx_contacts = {
     "heroine": {
         "name": "一只女主角",
-        "avatar": "images/wechat/heroine_avatar.jpg",
+        "avatar": "images/wechat/heroine_avatar.png",
         "side": "left",
         "fallback_color": "#f47f9a",
     },

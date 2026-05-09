@@ -25,7 +25,7 @@ screen wx_phone():
     on "show" action Function(wx_ensure_default_state)
 
     # 外侧黑色背景，对应截图中手机/窗口两边的黑边。
-    add Solid("#000000c0")
+    add Solid("#000000")
 
     # 中间微信主体：左侧栏 110px + 内容区 1170px。
     hbox:
