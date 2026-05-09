@@ -31,7 +31,16 @@ image chapter1:
         xalign 0.435
         yalign 0.52
 
+image bird= "images/Act1/鸽子.png"
+image wedding ="images/Act1/婚礼现场1.png"
+image flower = "images/Act1/捧花1.png"
+image peng = "images/Act1/撞.png"
 
+image sorry1 = "images/Act1/道歉1.png"
+image sorry2 = "images/Act1/道歉2.png"
+
+image get_flower1= "images/Act1/接花.png"
+image get_flower2= "images/Act1/接花高兴.jpg"
 
 label Act1_wedding:
     #结婚场景
@@ -90,10 +99,10 @@ label Act1_wedding:
     #change 经典的惊呼呢，动作的描写呢？我缺的小香风这块谁给我补啊？
     hide peng 
     with dissolve
-    show bird
+    show sorry1
 
     show m normal at left
-    show g normal at right
+    # show g normal at right
     "我低头时刚好对上她抬头看过来的，带有一丝慌乱害羞眼睛。"
     "睫毛好长......"
     "她的脸颊也微微泛红，像熟透的桃子。"
@@ -101,18 +110,22 @@ label Act1_wedding:
     "她先反应过来，轻轻松开扶着我肩膀的手"
     "往后退了半步，脸上带着歉意的笑容，声音软软的说道"
     
-    g_right "对不起对不起！"
-    g_right "我刚才太急着往前凑了，没看到你转身，没撞疼你吧？"
+    g "对不起对不起！"
+    g "我刚才太急着往前凑了，没看到你转身，没撞疼你吧？"
 
 
     "我这才回过神来，脸颊瞬间涨红"
     m "没、没撞疼我,应该是我说对不起才对，我转身太急了，没注意到你。"
     "我弯腰捡起地上的捧花"
+    hide sorry1
+    show get_flower1
     "递到她面前，指尖都有些微微发抖"
     m "这个，你的捧花，掉了。"
 
+    hide get_flower1
+    show get_flower2
     "她脸更红了，小声说"
-    g_right "谢谢......"
+    g "谢谢......"
     "她低头看着手里的捧花，嘴角忍不住微微上扬"
 
     "我看着她的笑容，心里的勇气突然多了几分。"
@@ -121,8 +134,8 @@ label Act1_wedding:
 
     "她抬起头，眼里闪过一丝笑意"
     "又轻轻点了点头，拿出手机，解锁屏幕"
-    g_right "好呀，确实挺有缘分的。"
-    g_right "你来扫我吧"
+    g "好呀，确实挺有缘分的。"
+    g "你来扫我吧"
     hide g
     hide m
     hide bird 
