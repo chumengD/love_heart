@@ -536,7 +536,7 @@ init python:
 
 
 # 剧本聊天演示流程。
-# 这里负责把“微信屏幕显示”和“点击推进”串起来。
+# 这里负责把“微信屏幕显示”和“默认文本框点击推进”串起来。
 # 进入方式：
 # $ wx_start_scripted_chat()
 # show screen wx_phone
@@ -546,7 +546,11 @@ label wx_scripted_chat_flow:
         while wx_scripted_has_next_message():
             $ wx_reveal_next_scripted_message()
             with dissolve
-            pause
+            $ wx_narration = wx_get_last_narration()
+            if wx_narration:
+                "[wx_narration]"
+            else:
+                pause
 
         $ wx_choices = wx_current_scripted_choices()
 
@@ -555,6 +559,8 @@ label wx_scripted_chat_flow:
             $ wx_choice_result = renpy.display_menu(wx_choice_items)
             $ wx_choose_scripted_option(wx_choice_result)
             with dissolve
-            pause
+            $ wx_narration = wx_get_last_narration()
+            if wx_narration:
+                "[wx_narration]"
         else:
             return
