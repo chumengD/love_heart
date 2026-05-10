@@ -143,6 +143,7 @@ define wx_free_chat = {
 # text：正文。
 # images：图片列表；空元组 () 表示无图片，界面不会渲染图片区，也不会显示占位图。
 # 1 张图会显示大图，2 张并排，3 张以上按网格显示。
+# comment_text：玩家点击“评论”按钮后自动显示的评论文本。
 define wx_moment_posts = (
     {
         "post_id": "moment_001",
@@ -150,6 +151,7 @@ define wx_moment_posts = (
         "time": "昨天",
         "text": "今天好累啊，终于下班了",
         "images": (),
+        "comment_text": "辛苦啦，早点休息。",
     },
     {
         "post_id": "moment_002",
@@ -160,6 +162,7 @@ define wx_moment_posts = (
             "images/wechat/moment_photo_1.jpg",
             "images/wechat/moment_photo_2.png",
         ),
+        "comment_text": "感觉会遇到很可爱的猫。",
     },
     {
         "post_id": "moment_act2_dessert",
@@ -169,6 +172,17 @@ define wx_moment_posts = (
         "images": (
             "images/wechat/moment_act2_dessert.png",
         ),
+        "comment_text": "看起来很好吃，下次可以教教我吗？",
+    },
+    {
+        "post_id": "moment_act2_gummy",
+        "author": "heroine",
+        "time": "前几天",
+        "text": "吃到好吃的软糖，心情也变甜了。",
+        "images": (
+            "images/wechat/moment_act2_gummy.png",
+        ),
+        "comment_text": "听起来就很甜，我也想尝尝。",
     },
     {
         "post_id": "moment_act2_music",
@@ -176,6 +190,7 @@ define wx_moment_posts = (
         "time": "前几天",
         "text": "今天循环到一首很适合傍晚听的歌。",
         "images": (),
+        "comment_text": "求歌名，我也想听听。",
     },
     {
         "post_id": "moment_act2_reading",
@@ -183,6 +198,7 @@ define wx_moment_posts = (
         "time": "前几天",
         "text": "读书笔记慢慢攒起来了，写论文的时候也算没有白看。",
         "images": (),
+        "comment_text": "认真做笔记这点很厉害。",
     },
     {
         "post_id": "moment_act2_sunset",
@@ -192,5 +208,6 @@ define wx_moment_posts = (
         "images": (
             "images/wechat/moment_act2_sunset.png",
         ),
+        "comment_text": "这个黄昏看着很温柔。",
     },
 )

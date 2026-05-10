@@ -1,6 +1,6 @@
 # 微信模块运行状态和行为函数。
 # 数据怎么写看 data/wechat_data.rpy，界面怎么画看 screens/wechat_screens.rpy。
-# 这里负责把“点击推进、点击选项、输入文本、切换朋友圈、点赞”等动作转成 Ren'Py 状态变化。
+# 这里负责把“点击推进、点击选项、输入文本、切换朋友圈、点赞、评论”等动作转成 Ren'Py 状态变化。
 
 # 当前左侧栏显示哪个页面："chat" 是聊天页，"moments" 是朋友圈页。
 default wx_current_view = "chat"
@@ -36,6 +36,10 @@ default wx_free_input_text = ""
 # 朋友圈点赞状态，格式是 {"post_id": True/False}。
 # 这里只影响红心显示，不调用 lc_add_affection()，不会影响剧情和结局。
 default wx_moment_likes = {}
+
+# 朋友圈评论状态，格式是 {"post_id": "玩家评论文本"}。
+# 这里只显示预设评论，不调用 lc_add_affection()，不会影响剧情和结局。
+default wx_moment_comments = {}
 
 default wx_ai_waiting = False
 
@@ -599,6 +603,25 @@ init python:
     # 查询某条朋友圈是否已点赞，供屏幕决定显示空心还是实心爱心图片。
     def wx_is_moment_liked(post_id):
         return bool(wx_moment_likes.get(str(post_id), False))
+
+
+    # 写入朋友圈预设评论。
+    def wx_add_moment_comment(post_id, comment_text):
+        global wx_moment_comments
+
+        key = str(post_id)
+        text = str(comment_text).strip()
+        if not key or not text:
+            return
+
+        next_comments = dict(wx_moment_comments)
+        next_comments[key] = text
+        wx_moment_comments = next_comments
+
+
+    # 查询某条朋友圈的玩家评论。
+    def wx_moment_comment(post_id):
+        return wx_moment_comments.get(str(post_id), "")
 
 
     # 把图片列表切成每行 size 张。

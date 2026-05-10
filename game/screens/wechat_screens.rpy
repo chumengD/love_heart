@@ -424,11 +424,13 @@ screen wx_moments_page():
 
 
 # 单条朋友圈。
-# post 字段来自 data/wechat_data.rpy：post_id/author/time/text/images。
+# post 字段来自 data/wechat_data.rpy：post_id/author/time/text/images/comment_text。
 screen wx_moment_post(post):
     $ author_id = post.get("author", WX_DEFAULT_CONTACT_ID)
     $ post_id = post.get("post_id", "")
     $ images = list(post.get("images", ()))
+    $ comment_text = post.get("comment_text", "")
+    $ player_comment = wx_moment_comment(post_id)
     $ heart_image = "images/wechat/heart_full.png" if wx_is_moment_liked(post_id) else "images/wechat/heart_empty.png"
 
     frame:
@@ -470,14 +472,41 @@ screen wx_moment_post(post):
                         size 25
                         color "#9a9a9a"
 
-                    # 点赞按钮：空心/实心爱心图片只看 wx_moment_likes，不调用好感度接口。
-                    imagebutton:
+                    hbox:
                         xalign 1.0
                         yalign 0.5
-                        xysize (46, 46)
-                        idle Transform(heart_image, xysize=(46, 46))
-                        hover Transform(heart_image, xysize=(46, 46))
-                        action Function(wx_toggle_moment_like, post_id)
+                        spacing 18
+
+                        # 评论按钮：只写入 data/wechat_data.rpy 里配置好的预设评论。
+                        textbutton "评论":
+                            xsize 86
+                            ysize 42
+                            background None
+                            hover_background Solid("#e6e6e6")
+                            action Function(wx_add_moment_comment, post_id, comment_text)
+                            text_size 25
+                            text_color "#666666"
+                            text_hover_color "#333333"
+                            text_xalign 0.5
+                            text_yalign 0.5
+
+                        # 点赞按钮：空心/实心爱心图片只看 wx_moment_likes，不调用好感度接口。
+                        imagebutton:
+                            xysize (46, 46)
+                            idle Transform(heart_image, xysize=(46, 46))
+                            hover Transform(heart_image, xysize=(46, 46))
+                            action Function(wx_toggle_moment_like, post_id)
+
+                if player_comment:
+                    frame:
+                        xfill True
+                        padding (14, 10)
+                        background Solid("#e8e8e8")
+
+                        text wx_contact_name(WX_PLAYER_CONTACT_ID) + "：" + player_comment:
+                            size 25
+                            color "#4f4f4f"
+                            xmaximum 820
 
                 frame:
                     xfill True
