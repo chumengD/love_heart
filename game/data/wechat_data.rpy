@@ -161,4 +161,36 @@ define wx_moment_posts = (
             "images/wechat/moment_photo_2.png",
         ),
     },
+    {
+        "post_id": "moment_act2_dessert",
+        "author": "heroine",
+        "time": "前几天",
+        "text": "第一次试着做小甜品，卖相好像还可以？",
+        "images": (
+            "images/wechat/moment_act2_dessert.png",
+        ),
+    },
+    {
+        "post_id": "moment_act2_music",
+        "author": "heroine",
+        "time": "前几天",
+        "text": "今天循环到一首很适合傍晚听的歌。",
+        "images": (),
+    },
+    {
+        "post_id": "moment_act2_reading",
+        "author": "heroine",
+        "time": "前几天",
+        "text": "读书笔记慢慢攒起来了，写论文的时候也算没有白看。",
+        "images": (),
+    },
+    {
+        "post_id": "moment_act2_sunset",
+        "author": "heroine",
+        "time": "前几天",
+        "text": "黄昏的颜色太好看了，忍不住拍下来。",
+        "images": (
+            "images/wechat/moment_act2_sunset.png",
+        ),
+    },
 )
