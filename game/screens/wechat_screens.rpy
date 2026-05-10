@@ -17,9 +17,10 @@ transform wx_message_dissolve:
 # 自由聊天演示：
 # $ wx_start_free_chat()
 # call screen wx_phone
-screen wx_phone():
+screen wx_phone(standalone=False):
     tag wx_phone
-    modal False
+    modal standalone
+    zorder (200 if standalone else 0)
 
     # 如果剧情没有提前初始化聊天，这里会自动加载默认聊天，避免空白。
     on "show" action Function(wx_ensure_default_state)
@@ -49,9 +50,25 @@ screen wx_phone():
             else:
                 use wx_chat_page()
 
-    # 只有自由聊天需要输入框。剧本聊天阶段使用 Ren'Py 默认文本框显示旁白/心理，不再画常驻底栏。
+    # AI 自由聊天使用仿微信输入栏；剧本聊天阶段保留 Ren'Py 默认文本框显示旁白/心理。
     if wx_current_view == "chat" and wx_active_chat_mode == "free":
         use wx_free_chat_bar()
+
+    if standalone:
+        textbutton _("返回"):
+            xalign 0.985
+            yalign 0.025
+            xsize 120
+            ysize 50
+            background Solid("#ffffff")
+            hover_background Solid("#e5e5e5")
+            action Hide("wx_phone")
+            text_size 24
+            text_color "#111111"
+            text_xalign 0.5
+            text_yalign 0.5
+
+        key "game_menu" action Hide("wx_phone")
 
 
 # 左侧导航栏。
@@ -227,29 +244,159 @@ screen wx_scripted_choice_bar():
     zorder 200
     $ choices = wx_current_scripted_choices()
 
-    frame:
+    use wx_wechat_bottom_bar("scripted", choices)
+
+
+# 自由输入底栏。
+# input 绑定 default wx_free_input_text；发送按钮和回车都会调用 wx_send_free_chat()。
+screen wx_free_chat_bar():
+    use wx_wechat_bottom_bar("free")
+
+    key "K_RETURN" action Function(wx_send_free_chat)
+
+
+# 仿微信底部输入栏。
+# mode 为 "free" 时显示可输入文本框；mode 为 "scripted" 时把剧本选项放进中间区域。
+screen wx_wechat_bottom_bar(mode="free", choices=None):
+    default sticker_open = False
+    $ choice_items = choices or []
+
+    fixed:
         xalign 0.5
         yalign 1.0
-        xfill True
-        ysize 260
-        padding (0, 0)
-        background Solid("#7f91a8")
+        xsize 1200
+        ysize 520
 
-        if choices:
+        if sticker_open:
+            use wx_sticker_popconfirm()
+
+        hbox:
+            xpos 0
+            ypos 260
+            xsize 1200
+            ysize 260
+
+            frame:
+                xsize 110
+                yfill True
+                padding (0, 0)
+                background Solid("#3d3d43")
+
+            frame:
+                xsize 1090
+                yfill True
+                padding (0, 0)
+                background Solid("#1f2522")
+
+                hbox:
+                    xalign 0.5
+                    yalign 0.5
+                    spacing 22
+
+                    textbutton ")))":
+                        xsize 72
+                        ysize 72
+                        background None
+                        hover_background Solid("#303733")
+                        action NullAction()
+                        text_size 30
+                        text_color "#d8d8d8"
+                        text_hover_color "#ffffff"
+                        text_xalign 0.5
+                        text_yalign 0.5
+
+                    if mode == "free":
+                        use wx_free_chat_input_box()
+                    else:
+                        use wx_scripted_choice_input_box(choice_items)
+
+                    textbutton "☺":
+                        xsize 72
+                        ysize 72
+                        background None
+                        hover_background Solid("#303733")
+                        action SetScreenVariable("sticker_open", not sticker_open)
+                        text_size 52
+                        text_color "#d8d8d8"
+                        text_hover_color "#ffffff"
+                        text_xalign 0.5
+                        text_yalign 0.5
+
+                    textbutton "+":
+                        xsize 72
+                        ysize 72
+                        background None
+                        hover_background Solid("#303733")
+                        action NullAction()
+                        text_size 56
+                        text_color "#d8d8d8"
+                        text_hover_color "#ffffff"
+                        text_xalign 0.5
+                        text_yalign 0.5
+
+
+# AI 自由聊天的真实输入框。回车发送，右侧按钮只保留视觉摆设。
+screen wx_free_chat_input_box():
+    frame:
+        xsize 610
+        ysize 82
+        padding (24, 0)
+        background Solid("#ffffff")
+
+        fixed:
+            xfill True
+            yfill True
+
+            if wx_ai_waiting:
+                text "等待回复...":
+                    xpos 0
+                    ypos 22
+                    size 34
+                    color "#9a9a9a"
+            elif not wx_free_input_text:
+                text "发送消息...":
+                    xpos 0
+                    ypos 22
+                    size 34
+                    color "#9a9a9a"
+
+            input:
+                value VariableInputValue("wx_free_input_text")
+                # 单次输入最大长度。以后觉得玩家回复太短/太长，就改 length。
+                length 80
+                xpos 0
+                ypos 20
+                xfill True
+                size 34
+                color "#2d3338"
+
+
+# 剧本选项显示在微信输入框位置，替代旧的大块蓝色选项底栏。
+screen wx_scripted_choice_input_box(choices):
+    $ choice_count = len(choices)
+    $ choice_width = 610 if choice_count <= 1 else max(180, int((610 - (choice_count - 1) * 10) / choice_count))
+
+    frame:
+        xsize 610
+        ysize 82
+        padding (14, 0)
+        background Solid("#ffffff")
+
+        if choice_count:
             hbox:
                 xalign 0.5
                 yalign 0.5
-                spacing 80
+                spacing 10
 
                 for choice_index, choice in enumerate(choices):
                     textbutton choice.get("text", ""):
-                        xsize 800
-                        ysize 92
-                        background Solid("#ffffff")
-                        hover_background Solid("#edf5ff")
+                        xsize choice_width
+                        ysize 58
+                        background Solid("#f4f4f4")
+                        hover_background Solid("#e8f1ff")
                         action [ Function(wx_choose_scripted_option, choice_index), Return(choice_index) ]
-                        text_size 30
-                        text_color "#111111"
+                        text_size 24
+                        text_color "#222222"
                         text_hover_color "#111111"
                         text_xalign 0.5
                         text_yalign 0.5
@@ -257,59 +404,37 @@ screen wx_scripted_choice_bar():
             textbutton "继续":
                 xalign 0.5
                 yalign 0.5
-                xsize 300
-                ysize 92
-                background Solid("#ffffff")
-                hover_background Solid("#edf5ff")
+                xsize 220
+                ysize 58
+                background Solid("#f4f4f4")
+                hover_background Solid("#e8f1ff")
                 action Return("continue")
-                text_size 30
-                text_color "#111111"
+                text_size 26
+                text_color "#222222"
+                text_hover_color "#111111"
                 text_xalign 0.5
                 text_yalign 0.5
 
 
-# 自由输入底栏。
-# input 绑定 default wx_free_input_text；发送按钮和回车都会调用 wx_send_free_chat()。
-screen wx_free_chat_bar():
+# 表情包按钮的 Popconfirm 弹窗。
+screen wx_sticker_popconfirm():
     frame:
-        xalign 0.5
-        yalign 1.0
-        xfill True
-        ysize 260
-        padding (0, 0)
-        background Solid("#7f91a8")
+        xpos 850
+        ypos 35
+        xysize (245, 245)
+        padding (16, 16)
+        background Solid("#ffffff")
 
-        hbox:
+        add "images/wechat/milk_tea_sticker.png":
             xalign 0.5
             yalign 0.5
-            spacing 22
+            xysize (150, 220)
 
-            frame:
-                xsize 1320
-                ysize 92
-                padding (26, 18)
-                background Solid("#ffffff")
-
-                input:
-                    value VariableInputValue("wx_free_input_text")
-                    # 单次输入最大长度。以后觉得玩家回复太短/太长，就改 length。
-                    length 80
-                    size 31
-                    color "#111111"
-                    xfill True
-
-            textbutton "发送":
-                xsize 170
-                ysize 92
-                background Solid("#e9f2ff")
-                hover_background Solid("#d7e9ff")
-                action Function(wx_send_free_chat)
-                text_size 31
-                text_color "#111111"
-                text_xalign 0.5
-                text_yalign 0.5
-
-    key "K_RETURN" action Function(wx_send_free_chat)
+    text "▼":
+        xpos 956
+        ypos 268
+        size 34
+        color "#ffffff"
 
 
 # 朋友圈页面。
