@@ -269,53 +269,70 @@ screen wx_wechat_bottom_bar(mode="free", choices=None):
                 xsize 1090
                 yfill True
                 padding (0, 0)
-                background Solid("#1f2522")
+                background Solid("#f6f6f6")
 
-                hbox:
-                    xalign 0.5
-                    yalign 0.5
-                    spacing 22
+                vbox:
+                    xfill True
+                    yfill True
 
-                    textbutton ")))":
-                        xsize 72
-                        ysize 72
+                    # 顶部分割线
+                    frame:
+                        xfill True
+                        ysize 1
+                        padding (0, 0)
+                        background Solid("#d9d9d9")
+
+                    frame:
+                        xfill True
+                        yfill True
+                        padding (0, 0)
                         background None
-                        hover_background Solid("#303733")
-                        action NullAction()
-                        text_size 30
-                        text_color "#d8d8d8"
-                        text_hover_color "#ffffff"
-                        text_xalign 0.5
-                        text_yalign 0.5
 
-                    if mode == "free":
-                        use wx_free_chat_input_box()
-                    else:
-                        use wx_scripted_choice_input_box(choice_items)
+                        hbox:
+                            xalign 0.5
+                            yalign 0.5
+                            spacing 22
 
-                    textbutton "☺":
-                        xsize 72
-                        ysize 72
-                        background None
-                        hover_background Solid("#303733")
-                        action SetScreenVariable("sticker_open", not sticker_open)
-                        text_size 52
-                        text_color "#d8d8d8"
-                        text_hover_color "#ffffff"
-                        text_xalign 0.5
-                        text_yalign 0.5
+                            textbutton ")))":
+                                xsize 72
+                                ysize 72
+                                background None
+                                hover_background Solid("#e0e0e0")
+                                action NullAction()
+                                text_size 30
+                                text_color "#666666"
+                                text_hover_color "#333333"
+                                text_xalign 0.5
+                                text_yalign 0.5
 
-                    textbutton "+":
-                        xsize 72
-                        ysize 72
-                        background None
-                        hover_background Solid("#303733")
-                        action NullAction()
-                        text_size 56
-                        text_color "#d8d8d8"
-                        text_hover_color "#ffffff"
-                        text_xalign 0.5
-                        text_yalign 0.5
+                            if mode == "free":
+                                use wx_free_chat_input_box()
+                            else:
+                                use wx_scripted_choice_input_box(choice_items)
+
+                            textbutton "☺":
+                                xsize 72
+                                ysize 72
+                                background None
+                                hover_background Solid("#e0e0e0")
+                                action SetScreenVariable("sticker_open", not sticker_open)
+                                text_size 52
+                                text_color "#666666"
+                                text_hover_color "#333333"
+                                text_xalign 0.5
+                                text_yalign 0.5
+
+                            textbutton "+":
+                                xsize 72
+                                ysize 72
+                                background None
+                                hover_background Solid("#e0e0e0")
+                                action NullAction()
+                                text_size 56
+                                text_color "#666666"
+                                text_hover_color "#333333"
+                                text_xalign 0.5
+                                text_yalign 0.5
 
 
 # AI 自由聊天的真实输入框。回车发送，右侧按钮只保留视觉摆设。
