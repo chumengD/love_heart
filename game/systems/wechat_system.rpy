@@ -19,6 +19,13 @@ default wx_active_message_index = 0
 # 用 default 保存，是为了让存档和回滚能记录当前聊天进度。
 default wx_chat_messages = []
 
+# 等待逐条显示的女主消息。
+default wx_pending_messages = []
+
+# 聊天框自动下滑用的版本号。每追加一条可见消息就递增一次。
+default wx_chat_scroll_version = 0
+default wx_chat_scrolled_version = -1
+
 # 最近一条微信消息对应的旁白或男主心理。
 # 演示流程会把它放进 Ren'Py 默认文本框里显示。
 default wx_last_narration = ""
@@ -123,6 +130,56 @@ init python:
         return wx_contact_side(message.get("speaker", WX_DEFAULT_CONTACT_ID))
 
 
+    # 女主消息逐条出现的间隔。
+    WX_HEROINE_MESSAGE_DELAY = 0.75
+
+
+    def wx_mark_chat_needs_scroll():
+        global wx_chat_scroll_version
+
+        wx_chat_scroll_version += 1
+
+
+    def wx_chat_needs_scroll():
+        return wx_chat_scrolled_version != wx_chat_scroll_version
+
+
+    def wx_mark_chat_scrolled():
+        global wx_chat_scrolled_version
+
+        wx_chat_scrolled_version = wx_chat_scroll_version
+
+
+    def wx_append_visible_message(message):
+        global wx_chat_messages
+
+        next_messages = list(wx_chat_messages)
+        next_messages.append(message)
+        wx_chat_messages = next_messages
+        wx_mark_chat_needs_scroll()
+
+
+    def wx_queue_message(message):
+        global wx_pending_messages
+
+        next_pending = list(wx_pending_messages)
+        next_pending.append(message)
+        wx_pending_messages = next_pending
+
+
+    def wx_reveal_next_pending_message():
+        global wx_pending_messages
+
+        if not wx_pending_messages:
+            return
+
+        next_pending = list(wx_pending_messages)
+        message = next_pending.pop(0)
+        wx_pending_messages = next_pending
+        wx_append_visible_message(message)
+        renpy.restart_interaction()
+
+
     # 读取当前剧本聊天节点。
     # node_id 对应 wx_scripted_chat["nodes"] 里的 key。
     def wx_get_scripted_node(node_id=None):
@@ -133,33 +190,30 @@ init python:
         
     # 追加一条聊天消息到当前聊天记录。
     # 注意这里会复制 list 再赋值，方便 Ren'Py 的存档/回滚系统识别状态变化。
-    def wx_append_message(speaker, text):
-        global wx_chat_messages
-
+    def wx_append_message(speaker, text, slow_heroine=True):
         if not text:
             return
 
-        next_messages = list(wx_chat_messages)
-        next_messages.append({
+        message = {
             "speaker": speaker,
             "text": str(text),
-        })
-        wx_chat_messages = next_messages
+        }
+
+        if slow_heroine and (speaker == WX_DEFAULT_CONTACT_ID or wx_pending_messages):
+            wx_queue_message(message)
+        else:
+            wx_append_visible_message(message)
 
 
     # 追加一条图片表情消息。表情入口会复用聊天气泡布局，只是不显示文字气泡背景。
     def wx_append_sticker(speaker, image):
-        global wx_chat_messages
-
         if not image:
             return
 
-        next_messages = list(wx_chat_messages)
-        next_messages.append({
+        wx_append_visible_message({
             "speaker": speaker,
             "image": str(image),
         })
-        wx_chat_messages = next_messages
 
 
     # 点击奶茶表情包后发送给女主；只触发一次，避免重复刷好感和重复消息。
@@ -199,6 +253,7 @@ init python:
         global wx_active_node_id
         global wx_active_message_index
         global wx_chat_messages
+        global wx_pending_messages
         global wx_last_narration
 
         start_node = str(node_id or wx_scripted_chat.get("start_node", "1"))
@@ -208,6 +263,7 @@ init python:
         wx_active_node_id = start_node
         wx_active_message_index = 0
         wx_chat_messages = []
+        wx_pending_messages = []
         wx_last_narration = ""
 
 
@@ -237,6 +293,7 @@ init python:
         wx_append_message(
             message.get("speaker", WX_DEFAULT_CONTACT_ID),
             message.get("text", ""),
+            slow_heroine=False,
         )
         wx_last_narration = message.get("narration", "")
         return True
@@ -379,6 +436,7 @@ init python:
         global wx_active_node_id
         global wx_active_message_index
         global wx_chat_messages
+        global wx_pending_messages
         global wx_free_input_text
         global wx_last_narration
 
@@ -387,6 +445,7 @@ init python:
         wx_active_node_id = ""
         wx_active_message_index = 0
         wx_chat_messages = []
+        wx_pending_messages = []
         wx_free_input_text = ""
         wx_last_narration = ""
         wx_append_messages(wx_free_chat.get("initial_messages", []))
@@ -554,7 +613,7 @@ init python:
     # 打开 wx_phone 屏幕时的兜底初始化。
     # 如果剧情忘了先初始化，这里会按当前模式加载默认聊天。
     def wx_ensure_default_state():
-        if wx_chat_messages:
+        if wx_chat_messages or wx_pending_messages:
             return
 
         if wx_active_chat_mode == "free":

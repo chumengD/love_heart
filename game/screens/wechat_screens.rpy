@@ -221,24 +221,30 @@ screen wx_sidebar():
 
 
 # 聊天记录区域。
-# viewport 支持鼠标滚轮和拖动；yinitial 1.0 尽量让新消息后保持底部可见。
+# viewport 支持鼠标滚轮和拖动；新消息出现后会自动下滑到底部。
 screen wx_chat_page():
-    viewport:
+    viewport id "wx_chat_viewport":
+        xfill True
+        yfill True
+        mousewheel True
+        yinitial 1.0
+
+        vbox:
             xfill True
-            yfill True
-            mousewheel True
-            yinitial 1.0
+            spacing 28
+            # xoffset/yoffset 是聊天内容内边距。不要在 vbox 上写 padding，Ren'Py 不支持。
+            xoffset 120
+            yoffset 120
+            xmaximum 1110
 
-            vbox:
-                xfill True
-                spacing 28
-                # xoffset/yoffset 是聊天内容内边距。不要在 vbox 上写 padding，Ren'Py 不支持。
-                xoffset 120
-                yoffset 120
-                xmaximum 1110
+            for message in wx_chat_messages:
+                use wx_chat_message(message)
 
-                for message in wx_chat_messages:
-                    use wx_chat_message(message)
+    if wx_pending_messages:
+        timer WX_HEROINE_MESSAGE_DELAY action Function(wx_reveal_next_pending_message) repeat True
+
+    if wx_chat_needs_scroll():
+        timer 0.01 action [Scroll("wx_chat_viewport", "vertical increase", amount=1000000, delay=0.12), Function(wx_mark_chat_scrolled)]
 
 
 # 单条聊天气泡。
