@@ -29,8 +29,8 @@ screen wx_phone(standalone=False):
     add Solid("#000000")
 
     $ wx_show_bottom_bar = wx_current_view == "chat" and wx_active_chat_mode in ("free", "scripted")
-    $ wx_chat_height = 620 if wx_active_chat_mode == "scripted" else 776
-    $ wx_bottom_height = 160 if wx_active_chat_mode == "scripted" else 260
+    $ wx_bottom_height = 112 if wx_active_chat_mode == "scripted" else 150
+    $ wx_chat_height = 668 if wx_active_chat_mode == "scripted" else 886
 
     # 中间微信主体：左侧栏 110px + 内容区 1160px。
     vbox:
@@ -106,15 +106,15 @@ screen wx_phone(standalone=False):
                                 hbox:
                                     xalign 0.5
                                     yalign 0.5
-                                    spacing 22
+                                    spacing 18
 
                                     textbutton ")))":
-                                        xsize 72
-                                        ysize 72
+                                        xsize 58
+                                        ysize 58
                                         background None
                                         hover_background Solid("#e0e0e0")
                                         action NullAction()
-                                        text_size 30
+                                        text_size 25
                                         text_color "#666666"
                                         text_hover_color "#333333"
                                         text_xalign 0.5
@@ -126,24 +126,24 @@ screen wx_phone(standalone=False):
                                         use wx_scripted_chat_input_box()
 
                                     textbutton "☺":
-                                        xsize 72
-                                        ysize 72
+                                        xsize 58
+                                        ysize 58
                                         background None
                                         hover_background Solid("#e0e0e0")
                                         action SetScreenVariable("sticker_open", not sticker_open)
-                                        text_size 52
+                                        text_size 42
                                         text_color "#666666"
                                         text_hover_color "#333333"
                                         text_xalign 0.5
                                         text_yalign 0.5
 
                                     textbutton "+":
-                                        xsize 72
-                                        ysize 72
+                                        xsize 58
+                                        ysize 58
                                         background None
                                         hover_background Solid("#e0e0e0")
                                         action NullAction()
-                                        text_size 56
+                                        text_size 44
                                         text_color "#666666"
                                         text_hover_color "#333333"
                                         text_xalign 0.5
@@ -336,8 +336,8 @@ screen wx_avatar(contact_id):
 screen wx_free_chat_input_box():
     frame:
         xsize 610
-        ysize 82
-        padding (24, 0)
+        ysize 64
+        padding (22, 0)
         background Solid("#ffffff")
 
         fixed:
@@ -347,14 +347,14 @@ screen wx_free_chat_input_box():
             if wx_ai_waiting:
                 text "等待回复...":
                     xpos 0
-                    ypos 22
-                    size 34
+                    ypos 16
+                    size 28
                     color "#9a9a9a"
             elif not wx_free_input_text:
                 text "发送消息...":
                     xpos 0
-                    ypos 22
-                    size 34
+                    ypos 16
+                    size 28
                     color "#9a9a9a"
 
             input:
@@ -362,17 +362,17 @@ screen wx_free_chat_input_box():
                 # 单次输入最大长度。以后觉得玩家回复太短/太长，就改 length。
                 length 80
                 xpos 0
-                ypos 20
+                ypos 15
                 xfill True
-                size 34
+                size 28
                 color "#2d3338"
 
 
 screen wx_scripted_chat_input_box():
     frame:
         xsize 610
-        ysize 82
-        padding (24, 0)
+        ysize 64
+        padding (22, 0)
         background Solid("#ffffff")
 
 
