@@ -555,9 +555,9 @@ label wx_scripted_chat_flow:
         $ wx_choices = wx_current_scripted_choices()
 
         if wx_choices:
-            $ wx_choice_result = renpy.call_screen("wx_scripted_choice_bar")
-            if wx_choice_result == "wechat_close":
-                return
+            $ wx_choice_items = [(choice.get("text", ""), choice_index) for choice_index, choice in enumerate(wx_choices)]
+            $ wx_choice_result = renpy.display_menu(wx_choice_items)
+            $ wx_choose_scripted_option(wx_choice_result)
             with dissolve
             $ wx_narration = wx_get_last_narration()
             if wx_narration:

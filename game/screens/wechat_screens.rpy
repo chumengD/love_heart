@@ -309,36 +309,6 @@ screen wx_avatar(contact_id):
                 color "#ffffff"
 
 
-# 剧本选项底栏。
-# 只有当前节点消息全部显示完并且有 choices 时，流程才 call 这个 screen。
-screen wx_scripted_choice_bar():
-    modal True
-    zorder 200
-    $ choices = wx_current_scripted_choices()
-    $ choice_items = choices or []
-
-    if choice_items:
-        vbox:
-            xalign 0.5
-            yalign 1.0
-            yoffset -300
-            spacing 22
-
-            for choice_index, choice in enumerate(choice_items):
-                textbutton choice.get("text", ""):
-                    xsize 600
-                    ysize 65
-                    xalign 0.5
-                    action [Function(wx_choose_scripted_option, choice_index), Return(choice_index)]
-    else:
-        textbutton "继续":
-            xalign 0.5
-            yalign 1.0
-            yoffset -300
-            xsize 300
-            ysize 65
-            action Return("continue")
-
 
 # AI 自由聊天的真实输入框。回车发送，右侧按钮只保留视觉摆设。
 screen wx_free_chat_input_box():
@@ -375,50 +345,6 @@ screen wx_free_chat_input_box():
                 size 34
                 color "#2d3338"
 
-
-# 剧本选项显示在微信输入框位置，替代旧的大块蓝色选项底栏。
-screen wx_scripted_choice_input_box(choices):
-    $ choice_count = len(choices)
-    $ choice_width = 610 if choice_count <= 1 else max(180, int((610 - (choice_count - 1) * 10) / choice_count))
-
-    frame:
-        xsize 610
-        ysize 82
-        padding (14, 0)
-        background Solid("#ffffff")
-
-        if choice_count:
-            hbox:
-                xalign 0.5
-                yalign 0.5
-                spacing 10
-
-                for choice_index, choice in enumerate(choices):
-                    textbutton choice.get("text", ""):
-                        xsize choice_width
-                        ysize 58
-                        background Solid("#f4f4f4")
-                        hover_background Solid("#e8f1ff")
-                        action [ Function(wx_choose_scripted_option, choice_index), Return(choice_index) ]
-                        text_size 24
-                        text_color "#222222"
-                        text_hover_color "#111111"
-                        text_xalign 0.5
-                        text_yalign 0.5
-        else:
-            textbutton "继续":
-                xalign 0.5
-                yalign 0.5
-                xsize 220
-                ysize 58
-                background Solid("#f4f4f4")
-                hover_background Solid("#e8f1ff")
-                action Return("continue")
-                text_size 26
-                text_color "#222222"
-                text_hover_color "#111111"
-                text_xalign 0.5
-                text_yalign 0.5
 
 
 # 表情包按钮的 Popconfirm 弹窗。
