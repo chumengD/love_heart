@@ -1,4 +1,4 @@
-本项目的根目录是D:\renpy_game\prtactice
+renpy.exe在F:\Download\renpy-8.5.2-sdk文件夹下
 在项目中，修改文件前，如果有未提交修改的文件，提交commit后再进行文件的修改，修改完文件后也要提交commit，并且commit的信息要用中文来写。
 
 在文件中只能修改我提到的地方，不能乱改结构体与其他函数。
