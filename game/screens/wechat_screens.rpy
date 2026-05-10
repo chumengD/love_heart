@@ -84,7 +84,7 @@ screen wx_phone(standalone=False):
                         xsize 1160
                         yfill True
                         padding (0, 0)
-                        background Solid("#f6f6f6")
+                        background Solid("#272a28")
 
                         vbox:
                             xfill True
