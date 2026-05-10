@@ -28,119 +28,119 @@ screen wx_phone(standalone=False):
     # 外侧黑色背景，对应截图中手机/窗口两边的黑边。
     add Solid("#000000")
 
-    # 中间微信主体：左侧栏 110px + 内容区 1170px。
-    hbox:
+    if wx_current_view == "chat" and wx_active_chat_mode == "free":
+        key "K_RETURN" action Function(wx_send_free_chat)
+
+    # 中间微信主体：左侧栏 110px + 内容区 1160px。
+    vbox:
         xalign 0.5
         ypos 0
         yanchor 0.0
-        xsize 1200
-        ysize 776
+        xsize 1270
+        spacing 0
 
-        use wx_sidebar()
-
-        # 内容区。wx_current_view 决定显示聊天还是朋友圈。
-        frame:
-            xsize 1160
+        hbox:
+            xsize 1270
             ysize 776
-            padding (25, 20)
-            background Solid("#f4f4f4")
 
-            if wx_current_view == "moments":
-                use wx_moments_page()
-            else:
-                use wx_chat_page()
+            use wx_sidebar()
 
-    # AI 自由聊天使用仿微信输入栏；剧本聊天阶段保留 Ren'Py 默认文本框显示旁白/心理。
-    if wx_current_view == "chat" and wx_active_chat_mode == "free":
-        # input 绑定 default wx_free_input_text；发送按钮和回车都会调用 wx_send_free_chat()。
-        key "K_RETURN" action Function(wx_send_free_chat)
+            # 内容区。wx_current_view 决定显示聊天还是朋友圈。
+            frame:
+                xsize 1160
+                ysize 776
+                padding (25, 20)
+                background Solid("#f4f4f4")
 
-        fixed:
-            xalign 0.5
-            yalign 1.0
-            xsize 1300
-            ysize 520
+                if wx_current_view == "moments":
+                    use wx_moments_page()
+                else:
+                    use wx_chat_page()
 
-            if sticker_open:
-                use wx_sticker_popconfirm()
-
-            hbox:
-                xpos 0
-                ypos 260
-                xsize 1200
+        # AI 自由聊天使用仿微信输入栏；剧本聊天阶段保留 Ren'Py 默认文本框显示旁白/心理。
+        if wx_current_view == "chat" and wx_active_chat_mode == "free":
+            fixed:
+                xsize 1270
                 ysize 260
 
-                frame:
-                    xsize 110
-                    yfill True
-                    padding (0, 0)
-                    background Solid("#3d3d43")
+                if sticker_open:
+                    use wx_sticker_popconfirm()
 
-                frame:
-                    xsize 1090
-                    yfill True
-                    padding (0, 0)
-                    background Solid("#f6f6f6")
+                hbox:
+                    xsize 1270
+                    ysize 260
 
-                    vbox:
-                        xfill True
+                    frame:
+                        xsize 110
                         yfill True
+                        padding (0, 0)
+                        background Solid("#3d3d43")
 
-                        # 顶部分割线
-                        frame:
-                            xfill True
-                            ysize 1
-                            padding (0, 0)
-                            background Solid("#d9d9d9")
+                    frame:
+                        xsize 1160
+                        yfill True
+                        padding (0, 0)
+                        background Solid("#f6f6f6")
 
-                        frame:
+                        vbox:
                             xfill True
                             yfill True
-                            padding (0, 0)
-                            background None
 
-                            hbox:
-                                xalign 0.5
-                                yalign 0.5
-                                spacing 22
+                            # 顶部分割线
+                            frame:
+                                xfill True
+                                ysize 1
+                                padding (0, 0)
+                                background Solid("#d9d9d9")
 
-                                textbutton ")))":
-                                    xsize 72
-                                    ysize 72
-                                    background None
-                                    hover_background Solid("#e0e0e0")
-                                    action NullAction()
-                                    text_size 30
-                                    text_color "#666666"
-                                    text_hover_color "#333333"
-                                    text_xalign 0.5
-                                    text_yalign 0.5
+                            frame:
+                                xfill True
+                                yfill True
+                                padding (0, 0)
+                                background None
 
-                                use wx_free_chat_input_box()
+                                hbox:
+                                    xalign 0.5
+                                    yalign 0.5
+                                    spacing 22
 
-                                textbutton "☺":
-                                    xsize 72
-                                    ysize 72
-                                    background None
-                                    hover_background Solid("#e0e0e0")
-                                    action SetScreenVariable("sticker_open", not sticker_open)
-                                    text_size 52
-                                    text_color "#666666"
-                                    text_hover_color "#333333"
-                                    text_xalign 0.5
-                                    text_yalign 0.5
+                                    textbutton ")))":
+                                        xsize 72
+                                        ysize 72
+                                        background None
+                                        hover_background Solid("#e0e0e0")
+                                        action NullAction()
+                                        text_size 30
+                                        text_color "#666666"
+                                        text_hover_color "#333333"
+                                        text_xalign 0.5
+                                        text_yalign 0.5
 
-                                textbutton "+":
-                                    xsize 72
-                                    ysize 72
-                                    background None
-                                    hover_background Solid("#e0e0e0")
-                                    action NullAction()
-                                    text_size 56
-                                    text_color "#666666"
-                                    text_hover_color "#333333"
-                                    text_xalign 0.5
-                                    text_yalign 0.5
+                                    use wx_free_chat_input_box()
+
+                                    textbutton "☺":
+                                        xsize 72
+                                        ysize 72
+                                        background None
+                                        hover_background Solid("#e0e0e0")
+                                        action SetScreenVariable("sticker_open", not sticker_open)
+                                        text_size 52
+                                        text_color "#666666"
+                                        text_hover_color "#333333"
+                                        text_xalign 0.5
+                                        text_yalign 0.5
+
+                                    textbutton "+":
+                                        xsize 72
+                                        ysize 72
+                                        background None
+                                        hover_background Solid("#e0e0e0")
+                                        action NullAction()
+                                        text_size 56
+                                        text_color "#666666"
+                                        text_hover_color "#333333"
+                                        text_xalign 0.5
+                                        text_yalign 0.5
 
 
 # 左侧导航栏。
@@ -351,7 +351,7 @@ screen wx_free_chat_input_box():
 screen wx_sticker_popconfirm():
     frame:
         xpos 850
-        ypos 35
+        ypos -225
         xysize (245, 245)
         padding (16, 16)
         background Solid("#ffffff")
@@ -363,7 +363,7 @@ screen wx_sticker_popconfirm():
 
     text "▼":
         xpos 956
-        ypos 268
+        ypos 8
         size 34
         color "#ffffff"
 
