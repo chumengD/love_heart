@@ -142,6 +142,6 @@ label Act1_wedding:
     with dissolve
 
     #我觉得这里不用再描写动作，
-    #todo 调用好感度韩函数+25
+    $ lc_set_affection(25)
     #todo 成就【初遇心动】
     return 

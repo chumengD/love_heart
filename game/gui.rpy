@@ -49,7 +49,8 @@ define gui.muted_color = '#002851'
 define gui.hover_muted_color = '#003d7a'
 
 ## 对话和菜单选择文本使用的颜色。
-define gui.text_color = '#ffffff'
+define gui.text_color = '#000000'
+define gui.text_size = 26
 define gui.interface_text_color = '#ffffff'
 
 
@@ -103,8 +104,8 @@ define gui.textbox_yalign = 1.0
 
 ## 叙述角色名字相对于文本框的位置。可以是从左侧或顶部起的整数像素，或设为 0.5 来
 ## 居中。
-define gui.name_xpos = 360
-define gui.name_ypos = 0
+define gui.name_xpos = 240
+define gui.name_ypos = 10
 
 ## 角色名字的水平对齐方式。0.0 为左侧对齐，0.5 为居中显示，而 1.0 为右侧对齐。
 define gui.name_xalign = 0.0

@@ -33,14 +33,14 @@ screen wx_phone(standalone=False):
         ypos 0
         yanchor 0.0
         xsize 1200
-        ysize 820
+        ysize 776
 
         use wx_sidebar()
 
         # 内容区。wx_current_view 决定显示聊天还是朋友圈。
         frame:
             xsize 1160
-            ysize 820
+            ysize 776
             padding (25, 20)
             background Solid("#f4f4f4")
 
