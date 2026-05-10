@@ -17,10 +17,9 @@ transform wx_message_dissolve:
 # 自由聊天演示：
 # $ wx_start_free_chat()
 # call screen wx_phone
-screen wx_phone(standalone=False):
+screen wx_phone():
     tag wx_phone
-    modal standalone
-    zorder (200 if standalone else 0)
+    modal False
 
     # 如果剧情没有提前初始化聊天，这里会自动加载默认聊天，避免空白。
     on "show" action Function(wx_ensure_default_state)
@@ -53,22 +52,6 @@ screen wx_phone(standalone=False):
     # AI 自由聊天使用仿微信输入栏；剧本聊天阶段保留 Ren'Py 默认文本框显示旁白/心理。
     if wx_current_view == "chat" and wx_active_chat_mode == "free":
         use wx_free_chat_bar()
-
-    if standalone:
-        textbutton _("返回"):
-            xalign 0.985
-            yalign 0.025
-            xsize 120
-            ysize 50
-            background Solid("#ffffff")
-            hover_background Solid("#e5e5e5")
-            action Hide("wx_phone")
-            text_size 24
-            text_color "#111111"
-            text_xalign 0.5
-            text_yalign 0.5
-
-        key "game_menu" action Hide("wx_phone")
 
 
 # 左侧导航栏。
