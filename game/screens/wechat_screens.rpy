@@ -258,7 +258,7 @@ screen wx_chat_message(message):
     $ message_image = message.get("image", "")
 
     if side == "right":
-        # 右侧气泡：主视角男主。文本右对齐，绿色气泡。
+        # 右侧气泡：主视角男主。文本左对齐，绿色气泡。
         hbox at wx_message_dissolve:
             xalign 1.0
             spacing 16
@@ -279,8 +279,8 @@ screen wx_chat_message(message):
                         size 31
                         color "#2d3338"
                         xmaximum 550
-                        text_align 1.0
-                        xalign 1.0
+                        text_align 0.0
+                        xalign 0.0
 
             use wx_avatar(speaker)
     else:
