@@ -28,9 +28,6 @@ screen wx_phone(standalone=False):
     # 外侧黑色背景，对应截图中手机/窗口两边的黑边。
     add Solid("#000000")
 
-    if wx_current_view == "chat" and wx_active_chat_mode == "free":
-        key "K_RETURN" action Function(wx_send_free_chat)
-
     # 中间微信主体：左侧栏 110px + 内容区 1160px。
     vbox:
         xalign 0.5
@@ -57,8 +54,11 @@ screen wx_phone(standalone=False):
                 else:
                     use wx_chat_page()
 
-        # AI 自由聊天使用仿微信输入栏；剧本聊天阶段保留 Ren'Py 默认文本框显示旁白/心理。
-        if wx_current_view == "chat" and wx_active_chat_mode == "free":
+        # 微信底部栏。自由聊天显示真实输入框，剧本聊天显示当前提示/心理。
+        if wx_current_view == "chat" and wx_active_chat_mode in ("free", "scripted"):
+            if wx_active_chat_mode == "free":
+                key "K_RETURN" action Function(wx_send_free_chat)
+
             fixed:
                 xsize 1270
                 ysize 260
@@ -116,7 +116,10 @@ screen wx_phone(standalone=False):
                                         text_xalign 0.5
                                         text_yalign 0.5
 
-                                    use wx_free_chat_input_box()
+                                    if wx_active_chat_mode == "free":
+                                        use wx_free_chat_input_box()
+                                    else:
+                                        use wx_scripted_chat_prompt_box()
 
                                     textbutton "☺":
                                         xsize 72
@@ -343,6 +346,26 @@ screen wx_free_chat_input_box():
                 ypos 20
                 xfill True
                 size 34
+                color "#2d3338"
+
+
+screen wx_scripted_chat_prompt_box():
+    frame:
+        xsize 610
+        ysize 82
+        padding (24, 0)
+        background Solid("#ffffff")
+
+        fixed:
+            xfill True
+            yfill True
+
+            text (wx_last_narration if wx_last_narration else "点击继续..."):
+                xpos 0
+                yalign 0.5
+                xmaximum 560
+                size 30
+                line_spacing 2
                 color "#2d3338"
 
 

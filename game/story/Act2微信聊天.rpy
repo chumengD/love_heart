@@ -36,11 +36,12 @@ label Act2_wx:
     show screen wx_phone
     pause 0.4
 
+    $ wx_last_narration = "要发什么……？"
     menu chat1:
-        "要发什么……？"
         "你叫什么名字？也是大学生吗？":
             $ lc_add_affection(-3)
             $ act2_flag = 1
+            $ wx_last_narration = ""
             $ wx_append_message("player", "你叫什么名字？也是大学生吗？")
             pause 0.4
             $ wx_append_message("heroine", "嗯，我叫xx，在xx大学。")
@@ -57,13 +58,17 @@ label Act2_wx:
             pause 0.4
             $ wx_append_message("heroine", "今天不早了，先不聊了哦。")
             pause 0.4
-            "对话很快停在了礼貌又尴尬的位置。"
-            "她的回复不算冷淡，却也没有继续展开的意思。"
-            "触发成就：【尴尬破冰】"
+            $ wx_last_narration = "对话很快停在了礼貌又尴尬的位置。"
+            pause
+            $ wx_last_narration = "她的回复不算冷淡，却也没有继续展开的意思。"
+            pause
+            $ wx_last_narration = "触发成就：【尴尬破冰】"
+            pause
 
         "白天撞疼你了吧？实在不好意思，婚礼人多太乱了":
             $ lc_add_affection(4)
             $ act2_flag = 2
+            $ wx_last_narration = ""
             $ wx_append_message("player", "白天撞疼你了吧？实在不好意思，婚礼人太乱了。")
             pause 0.4
             $ wx_append_message("heroine", "没事啦，我本来也往前挤嘛。")
@@ -94,12 +99,15 @@ label Act2_wx:
             pause 0.4
             $ wx_append_message("heroine", "毕竟大三了嘛，在很紧张地写论文呢。")
             pause 0.4
-            "简单几句来回，气氛缓和温柔。"
-            "她主动接话，没有刻意结束聊天。"
+            $ wx_last_narration = "简单几句来回，气氛缓和温柔。"
+            pause
+            $ wx_last_narration = "她主动接话，没有刻意结束聊天。"
+            pause
 
         "今天婚礼的捧花寓意超好，没想到我们这么有缘分":
             $ lc_add_affection(6)
             $ act2_flag = 3
+            $ wx_last_narration = ""
             $ wx_append_message("player", "今天婚礼的捧花寓意超好，没想到我们这么有缘分。")
             pause 0.4
             $ wx_append_message("heroine", "我也觉得！第一次抢捧花还能撞到人，缘分拉满了哈哈。")
@@ -130,29 +138,39 @@ label Act2_wx:
             pause 0.4
             $ wx_append_message("heroine", "毕竟大三了嘛，在很紧张地写论文呢。你呢？")
             pause 0.4
-            "她主动分享自己参加婚礼的感受和生活经历。"
-            "聊天氛围比想象中更快升温。"
+            $ wx_last_narration = "她主动分享自己参加婚礼的感受和生活经历。"
+            pause
+            $ wx_last_narration = "聊天氛围比想象中更快升温。"
+            pause
 
+    $ wx_last_narration = "要不要用表情包再破冰？"
     menu:
-        "要不要用表情包再破冰？"
         "发送一杯奶茶卡通表情":
             $ act2_sticker_break = True
             $ lc_add_affection(8)
+            $ wx_last_narration = ""
             $ wx_append_message("player", "【奶茶表情包】")
             pause 0.4
             $ wx_append_message("heroine", "【忍不住笑出来的表情包】")
             pause 0.4
             $ wx_append_message("heroine", "你还挺可爱的嘛。")
             pause 0.4
-            "简单一句话，让我盯着屏幕傻笑了好久。"
-            "触发成就：【表情包破冰】"
+            $ wx_last_narration = "简单一句话，让我盯着屏幕傻笑了好久。"
+            pause
+            $ wx_last_narration = "触发成就：【表情包破冰】"
+            pause
         "今天先聊到这里":
-            "我忍住继续发消息的冲动，把手机放到枕边。"
+            $ wx_last_narration = "我忍住继续发消息的冲动，把手机放到枕边。"
+            pause
 
-    "之后几天，我们开始断断续续地分享日常。"
-    "她偶尔会在朋友圈发自己做的甜品、分享的音乐、读书笔记，还有黄昏晚霞。"
-    "我点赞过，也认真评论过。"
-    "她会回一句“嘿嘿谢谢啦~”，语气比刚认识时自然了很多。"
+    $ wx_last_narration = "之后几天，我们开始断断续续地分享日常。"
+    pause
+    $ wx_last_narration = "她偶尔会在朋友圈发自己做的甜品、分享的音乐、读书笔记，还有黄昏晚霞。"
+    pause
+    $ wx_last_narration = "我点赞过，也认真评论过。"
+    pause
+    $ wx_last_narration = "她会回一句“嘿嘿谢谢啦~”，语气比刚认识时自然了很多。"
+    pause
 
     $ wx_append_message("heroine", "这个水课老师好烦呐，只是念ppt，还不让我们看手机。")
     pause 0.4
@@ -165,22 +183,25 @@ label Act2_wx:
     $ wx_append_message("heroine", "好多事情呀，我都忙晕了。")
     pause 0.4
 
+    $ wx_last_narration = "她被课程和作业压得有点烦，我该怎么回？"
     menu:
-        "她被课程和作业压得有点烦，我该怎么回？"
         "加油，坚持一下就下课啦":
             $ lc_add_affection(3)
+            $ wx_last_narration = ""
             $ wx_append_message("player", "加油，坚持一下就下课啦。")
             pause 0.4
             $ wx_append_message("heroine", "嗯嗯，好哦。")
             pause 0.4
         "专业课确实很累，有需要我帮忙的就跟我说哦":
             $ lc_add_affection(5)
+            $ wx_last_narration = ""
             $ wx_append_message("player", "专业课确实很累，慢慢写，不用着急，有需要我帮忙的就跟我说哦。")
             pause 0.4
             $ wx_append_message("heroine", "嘿嘿，好呀，谢谢你。")
             pause 0.4
         "别烦啦，给你分享一个搞笑短视频":
             $ lc_add_affection(4)
+            $ wx_last_narration = ""
             $ wx_append_message("player", "别烦啦，给你分享一个搞笑短视频。")
             pause 0.4
             $ wx_append_message("player", "【搞笑短视频】")
@@ -188,7 +209,9 @@ label Act2_wx:
             $ wx_append_message("heroine", "哈哈哈哈哈哈哈哈！Xswl！")
             pause 0.4
 
-    "聊天框里的陌生感一点点消散。"
-    "我开始期待每一次手机震动。"
+    $ wx_last_narration = "聊天框里的陌生感一点点消散。"
+    pause
+    $ wx_last_narration = "我开始期待每一次手机震动。"
+    pause
     hide screen wx_phone
     return
