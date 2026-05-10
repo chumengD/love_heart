@@ -147,6 +147,34 @@ init python:
         wx_chat_messages = next_messages
 
 
+    # 追加一条图片表情消息。表情入口会复用聊天气泡布局，只是不显示文字气泡背景。
+    def wx_append_sticker(speaker, image):
+        global wx_chat_messages
+
+        if not image:
+            return
+
+        next_messages = list(wx_chat_messages)
+        next_messages.append({
+            "speaker": speaker,
+            "image": str(image),
+        })
+        wx_chat_messages = next_messages
+
+
+    # 点击奶茶表情包后发送给女主；只触发一次，避免重复刷好感和重复消息。
+    def wx_send_milk_tea_sticker():
+        global act2_sticker_break
+
+        if act2_sticker_break:
+            return
+
+        act2_sticker_break = True
+        wx_append_sticker(WX_PLAYER_CONTACT_ID, "images/wechat/milk_tea_sticker.png")
+        lc_add_affection(8, source="wechat:sticker:milk_tea")
+        wx_append_message(WX_DEFAULT_CONTACT_ID, "你还挺可爱的嘛。")
+
+
     # 批量追加消息。选项后的 reply_messages 会走这里。
     def wx_append_messages(messages):
         global wx_last_narration

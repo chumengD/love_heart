@@ -28,6 +28,10 @@ screen wx_phone(standalone=False):
     # 外侧黑色背景，对应截图中手机/窗口两边的黑边。
     add Solid("#000000")
 
+    $ wx_show_bottom_bar = wx_current_view == "chat" and wx_active_chat_mode in ("free", "scripted")
+    $ wx_chat_height = 620 if wx_active_chat_mode == "scripted" else 776
+    $ wx_bottom_height = 160 if wx_active_chat_mode == "scripted" else 260
+
     # 中间微信主体：左侧栏 110px + 内容区 1160px。
     vbox:
         xalign 0.5
@@ -38,14 +42,14 @@ screen wx_phone(standalone=False):
 
         hbox:
             xsize 1270
-            ysize 776
+            ysize wx_chat_height
 
             use wx_sidebar()
 
             # 内容区。wx_current_view 决定显示聊天还是朋友圈。
             frame:
                 xsize 1160
-                ysize 776
+                ysize wx_chat_height
                 padding (25, 20)
                 background Solid("#f4f4f4")
 
@@ -54,19 +58,21 @@ screen wx_phone(standalone=False):
                 else:
                     use wx_chat_page()
 
-        # AI 自由聊天使用仿微信输入栏；剧本聊天阶段保留 Ren'Py 默认文本框显示旁白/心理。
-        if wx_current_view == "chat" and wx_active_chat_mode == "free":
-            key "K_RETURN" action Function(wx_send_free_chat)
+        # 微信底部栏。剧本聊天只提供操作入口，台词仍走 Ren'Py 默认文本框。
+        if wx_show_bottom_bar:
+            if wx_active_chat_mode == "free":
+                key "K_RETURN" action Function(wx_send_free_chat)
+
             fixed:
                 xsize 1270
-                ysize 260
+                ysize wx_bottom_height
 
                 if sticker_open:
                     use wx_sticker_popconfirm()
 
                 hbox:
                     xsize 1270
-                    ysize 260
+                    ysize wx_bottom_height
 
                     frame:
                         xsize 110
@@ -114,7 +120,10 @@ screen wx_phone(standalone=False):
                                         text_xalign 0.5
                                         text_yalign 0.5
 
-                                    use wx_free_chat_input_box()
+                                    if wx_active_chat_mode == "free":
+                                        use wx_free_chat_input_box()
+                                    else:
+                                        use wx_scripted_chat_input_box()
 
                                     textbutton "☺":
                                         xsize 72
@@ -240,6 +249,7 @@ screen wx_chat_message(message):
     $ speaker = message.get("speaker", WX_DEFAULT_CONTACT_ID)
     $ side = wx_message_side(message)
     $ message_text = message.get("text", "")
+    $ message_image = message.get("image", "")
 
     if side == "right":
         # 右侧气泡：主视角男主。文本右对齐，绿色气泡。
@@ -250,17 +260,21 @@ screen wx_chat_message(message):
             null:
                 xfill True
 
-            frame:
-                xmaximum 610
-                padding (28, 18)
-                background Solid("#b9e99d")
+            if message_image:
+                add wx_clean_image_path(message_image):
+                    xysize (150, 220)
+            else:
+                frame:
+                    xmaximum 610
+                    padding (28, 18)
+                    background Solid("#b9e99d")
 
-                text message_text:
-                    size 31
-                    color "#2d3338"
-                    xmaximum 550
-                    text_align 1.0
-                    xalign 1.0
+                    text message_text:
+                        size 31
+                        color "#2d3338"
+                        xmaximum 550
+                        text_align 1.0
+                        xalign 1.0
 
             use wx_avatar(speaker)
     else:
@@ -270,17 +284,21 @@ screen wx_chat_message(message):
 
             use wx_avatar(speaker)
 
-            frame:
-                xmaximum 720
-                padding (28, 18)
-                background Solid("#ffffff")
+            if message_image:
+                add wx_clean_image_path(message_image):
+                    xysize (150, 220)
+            else:
+                frame:
+                    xmaximum 720
+                    padding (28, 18)
+                    background Solid("#ffffff")
 
-                text message_text:
-                    size 31
-                    color "#2d3338"
-                    xmaximum 660
-                    text_align 0.0
-                    xalign 0.0
+                    text message_text:
+                        size 31
+                        color "#2d3338"
+                        xmaximum 660
+                        text_align 0.0
+                        xalign 0.0
 
             null:
                 xfill True
@@ -344,6 +362,14 @@ screen wx_free_chat_input_box():
                 color "#2d3338"
 
 
+screen wx_scripted_chat_input_box():
+    frame:
+        xsize 610
+        ysize 82
+        padding (24, 0)
+        background Solid("#ffffff")
+
+
 # 表情包按钮的 Popconfirm 弹窗。
 screen wx_sticker_popconfirm():
     frame:
@@ -353,10 +379,15 @@ screen wx_sticker_popconfirm():
         padding (16, 16)
         background Solid("#ffffff")
 
-        add "images/wechat/milk_tea_sticker.png":
-            xalign 0.5
-            yalign 0.5
-            xysize (150, 220)
+        button:
+            background None
+            hover_background Solid("#f4f4f4")
+            action [Function(wx_send_milk_tea_sticker), SetScreenVariable("sticker_open", False)]
+
+            add "images/wechat/milk_tea_sticker.png":
+                xalign 0.5
+                yalign 0.5
+                xysize (150, 220)
 
     text "▼":
         xpos 956
