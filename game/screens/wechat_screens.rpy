@@ -128,21 +128,21 @@ screen wx_sidebar():
 # viewport 支持鼠标滚轮和拖动；yinitial 1.0 尽量让新消息后保持底部可见。
 screen wx_chat_page():
     viewport:
-        xfill True
-        yfill True
-        mousewheel True
-        yinitial 1.0
-
-        vbox:
             xfill True
-            spacing 28
-            # xoffset/yoffset 是聊天内容内边距。不要在 vbox 上写 padding，Ren'Py 不支持。
-            xoffset 120
-            yoffset 120
-            xmaximum 1110
+            yfill True
+            mousewheel True
+            yinitial 1.0
 
-            for message in wx_chat_messages:
-                use wx_chat_message(message)
+            vbox:
+                xfill True
+                spacing 28
+                # xoffset/yoffset 是聊天内容内边距。不要在 vbox 上写 padding，Ren'Py 不支持。
+                xoffset 120
+                yoffset 120
+                xmaximum 1110
+
+                for message in wx_chat_messages:
+                    use wx_chat_message(message)
 
 
 # 单条聊天气泡。
@@ -226,8 +226,29 @@ screen wx_scripted_choice_bar():
     modal True
     zorder 200
     $ choices = wx_current_scripted_choices()
+    $ choice_items = choices or []
 
-    use wx_wechat_bottom_bar("scripted", choices)
+    if choice_items:
+        vbox:
+            xalign 0.5
+            yalign 1.0
+            yoffset -300
+            spacing 22
+
+            for choice_index, choice in enumerate(choice_items):
+                textbutton choice.get("text", ""):
+                    xsize 600
+                    ysize 65
+                    xalign 0.5
+                    action [Function(wx_choose_scripted_option, choice_index), Return(choice_index)]
+    else:
+        textbutton "继续":
+            xalign 0.5
+            yalign 1.0
+            yoffset -300
+            xsize 300
+            ysize 65
+            action Return("continue")
 
 
 # 自由输入底栏。
@@ -247,7 +268,7 @@ screen wx_wechat_bottom_bar(mode="free", choices=None):
     fixed:
         xalign 0.5
         yalign 1.0
-        xsize 1200
+        xsize 1300
         ysize 520
 
         if sticker_open:

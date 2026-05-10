@@ -1,9 +1,9 @@
-define flag =0
-init python:
-    affection = lc_get_affection()
-    #todo 多高的好感度才算高？
-    if (affection>50):
-        flag =1
+# define flag =0
+# init python:
+#     affection = lc_get_affection()
+#     #todo 多高的好感度才算高？
+#     if (affection>50):
+#         flag =1
 
 label Act5_wander:
     "几天过后，她的感冒彻底痊愈"

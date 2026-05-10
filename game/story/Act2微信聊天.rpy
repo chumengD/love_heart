@@ -26,7 +26,9 @@ label Act2_wx:
     #change 下定决心要发送
     hide peng
     with pixellate
-    show screen wx_chat_page 
+    show screen wx_phone
+    pause 2.0
+    
 
     menu chat1:
         "要发什么……？"
