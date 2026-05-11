@@ -12,7 +12,7 @@ label Act2_wx:
     "xx，真是个好听的名字。"
     "加完好友之后，我们一直没有说话。"
     "聊天框上干干净净，只有系统提示：你们已成为好友，可以开始聊天。"
-    show m normal at left
+    # show m normal at left
     m "怎么办……要不要先发消息？"
     m "第一次主动加女生微信，我完全不知道该说什么。"
     #change 是不是写一下打完字又删的样子？
@@ -21,7 +21,7 @@ label Act2_wx:
     "指尖悬停在屏幕上方，迟迟不敢按下发送。"
     "脑海里又想起白天相撞的那一瞬间。"
 
-    hide m normal
+    # hide m normal
     hide bird
     with dissolve
     show peng

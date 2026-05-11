@@ -59,9 +59,9 @@ label Act1_wedding:
     "宾客们穿着得体的衣服，三三两两交谈着，脸上都带着笑意"
     "今天是表哥的婚礼"
     "我在一周前就收到了邀请"
-    show m normal at left
+    # show m normal at left
     m "啊，又要被迫吃一波狗粮了啊......"
-    hide m normal
+    # hide m normal
 
     # hide bird
     # with dissolve
@@ -85,7 +85,7 @@ label Act1_wedding:
     "宴会厅里的女生们纷纷起身，笑着涌向舞台下方"
     "有的整理着裙摆，有的互相推搡着，眼里满是期待。"
 
-    show m normal at left
+    # show m normal at left
     "怎么大家都这么积极?"
     "我本就是来凑热闹的......"
     "要不我也去试试看，要是能抢到捧花，说不定还能跟表哥讨个好彩头。"
@@ -101,7 +101,7 @@ label Act1_wedding:
     with dissolve
     show sorry1
 
-    show m normal at left
+    # show m normal at left
     # show g normal at right
     "我低头时刚好对上她抬头看过来的，带有一丝慌乱害羞眼睛。"
     "睫毛好长......"
