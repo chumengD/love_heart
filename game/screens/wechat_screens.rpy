@@ -115,7 +115,7 @@ screen wx_phone(standalone=False):
 
                                     button:
                                         xpos 40
-                                        yalign 0.5
+                                        yalign 0.4
                                         xysize (76, 76)
                                         background None
                                         hover_background None
@@ -135,7 +135,7 @@ screen wx_phone(standalone=False):
 
                                     button:
                                         xpos 955
-                                        yalign 0.5
+                                        yalign 0.4
                                         xysize (76, 76)
                                         background None
                                         hover_background None
@@ -146,7 +146,7 @@ screen wx_phone(standalone=False):
 
                                     button:
                                         xpos 1040
-                                        yalign 0.5
+                                        yalign 0.4
                                         xysize (76, 76)
                                         background None
                                         hover_background None
