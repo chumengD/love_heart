@@ -1,5 +1,6 @@
 default act2_flag = 0
 default act2_sticker_break = False
+default act2_moments_unlocked = False
 define pause_time =0.8
 
 label Act2_wx:
@@ -177,5 +178,6 @@ label Act2_wx:
 
     "聊天框里的陌生感一点点消散。"
     "我开始期待每一次手机震动。"
+    $ act2_moments_unlocked = True
     hide screen wx_phone
     return

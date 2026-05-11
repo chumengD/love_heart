@@ -624,6 +624,14 @@ init python:
         return wx_moment_comments.get(str(post_id), "")
 
 
+    # 判断某条朋友圈当前是否应该展示。
+    def wx_should_show_moment_post(post):
+        if post.get("unlock_after_act2", False):
+            return bool(act2_moments_unlocked)
+
+        return True
+
+
     # 把图片列表切成每行 size 张。
     # 朋友圈 3 张以上图片的网格显示会用它。
     def wx_chunks(items, size):

@@ -426,7 +426,8 @@ screen wx_moments_page():
             xmaximum 1094
 
             for post in wx_moment_posts:
-                use wx_moment_post(post)
+                if wx_should_show_moment_post(post):
+                    use wx_moment_post(post)
 
 
 # 单条朋友圈。

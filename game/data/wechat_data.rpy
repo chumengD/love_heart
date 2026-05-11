@@ -144,26 +144,8 @@ define wx_free_chat = {
 # images：图片列表；空元组 () 表示无图片，界面不会渲染图片区，也不会显示占位图。
 # 1 张图会显示大图，2 张并排，3 张以上按网格显示。
 # comment_text：玩家点击“评论”按钮后自动显示的评论文本。
+# unlock_after_act2：True 表示 Act2 结束后才显示。
 define wx_moment_posts = (
-    {
-        "post_id": "moment_001",
-        "author": "heroine",
-        "time": "昨天",
-        "text": "今天好累啊，终于下班了",
-        "images": (),
-        "comment_text": "辛苦啦，早点休息。",
-    },
-    {
-        "post_id": "moment_002",
-        "author": "heroine",
-        "time": "20分钟前",
-        "text": "我想去看一下猫~",
-        "images": (
-            "images/wechat/moment_photo_1.jpg",
-            "images/wechat/moment_photo_2.png",
-        ),
-        "comment_text": "感觉会遇到很可爱的猫。",
-    },
     {
         "post_id": "moment_act2_dessert",
         "author": "heroine",
@@ -191,6 +173,7 @@ define wx_moment_posts = (
         "text": "今天循环到一首很适合傍晚听的歌。",
         "images": (),
         "comment_text": "求歌名，我也想听听。",
+        "unlock_after_act2": True,
     },
     {
         "post_id": "moment_act2_reading",
@@ -199,6 +182,7 @@ define wx_moment_posts = (
         "text": "读书笔记慢慢攒起来了，写论文的时候也算没有白看。",
         "images": (),
         "comment_text": "认真做笔记这点很厉害。",
+        "unlock_after_act2": True,
     },
     {
         "post_id": "moment_act2_sunset",
@@ -209,5 +193,6 @@ define wx_moment_posts = (
             "images/wechat/moment_act2_sunset.png",
         ),
         "comment_text": "这个黄昏看着很温柔。",
+        "unlock_after_act2": True,
     },
 )
