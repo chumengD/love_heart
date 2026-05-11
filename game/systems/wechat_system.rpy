@@ -171,6 +171,21 @@ init python:
         wx_pending_messages = next_pending
 
 
+    def wx_queue_text_message(speaker, text, narration=""):
+        if not text:
+            return
+
+        message = {
+            "speaker": speaker,
+            "text": str(text),
+        }
+
+        if narration:
+            message["narration"] = str(narration)
+
+        wx_queue_message(message)
+
+
     def wx_reveal_next_pending_message():
         global wx_pending_messages
         global wx_last_narration
@@ -687,6 +702,7 @@ init python:
 label wx_scripted_chat_flow:
     while True:
         while wx_scripted_has_pending_message():
+            pause
             $ wx_reveal_next_pending_message()
             with dissolve
             $ wx_narration = wx_get_last_narration()
@@ -696,6 +712,7 @@ label wx_scripted_chat_flow:
                 pause
 
         while wx_scripted_has_next_message():
+            pause
             $ wx_reveal_next_scripted_message()
             with dissolve
             $ wx_narration = wx_get_last_narration()
@@ -716,3 +733,11 @@ label wx_scripted_chat_flow:
                 "[wx_narration]"
         else:
             return
+
+
+label wx_click_reveal_pending_message:
+    if wx_pending_messages:
+        pause
+        $ wx_reveal_next_pending_message()
+        with dissolve
+    return
