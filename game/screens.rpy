@@ -263,7 +263,8 @@ screen quick_menu():
             textbutton _("快读") action QuickLoad()
             textbutton _("设置") action ShowMenu('preferences')
 
-        use quick_menu_wechat_button()
+        if not renpy.get_screen("wx_phone"):
+            use quick_menu_wechat_button()
 
 
 screen quick_menu_wechat_button():
@@ -1665,7 +1666,8 @@ screen quick_menu():
             textbutton _("自动") action Preference("auto-forward", "toggle")
             textbutton _("菜单") action ShowMenu()
 
-        use quick_menu_wechat_button()
+        if not renpy.get_screen("wx_phone"):
+            use quick_menu_wechat_button()
 
 
 style window:
