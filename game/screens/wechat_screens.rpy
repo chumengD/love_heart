@@ -389,10 +389,12 @@ screen wx_sticker_popconfirm():
         xanchor 0.5
         ypos -225
         xysize (245, 245)
-        padding (16, 16)
+        padding (0, 0)
         background Solid("#ffffff")
 
         button:
+            xfill True
+            yfill True
             background None
             hover_background Solid("#f4f4f4")
             action [Function(wx_send_milk_tea_sticker), SetScreenVariable("sticker_open", False)]
