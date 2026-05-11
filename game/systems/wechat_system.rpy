@@ -704,7 +704,6 @@ label wx_scripted_chat_flow:
         while wx_scripted_has_pending_message():
             pause
             $ wx_reveal_next_pending_message()
-            with dissolve
             $ wx_narration = wx_get_last_narration()
             if wx_narration:
                 "[wx_narration]"
@@ -714,7 +713,6 @@ label wx_scripted_chat_flow:
         while wx_scripted_has_next_message():
             pause
             $ wx_reveal_next_scripted_message()
-            with dissolve
             $ wx_narration = wx_get_last_narration()
             if wx_narration:
                 "[wx_narration]"
@@ -727,7 +725,6 @@ label wx_scripted_chat_flow:
             $ wx_choice_items = [(choice.get("text", ""), choice_index) for choice_index, choice in enumerate(wx_choices)]
             $ wx_choice_result = renpy.display_menu(wx_choice_items)
             $ wx_choose_scripted_option(wx_choice_result)
-            with dissolve
             $ wx_narration = wx_get_last_narration()
             if wx_narration:
                 "[wx_narration]"
@@ -739,5 +736,4 @@ label wx_click_reveal_pending_message:
     if wx_pending_messages:
         pause
         $ wx_reveal_next_pending_message()
-        with dissolve
     return
