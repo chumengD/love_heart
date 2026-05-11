@@ -114,46 +114,31 @@ screen wx_phone(standalone=False):
                                     yalign 0.5
                                     spacing 18
 
-                                    textbutton ")))":
+                                    imagebutton:
+                                        idle "images/wechat/bottom_voice.png"
+                                        hover "images/wechat/bottom_voice.png"
                                         xsize 58
                                         ysize 58
-                                        background None
-                                        hover_background Solid("#e0e0e0")
                                         action NullAction()
-                                        text_size 25
-                                        text_color "#666666"
-                                        text_hover_color "#333333"
-                                        text_xalign 0.5
-                                        text_yalign 0.5
 
                                     if wx_active_chat_mode == "free":
                                         use wx_free_chat_input_box()
                                     else:
                                         use wx_scripted_chat_input_box()
 
-                                    textbutton "☺":
+                                    imagebutton:
+                                        idle "images/wechat/bottom_emoji.png"
+                                        hover "images/wechat/bottom_emoji.png"
                                         xsize 58
                                         ysize 58
-                                        background None
-                                        hover_background Solid("#e0e0e0")
                                         action SetScreenVariable("sticker_open", not sticker_open)
-                                        text_size 42
-                                        text_color "#666666"
-                                        text_hover_color "#333333"
-                                        text_xalign 0.5
-                                        text_yalign 0.5
 
-                                    textbutton "+":
+                                    imagebutton:
+                                        idle "images/wechat/bottom_more.png"
+                                        hover "images/wechat/bottom_more.png"
                                         xsize 58
                                         ysize 58
-                                        background None
-                                        hover_background Solid("#e0e0e0")
                                         action NullAction()
-                                        text_size 44
-                                        text_color "#666666"
-                                        text_hover_color "#333333"
-                                        text_xalign 0.5
-                                        text_yalign 0.5
 
 
 # 左侧导航栏。
