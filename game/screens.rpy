@@ -734,90 +734,119 @@ screen file_slots(title):
 
     default page_name_value = FilePageNameInputValue(pattern=_("第 {} 页"), auto=_("自动存档"), quick=_("快速存档"))
 
-    use game_menu(title):
+    add gui.game_menu_background
+    add Solid("#fff0b8c9")
 
-        fixed:
+    imagebutton:
+        idle Transform("images/左箭头.png", zoom=0.78)
+        hover Transform("images/左箭头.png", zoom=0.82)
+        style "save_return_button"
+        action Return()
 
-            ## 此代码确保输入控件在任意按钮执行前可以获取 enter 事件。
-            order_reverse True
+    text title style "save_title_text"
+    text "♡" style "save_sketch_mark" xpos 1520 ypos 72
+    text "♡" style "save_sketch_mark" xpos 1590 ypos 920
 
-            ## 页面名称，可以通过单击按钮进行编辑。
-            button:
-                style "page_label"
+    fixed:
 
-                key_events True
+        ## 此代码确保输入控件在任意按钮执行前可以获取 enter 事件。
+        order_reverse True
+
+        add Solid("#7a4a35") xpos 330 ypos 150 xsize 1260 ysize 3
+        add Solid("#d98a75") xpos 430 ypos 164 xsize 1060 ysize 2
+
+        ## 页面名称，可以通过单击按钮进行编辑。
+        button:
+            style "page_label"
+
+            key_events True
+            xalign 0.5
+            ypos 116
+            action page_name_value.Toggle()
+
+            input:
+                style "page_label_text"
+                value page_name_value
+
+        ## 存档位网格。
+        grid gui.file_slot_cols gui.file_slot_rows:
+            style_prefix "slot"
+
+            xalign 0.5
+            ypos 215
+
+            spacing 46
+
+            for i in range(gui.file_slot_cols * gui.file_slot_rows):
+
+                $ slot = i + 1
+
+                button:
+                    action FileAction(slot)
+
+                    has vbox
+
+                    text _("SLOT [slot]"):
+                        style "slot_index_text"
+                        xalign 0.5
+
+                    frame:
+                        style "slot_preview_frame"
+                        xalign 0.5
+
+                        fixed:
+                            xysize (config.thumbnail_width, config.thumbnail_height)
+                            add Solid("#fffaf0bb")
+                            add FileScreenshot(slot) xalign 0.5 yalign 0.5
+
+                    text FileTime(slot, format=_("{#file_time}%Y-%m-%d %H:%M"), empty=_("空存档位")):
+                        style "slot_time_text"
+
+                    text FileSaveName(slot):
+                        style "slot_name_text"
+
+                    key "save_delete" action FileDelete(slot)
+
+        ## 用于访问其他页面的按钮。
+        vbox:
+            style_prefix "page"
+
+            xalign 0.5
+            ypos 925
+
+            hbox:
                 xalign 0.5
-                action page_name_value.Toggle()
 
-                input:
-                    style "page_label_text"
-                    value page_name_value
+                spacing 12
 
-            ## 存档位网格。
-            grid gui.file_slot_cols gui.file_slot_rows:
-                style_prefix "slot"
+                textbutton _("<") action FilePagePrevious()
+                key "save_page_prev" action FilePagePrevious()
 
-                xalign 0.5
-                yalign 0.5
+                if config.has_autosave:
+                    textbutton _("{#auto_page}A") action FilePage("auto")
 
-                spacing gui.slot_spacing
+                if config.has_quicksave:
+                    textbutton _("{#quick_page}Q") action FilePage("quick")
 
-                for i in range(gui.file_slot_cols * gui.file_slot_rows):
+                ## range(1, 10) 给出 1 到 9 之间的数字。
+                for page in range(1, 10):
+                    textbutton "[page]" action FilePage(page)
 
-                    $ slot = i + 1
+                textbutton _(">") action FilePageNext()
+                key "save_page_next" action FilePageNext()
 
-                    button:
-                        action FileAction(slot)
+            if config.has_sync:
+                if CurrentScreenName() == "save":
+                    textbutton _("上传同步"):
+                        action UploadSync()
+                        xalign 0.5
+                else:
+                    textbutton _("下载同步"):
+                        action DownloadSync()
+                        xalign 0.5
 
-                        has vbox
-
-                        add FileScreenshot(slot) xalign 0.5
-
-                        text FileTime(slot, format=_("{#file_time}%Y-%m-%d %H:%M"), empty=_("空存档位")):
-                            style "slot_time_text"
-
-                        text FileSaveName(slot):
-                            style "slot_name_text"
-
-                        key "save_delete" action FileDelete(slot)
-
-            ## 用于访问其他页面的按钮。
-            vbox:
-                style_prefix "page"
-
-                xalign 0.5
-                yalign 1.0
-
-                hbox:
-                    xalign 0.5
-
-                    spacing gui.page_spacing
-
-                    textbutton _("<") action FilePagePrevious()
-                    key "save_page_prev" action FilePagePrevious()
-
-                    if config.has_autosave:
-                        textbutton _("{#auto_page}A") action FilePage("auto")
-
-                    if config.has_quicksave:
-                        textbutton _("{#quick_page}Q") action FilePage("quick")
-
-                    ## range(1, 10) 给出 1 到 9 之间的数字。
-                    for page in range(1, 10):
-                        textbutton "[page]" action FilePage(page)
-
-                    textbutton _(">") action FilePageNext()
-                    key "save_page_next" action FilePageNext()
-
-                if config.has_sync:
-                    if CurrentScreenName() == "save":
-                        textbutton _("上传同步"):
-                            action UploadSync()
-                            xalign 0.5
-                    else:
-                        textbutton _("下载同步"):
-                            action DownloadSync()
-                            xalign 0.5
+    if main_menu:
+        key "game_menu" action ShowMenu("main_menu")
 
 
 style page_label is gui_label
@@ -827,30 +856,97 @@ style page_button_text is gui_button_text
 
 style slot_button is gui_button
 style slot_button_text is gui_button_text
+style slot_index_text is slot_button_text
 style slot_time_text is slot_button_text
 style slot_name_text is slot_button_text
+style slot_preview_frame is empty
+style save_return_button is navigation_button
+style save_title_text is gui_label_text
+style save_sketch_mark is gui_text
 
 style page_label:
-    xpadding 75
-    ypadding 5
+    xsize 420
+    ysize 62
+    background Solid("#fff7d6d8")
+    hover_background Solid("#ffe9bccc")
+    xpadding 30
+    ypadding 7
     xalign 0.5
 
 style page_label_text:
     textalign 0.5
     layout "subtitle"
-    hover_color gui.hover_color
+    size 30
+    color "#6a3f2c"
+    hover_color "#d46f65"
 
 style page_button:
-    properties gui.button_properties("page_button")
+    xminimum 46
+    yminimum 44
+    background Solid("#fff7d600")
+    hover_background Solid("#fff0c5cc")
+    selected_background Solid("#e9927d99")
+    xpadding 9
+    ypadding 2
 
 style page_button_text:
-    properties gui.text_properties("page_button")
+    size 28
+    color "#7a604d"
+    hover_color "#8b3f35"
+    selected_color "#fffaf0"
+    textalign 0.5
 
 style slot_button:
-    properties gui.button_properties("slot_button")
+    xsize 430
+    ysize 318
+    background Solid("#fff6d6d2")
+    hover_background Solid("#ffeabbdc")
+    selected_background Solid("#f0b09dcc")
+    left_padding 18
+    right_padding 18
+    top_padding 14
+    bottom_padding 12
 
 style slot_button_text:
-    properties gui.text_properties("slot_button")
+    size 20
+    color "#7a604d"
+    hover_color "#8b3f35"
+    selected_color "#8b3f35"
+    xalign 0.5
+    textalign 0.5
+
+style slot_index_text:
+    size 19
+    color "#9d6653"
+
+style slot_time_text:
+    color "#6a3f2c"
+
+style slot_name_text:
+    color "#9d6653"
+
+style slot_preview_frame:
+    background Solid("#7a4a35")
+    left_padding 5
+    right_padding 5
+    top_padding 5
+    bottom_padding 5
+
+style save_return_button:
+    size_group None
+    xsize 140
+    xpos 45
+    ypos 45
+
+style save_title_text:
+    size 64
+    color "#7a4a35"
+    xpos 188
+    ypos 65
+
+style save_sketch_mark:
+    size 46
+    color "#d98a75cc"
 
 
 ## 设置屏幕 ########################################################################
