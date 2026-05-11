@@ -683,18 +683,131 @@ screen achievements():
             text _("这里是成就页面的占位内容。之后可以在这里接入成就列表、解锁状态和完成条件。")
 
 
+init python:
+    import os
+
+    memory_gallery_locked_image = "C:/Users/LENOVO/Desktop/pic/logo.png"
+    memory_gallery_image_extensions = (".jpg", ".jpeg", ".png", ".webp", ".avif", ".svg")
+
+    def memory_gallery_title(path):
+        return os.path.splitext(os.path.basename(path))[0]
+
+    def memory_gallery_registered_names(path):
+        target = path.replace("\\", "/").lower()
+        names = []
+
+        for name, displayable in renpy.display.image.images.items():
+            filename = getattr(displayable, "filename", None)
+            if filename and filename.replace("\\", "/").lower() == target:
+                names.append(" ".join(name))
+
+        auto_name = os.path.splitext(os.path.basename(path))[0].lower()
+        if auto_name not in names:
+            names.append(auto_name)
+
+        return tuple(names)
+
+    def memory_gallery_is_unlocked(path):
+        return any(renpy.seen_image(name) for name in memory_gallery_registered_names(path))
+
+    def memory_gallery_items():
+        items = []
+
+        for filename in renpy.list_files():
+            path = filename.replace("\\", "/")
+            parts = path.split("/")
+
+            if len(parts) < 3:
+                continue
+
+            if parts[0] != "images" or not parts[1].startswith("Act"):
+                continue
+
+            if os.path.splitext(path)[1].lower() not in memory_gallery_image_extensions:
+                continue
+
+            items.append({
+                "path": path,
+                "title": memory_gallery_title(path),
+                "unlocked": memory_gallery_is_unlocked(path),
+            })
+
+        return sorted(items, key=lambda item: item["path"].lower())
+
+    def memory_gallery_unlocked_count(items):
+        return sum(1 for item in items if item["unlocked"])
+
+
 screen memory_gallery():
 
     tag menu
+    default cg_items = memory_gallery_items()
+    default cg_cols = 3
+    default cg_rows = (len(cg_items) + cg_cols - 1) // cg_cols
+    default cg_fillers = (cg_cols - (len(cg_items) % cg_cols)) % cg_cols
 
     use game_menu(_("记忆回廊"), scroll="viewport"):
 
         vbox:
-            style_prefix "placeholder"
-            spacing 24
+            spacing 30
 
             label _("记忆回廊")
-            text _("这里是记忆回廊页面的占位内容。之后可以在这里展示回忆、CG、事件片段或收藏内容。")
+            text _("已解锁 [memory_gallery_unlocked_count(cg_items)] / [len(cg_items)]") style "memory_gallery_summary_text"
+
+            if cg_items:
+                grid cg_cols cg_rows:
+                    spacing 30
+
+                    for cg in cg_items:
+                        use memory_gallery_card(cg)
+
+                    for i in range(cg_fillers):
+                        null width 420 height 300
+
+            else:
+                text _("没有找到 images/Act* 文件夹下的 CG。") style "memory_gallery_summary_text"
+
+
+screen memory_gallery_card(cg):
+
+    $ unlocked = cg["unlocked"]
+    $ preview = cg["path"] if unlocked else memory_gallery_locked_image
+
+    button:
+        style "memory_gallery_card"
+        sensitive unlocked
+        action ShowMenu("memory_gallery_view", cg)
+
+        vbox:
+            spacing 12
+
+            frame:
+                style "memory_gallery_thumb_frame"
+
+                add Transform(preview, xysize=(420, 236), fit="cover")
+
+            text (cg["title"] if unlocked else _("未解锁")) style "memory_gallery_card_text"
+
+
+screen memory_gallery_view(cg):
+
+    tag menu
+
+    add Solid("#111111")
+
+    add Transform(cg["path"], xysize=(1600, 900), fit="contain"):
+        xalign 0.5
+        yalign 0.5
+
+    imagebutton:
+        idle Transform("images/左箭头.png", zoom=0.8)
+        hover Transform("images/左箭头.png", zoom=0.86)
+        style "return_button"
+        action ShowMenu("memory_gallery")
+
+    text cg["title"] style "memory_gallery_view_title"
+
+    key "game_menu" action ShowMenu("memory_gallery")
 
 
 style placeholder_label is gui_label
@@ -706,6 +819,42 @@ style placeholder_label_text:
 
 style placeholder_text:
     xmaximum 1110
+
+style memory_gallery_summary_text is gui_text
+style memory_gallery_card is button
+style memory_gallery_card_text is gui_text
+style memory_gallery_thumb_frame is empty
+style memory_gallery_view_title is gui_text
+
+style memory_gallery_summary_text:
+    size 34
+    color "#5c4a42"
+
+style memory_gallery_card:
+    xsize 420
+    ysize 300
+    padding (0, 0, 0, 0)
+    background None
+    hover_background Solid("#ffffff33")
+    insensitive_background None
+
+style memory_gallery_thumb_frame:
+    xsize 420
+    ysize 236
+    background Solid("#f8efe9")
+
+style memory_gallery_card_text:
+    xsize 420
+    size 30
+    color "#5c4a42"
+    textalign 0.5
+    xalign 0.5
+
+style memory_gallery_view_title:
+    xpos 210
+    ypos 62
+    size 48
+    color "#ffffff"
 
 
 ## 读取和保存屏幕 #####################################################################
