@@ -14,6 +14,14 @@ init python:
 
     def quick_menu_open_wechat_button(drag=None):
         global wx_phone_standalone_modal
+
+        if renpy.get_screen("wx_phone"):
+            return
+
+        if quick_menu_phone_target == "takeaway_cg":
+            renpy.show_screen("quick_menu_takeaway_cg")
+            return
+
         wx_phone_standalone_modal = True
         wx_start_free_chat()
         renpy.show_screen("wx_phone", standalone=True)
@@ -263,8 +271,7 @@ screen quick_menu():
             textbutton _("快读") action QuickLoad()
             textbutton _("设置") action ShowMenu('preferences')
 
-        if not renpy.get_screen("wx_phone"):
-            use quick_menu_wechat_button()
+        use quick_menu_wechat_button()
 
 
 screen quick_menu_wechat_button():
@@ -300,11 +307,38 @@ screen quick_menu_wechat_button():
                 xysize (6, 2)
 
 
+screen quick_menu_takeaway_cg():
+
+    tag quick_menu_takeaway_cg
+    modal True
+    zorder 250
+
+    key "game_menu" action Hide("quick_menu_takeaway_cg")
+
+    button:
+        xfill True
+        yfill True
+        background Solid("#000000")
+        action Hide("quick_menu_takeaway_cg")
+
+        if renpy.loadable("images/act4/takeaway.png"):
+            add Transform("images/act4/takeaway.png", xysize=(config.screen_width, config.screen_height), fit="contain"):
+                xalign 0.5
+                yalign 0.5
+        else:
+            text "缺少 CG：game/images/act4/takeaway.png":
+                xalign 0.5
+                yalign 0.5
+                color "#ffffff"
+                size 32
+
+
 ## 此代码确保只要用户没有主动隐藏界面，就会在游戏中显示 quick_menu 屏幕。
 init python:
     config.overlay_screens.append("quick_menu")
 
 default quick_menu = True
+default quick_menu_phone_target = "ai"
 
 style quick_menu is hbox
 style quick_button is default
@@ -1889,8 +1923,7 @@ screen quick_menu():
             textbutton _("自动") action Preference("auto-forward", "toggle")
             textbutton _("菜单") action ShowMenu()
 
-        if not renpy.get_screen("wx_phone"):
-            use quick_menu_wechat_button()
+        use quick_menu_wechat_button()
 
 
 style window:
