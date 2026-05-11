@@ -36,7 +36,7 @@ image wedding ="images/Act1/婚礼现场1.png"
 image flower = "images/Act1/捧花1.png"
 image peng = "images/Act1/撞.png"
 
-image sorry1 = "images/Act1/道歉1.png"
+image sorry1 = "images/Act1/sorry1.png"
 image sorry2 = "images/Act1/道歉2.png"
 
 image get_flower1= "images/Act1/接花.png"
