@@ -385,7 +385,8 @@ screen wx_scripted_chat_input_box():
 # 表情包按钮的 Popconfirm 弹窗。
 screen wx_sticker_popconfirm():
     frame:
-        xpos 850
+        xpos 1103
+        xanchor 0.5
         ypos -225
         xysize (245, 245)
         padding (16, 16)
@@ -402,7 +403,8 @@ screen wx_sticker_popconfirm():
                 xysize (150, 220)
 
     text "▼":
-        xpos 956
+        xpos 1103
+        xanchor 0.5
         ypos 8
         size 34
         color "#ffffff"
