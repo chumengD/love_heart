@@ -109,35 +109,44 @@ screen wx_phone(standalone=False):
                                 padding (0, 0)
                                 background None
 
-                                hbox:
-                                    xalign 0.5
-                                    yalign 0.5
-                                    spacing 18
+                                fixed:
+                                    xfill True
+                                    yfill True
 
                                     imagebutton:
                                         idle "images/wechat/bottom_voice.png"
                                         hover "images/wechat/bottom_voice.png"
-                                        xsize 58
-                                        ysize 58
+                                        xpos 170
+                                        yalign 0.5
+                                        xsize 70
+                                        ysize 70
                                         action NullAction()
 
-                                    if wx_active_chat_mode == "free":
-                                        use wx_free_chat_input_box()
-                                    else:
-                                        use wx_scripted_chat_input_box()
+                                    hbox:
+                                        xalign 0.5
+                                        yalign 0.5
+
+                                        if wx_active_chat_mode == "free":
+                                            use wx_free_chat_input_box()
+                                        else:
+                                            use wx_scripted_chat_input_box()
 
                                     imagebutton:
                                         idle "images/wechat/bottom_emoji.png"
                                         hover "images/wechat/bottom_emoji.png"
-                                        xsize 58
-                                        ysize 58
+                                        xpos 870
+                                        yalign 0.5
+                                        xsize 70
+                                        ysize 70
                                         action SetScreenVariable("sticker_open", not sticker_open)
 
                                     imagebutton:
                                         idle "images/wechat/bottom_more.png"
                                         hover "images/wechat/bottom_more.png"
-                                        xsize 58
-                                        ysize 58
+                                        xpos 950
+                                        yalign 0.5
+                                        xsize 70
+                                        ysize 70
                                         action NullAction()
 
 
