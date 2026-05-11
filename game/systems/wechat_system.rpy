@@ -419,25 +419,39 @@ init python:
         """
         try:
             # 构建系统提示词
-            system_prompt = context.get("system_prompt", "你是我刚认识的女孩子，不过可能发展为恋人，一位可爱温柔的女孩，也有自己的小脾气。你现在发圈丢了，和我诉苦中。回复如微信聊天一般简洁明了，不要过于正式或生硬。")
+            system_prompt = context.get("system_prompt", "你是游戏中的女主角，一位温和沉静的女孩，正在读大三。你现在发圈丢了，和我诉苦中。回复如微信聊天一般简洁自然。")
             scene_info = context.get("scene", "")
-            
+
             system_message = system_prompt
             if scene_info:
                 system_message += f"\n当前场景：{scene_info}"
-            
-            # 直接调用 Deepseek API，使用 requests 库
+
+            # 构建对话历史上下文（取最近20条，避免 token 过多）
+            api_messages = [{"role": "system", "content": system_message}]
+            recent_messages = wx_chat_messages[-20:] if len(wx_chat_messages) > 20 else list(wx_chat_messages)
+            for msg in recent_messages:
+                speaker = msg.get("speaker", "")
+                text = msg.get("text", "")
+                if not text:
+                    continue
+                if speaker == WX_PLAYER_CONTACT_ID:
+                    api_messages.append({"role": "user", "content": text})
+                else:
+                    api_messages.append({"role": "assistant", "content": text})
+
+            # 当前玩家输入如果已在历史末尾则跳过，否则追加
+            if not (api_messages and api_messages[-1]["role"] == "user" and api_messages[-1]["content"] == player_text):
+                api_messages.append({"role": "user", "content": player_text})
+
+            # 调用 Deepseek API
             headers = {
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {DEEPSEEK_API_KEY}"
             }
-            
+
             payload = {
                 "model": "deepseek-chat",
-                "messages": [
-                    {"role": "system", "content": system_message},
-                    {"role": "user", "content": player_text},
-                ],
+                "messages": api_messages,
                 "temperature": 0.7,
                 "max_tokens": 150,
                 "stream": False
@@ -470,10 +484,6 @@ init python:
             return "我现在有点烦，回头再聊吧。"
 
     # 打开自由输入聊天。
-    # 剧情里调用示例：
-    # $ wx_start_free_chat()
-    # call screen wx_phone
-    # 不再传入编号；当前只有一套自由聊天配置。
     def wx_start_free_chat():
         global wx_current_view
         global wx_active_chat_mode
