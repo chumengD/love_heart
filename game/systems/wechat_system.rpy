@@ -26,7 +26,7 @@ default wx_pending_messages = []
 default wx_chat_scroll_version = 0
 default wx_chat_scrolled_version = -1
 
-# 最近一条微信消息对应的旁白或男主心理。
+# 最近一条微信消息对应的旁白或我的心理。
 # 演示流程会把它放进 Ren'Py 默认文本框里显示。
 default wx_last_narration = ""
 
@@ -110,7 +110,7 @@ init python:
 
 
     # 联系人聊天气泡方向。
-    # 当前按微信主视角：男主 player 在右侧，女主 heroine 在左侧；如果以后想反过来，只改数据表 side 字段。
+    # 当前按微信主视角：我 player 在右侧，女主 heroine 在左侧；如果以后想反过来，只改数据表 side 字段。
     def wx_contact_side(contact_id):
         return wx_get_contact(contact_id).get("side", "left")
 
@@ -303,7 +303,7 @@ init python:
         return True
 
 
-    # 读取最近一条微信消息对应的旁白或男主心理。
+    # 读取最近一条微信消息对应的旁白或我的心理。
     # Ren'Py label 会把这个字符串交给默认文本框显示。
     def wx_get_last_narration():
         return wx_last_narration
@@ -324,7 +324,7 @@ init python:
 
     # 玩家点击剧本选项后的统一入口。
     # 做的事按顺序是：
-    # 1. 把 player_text 追加成男主气泡。
+    # 1. 把 player_text 追加成我的气泡。
     # 2. 读取 affection_delta，并调用隐藏好感度系统 lc_add_affection()。
     # 3. 追加女主 reply_messages。
     # 4. 如果配置了 next_label，直接跳剧情 label；否则按 next 切到下一个聊天节点。
@@ -530,7 +530,7 @@ init python:
     # 自由输入点击“发送”或按回车后的统一入口。
     # 做的事按顺序是：
     # 1. 读取输入框文本。
-    # 2. 立即追加男主气泡并清空输入框。
+    # 2. 立即追加我的气泡并清空输入框。
     # 3. 调 wx_score_player_input() 计算本次好感变化，并调用 lc_add_affection()。
     # 4. 刷新界面后用后台线程等待 AI 回复。
     # 5. AI 返回后再从主线程追加女主气泡。

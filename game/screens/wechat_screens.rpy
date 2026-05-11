@@ -256,7 +256,7 @@ screen wx_chat_page():
 # 单条聊天气泡。
 # side 来自 wx_contacts[contact_id]["side"]：
 # right 表示头像和气泡靠右；left 表示靠左。
-# 当前男主 player 是主视角，在右侧；女主 heroine 在左侧。
+# 当前我 player 是主视角，在右侧；女主 heroine 在左侧。
 screen wx_chat_message(message):
     $ speaker = message.get("speaker", WX_DEFAULT_CONTACT_ID)
     $ side = wx_message_side(message)
@@ -264,7 +264,7 @@ screen wx_chat_message(message):
     $ message_image = message.get("image", "")
 
     if side == "right":
-        # 右侧气泡：主视角男主。文本左对齐，绿色气泡。
+        # 右侧气泡：主视角我。文本左对齐，绿色气泡。
         hbox at wx_message_dissolve:
             xalign 1.0
             spacing 16

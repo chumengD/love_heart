@@ -4,7 +4,7 @@
 # 图片路径要写 game/ 目录下的相对路径，例如："images/wechat/heroine_avatar.jpg"。
 
 # 玩家联系人 id。
-# 聊天记录里 speaker 写 "player" 时，会用男主的头像、名字和气泡方向。
+# 聊天记录里 speaker 写 "player" 时，会用我的头像、名字和气泡方向。
 define WX_PLAYER_CONTACT_ID = "player"
 
 # 默认女主联系人 id。
@@ -15,7 +15,7 @@ define WX_DEFAULT_CONTACT_ID = "heroine"
 # 以后要改名字、头像、左右方向，就改这里：
 # name：显示在朋友圈作者名里，也用作头像缺失时的首字 fallback。
 # avatar：头像图片路径，必须是 game/ 下的相对路径；文件不存在时会显示 fallback_color 色块。
-# side：聊天气泡方向，"right" 是右侧，"left" 是左侧。主视角男主放右侧，女主放左侧。
+# side：聊天气泡方向，"right" 是右侧，"left" 是左侧。主视角我放右侧，女主放左侧。
 # fallback_color：头像图片没放好时的兜底色，方便开发阶段不报错。
 define wx_contacts = {
     "heroine": {
@@ -25,7 +25,7 @@ define wx_contacts = {
         "fallback_color": "#f47f9a",
     },
     "player": {
-        "name": "男主",
+        "name": "我",
         "avatar": "images/wechat/player_avatar.png",
         "side": "right",
         "fallback_color": "#9fb5c6",
@@ -43,7 +43,7 @@ define wx_scripted_chat = {
             # messages 会被逐条显示，不会一次性全部出现。
             # 玩家每点一次默认文本框，就推进一条微信消息，并用 dissolve 过渡显示。
             # speaker 必须对应 wx_contacts 里的联系人 id；text 是气泡文字。
-            # narration 是底部默认文本框里显示的旁白或男主心理，不想显示就写空字符串。
+            # narration 是底部默认文本框里显示的旁白或我的心理，不想显示就写空字符串。
             "messages": [
                 {
                     "speaker": "heroine",
@@ -63,7 +63,7 @@ define wx_scripted_chat = {
             ],
             # choices 是底部选项。只有当前节点 messages 全部显示完后，底部才会切换成选项。
             # text：按钮上看到的文字。
-            # player_text：玩家点选后，男主真正发出去的气泡文字。
+            # player_text：玩家点选后，我真正发出去的气泡文字。
             # reply_messages：选项后女主追加回复。
             # affection_delta：这次选择对好感度的影响，会调用 lc_add_affection()。
             # next：跳到同一套剧本里的下一个 node_id。
@@ -127,7 +127,7 @@ define wx_free_chat = {
     # 用来计算本次自由输入的好感变化，最终变化会 clamp 到 -10 到 +10。
     "context": {
         "system_prompt": "你是我刚认识的女孩子，不过可能发展为恋人，一位可爱温柔的女孩，也有自己的小脾气。你现在发圈丢了，和我诉苦中。回复如微信聊天一般简洁明了",
-        "scene": "男主要安慰女主，想办法逗女主开心，忘掉不高兴，不能偏离主题太远。",
+        "scene": "我要安慰女主，想办法逗女主开心，忘掉不高兴，不能偏离主题太远。",
         "scoring_rule": "在别的话题深入会降低好感度，恰当的关心会提高好感度，过于明显亲密的关心会稍微降低好感度。",
         "positive_keywords": ["没事", "别难过", "我陪你", "一起找", "发圈", "开心", "安慰"],
         "negative_keywords": ["无所谓", "别烦", "不关我事", "活该", "换个话题"],

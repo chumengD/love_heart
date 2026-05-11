@@ -32,7 +32,7 @@ init -2 python:
 
 
 
-define m = Character("男主", image="m",what_color="#4874CB")
+define m = Character("我", image="m",what_color="#4874CB")
 define g = Character("女主", image="g",what_color="#EF939E")
 define g_right =Character("女主", 
     image="g",

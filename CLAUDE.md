@@ -26,7 +26,7 @@ This matters because `gui.rpy` must run first so screen styles can reference its
 
 ### Character system (`game/script.rpy`)
 
-Two characters: `m` (男主, male protagonist/player, blue `#4874CB`) and `g` (女主, female lead, `#EF939E`). Characters are rendered on a custom `character_front` layer placed above the `screens` layer, so sprites always appear above UI. `define g_right` is a variant for when the heroine needs right-aligned namebox (e.g., alternating dialogue scenes).
+Two characters: `m` (我, male protagonist/player, blue `#4874CB`) and `g` (女主, female lead, `#EF939E`). Characters are rendered on a custom `character_front` layer placed above the `screens` layer, so sprites always appear above UI. `define g_right` is a variant for when the heroine needs right-aligned namebox (e.g., alternating dialogue scenes).
 
 ### Affection system (`game/systems/affection_system.rpy`)
 
