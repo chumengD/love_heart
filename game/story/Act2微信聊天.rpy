@@ -1,5 +1,6 @@
 default act2_flag = 0
 default act2_sticker_break = False
+define pause_time =0.8
 
 label Act2_wx:
     scene black
