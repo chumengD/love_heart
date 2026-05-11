@@ -42,6 +42,8 @@ image sorry2 = "images/Act1/道歉2.png"
 image get_flower1= "images/Act1/接花.png"
 image get_flower2= "images/Act1/接花高兴.jpg"
 
+default act1_wechat_unlocked = False
+
 label Act1_wedding:
     #结婚场景
     scene black
@@ -143,5 +145,6 @@ label Act1_wedding:
 
     #我觉得这里不用再描写动作，
     $ lc_set_affection(25)
+    $ act1_wechat_unlocked = True
     #todo 成就【初遇心动】
     return 
