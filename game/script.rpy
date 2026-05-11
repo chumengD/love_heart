@@ -100,6 +100,10 @@ label start:
 
     call screen wx_phone
 
+    call Act3_encounter
+
+    call Act3_heroine_view
+
     # 此处为游戏结尾。
 
     return
