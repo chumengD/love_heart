@@ -252,11 +252,48 @@ screen quick_menu():
             textbutton _("历史") action ShowMenu('history')
             textbutton _("快进") action Skip() alternate Skip(fast=True, confirm=True)
             textbutton _("自动") action Preference("auto-forward", "toggle")
-            textbutton _("微信") action [Function(wx_start_free_chat), Show("wx_phone", standalone=True)]
             textbutton _("保存") action ShowMenu('save')
             textbutton _("快存") action QuickSave()
             textbutton _("快读") action QuickLoad()
             textbutton _("设置") action ShowMenu('preferences')
+
+        use quick_menu_wechat_button()
+
+
+screen quick_menu_wechat_button():
+
+    drag:
+        drag_name "quick_menu_wechat_button"
+        draggable True
+        droppable False
+        drag_raise True
+        xpos 0.9
+        ypos 0.65
+
+        button:
+            xysize (72, 72)
+            padding (0, 0)
+            background Solid("#ffffffcc")
+            hover_background Solid("#e8f5ed")
+            action [Function(wx_start_free_chat), Show("wx_phone", standalone=True)]
+
+            fixed:
+                xysize (72, 72)
+
+                add Solid("#2f3338"):
+                    xpos 23
+                    ypos 12
+                    xysize (26, 48)
+
+                add Solid("#f8fafc"):
+                    xpos 26
+                    ypos 16
+                    xysize (20, 38)
+
+                add Solid("#2f3338"):
+                    xpos 33
+                    ypos 56
+                    xysize (6, 2)
 
 
 ## 此代码确保只要用户没有主动隐藏界面，就会在游戏中显示 quick_menu 屏幕。
@@ -1623,8 +1660,9 @@ screen quick_menu():
             textbutton _("回退") action Rollback()
             textbutton _("快进") action Skip() alternate Skip(fast=True, confirm=True)
             textbutton _("自动") action Preference("auto-forward", "toggle")
-            textbutton _("微信") action [Function(wx_start_free_chat), Show("wx_phone", standalone=True)]
             textbutton _("菜单") action ShowMenu()
+
+        use quick_menu_wechat_button()
 
 
 style window:
