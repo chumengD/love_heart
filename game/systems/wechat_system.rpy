@@ -448,26 +448,25 @@ init python:
             
             data = response.json()
             
-            # 提取回复内容
             if "choices" in data and len(data["choices"]) > 0:
                 reply = data["choices"][0].get("message", {}).get("content", "").strip()
-                
-                # 限制回复长度（微信消息气泡宽度）
+
                 if len(reply) > 150:
                     reply = reply[:150]
-                
-                return reply if reply else "嗯，我听着呢。"
-            
-            return "嗯，我听着呢。"
-        
+
+                return reply
+
+            return ""
+
         except requests.exceptions.Timeout:
-            return "网络有点慢，等等再说吧。"
+            print("Deepseek 调用超时")
+            return ""
         except requests.exceptions.ConnectionError:
-            return "好像没网了，连不上呢。"
+            print("Deepseek 连接失败")
+            return ""
         except Exception as e:
-            # 网络错误或 API 异常时，返回备用文本
             print(f"Deepseek 调用出错: {str(e)}")
-            return "我现在有点烦，回头再聊吧。"
+            return ""
 
     # 打开自由输入聊天。
     # 剧情里调用示例：
@@ -533,38 +532,21 @@ init python:
         return wx_clamp(score, -10, 10)
 
 
-    # AI 回复生成占位函数。
+    # AI 回复生成函数。
     # 它只负责“女主怎么回”，不负责好感度评分；好感变化由 wx_score_player_input() 单独处理。
-    # 以后接 Ollama 时，只替换这个函数内部逻辑：
-    # - 不要把请求地址、模型名硬编码在数据文件里。
-    # - 保留 fallback，网络失败时仍能返回一句可显示文本。
+    # 女主可见回复只来自 AI 接口；接口失败时不追加本地预设回复。
     # - 返回值必须是字符串，供 wx_append_message(WX_DEFAULT_CONTACT_ID, reply) 使用。
     def wx_generate_ai_reply(player_text, context):
         normalized_text = (player_text or "").strip()
 
         if not normalized_text:
-            return "你刚才是不是没发出去？"
+            return ""
 
-        # 尝试调用 Deepseek 生成回复
         try:
-            ai_reply = wx_call_deepseek(normalized_text, context)
-            if ai_reply:
-                return ai_reply
+            return wx_call_deepseek(normalized_text, context)
         except Exception as e:
-            # 如果 Deepseek 调用失败，打印错误并使用 fallback
-            print(f"Deepseek 调用异常，使用本地规则: {str(e)}")
-        
-        # Fallback: 使用本地规则库
-        if "发圈" in normalized_text or "一起找" in normalized_text:
-            return "嗯……谢谢你愿意陪我找。"
-
-        if "没事" in normalized_text or "别难过" in normalized_text or "我陪你" in normalized_text:
-            return "听你这么说，我好像没那么烦了。"
-
-        if "无所谓" in normalized_text or "别烦" in normalized_text:
-            return "你这样说我会更不开心。"
-
-        return "我知道了，不过我还是有点在意这件事。"
+            print(f"Deepseek 调用异常: {str(e)}")
+            return ""
 
 
     # 自由输入点击“发送”或按回车后的统一入口。
@@ -607,7 +589,7 @@ init python:
             reply = wx_generate_ai_reply(player_text, context)
         except Exception as e:
             print(f"AI 回复线程异常: {str(e)}")
-            reply = "我现在有点烦，回头再聊吧。"
+            reply = ""
 
         renpy.invoke_in_main_thread(wx_receive_ai_reply, reply)
 
@@ -616,7 +598,10 @@ init python:
     def wx_receive_ai_reply(reply):
         global wx_ai_waiting
 
-        wx_append_message(WX_DEFAULT_CONTACT_ID, reply)
+        reply_text = (reply or "").strip()
+        if reply_text:
+            wx_append_message(WX_DEFAULT_CONTACT_ID, reply_text)
+
         wx_ai_waiting = False
         renpy.restart_interaction()
 

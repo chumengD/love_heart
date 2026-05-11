@@ -113,14 +113,11 @@ define wx_scripted_chat = {
 }
 
 # 自由输入聊天配置。
-# 当前只有一套自由聊天；AI 接入暂时不写真实网络请求。
-# 后续只需要替换 systems/wechat_system.rpy 里的 wx_generate_ai_reply()。
+# 当前只有一套自由聊天；女主回复只从 AI 接口返回。
 define wx_free_chat = {
     "title": "自由聊天示例",
-    # 打开自由聊天时先显示这些初始消息。
-    "initial_messages": [
-        {"speaker": "heroine", "text": "我的发圈丢了"},
-    ],
+    # 打开自由聊天时不预置女主消息，等待玩家输入后由 AI 回复。
+    "initial_messages": [],
     # context 是本轮自由聊天的上下文。
     # scene 给未来 AI 回复生成使用；scoring_rule 是给开发者看的评分说明。
     # positive_keywords / negative_keywords / too_intimate_keywords 会被 wx_score_player_input() 读取，
