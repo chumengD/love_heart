@@ -113,14 +113,16 @@ screen wx_phone(standalone=False):
                                     xfill True
                                     yfill True
 
-                                    imagebutton:
-                                        idle "images/wechat/bottom_voice.png"
-                                        hover "images/wechat/bottom_voice.png"
-                                        xpos 170
+                                    button:
+                                        xpos 40
                                         yalign 0.5
-                                        xsize 70
-                                        ysize 70
+                                        xysize (76, 76)
+                                        background None
+                                        hover_background None
                                         action NullAction()
+
+                                        add "images/wechat/bottom_voice.png":
+                                            xysize (76, 76)
 
                                     hbox:
                                         xalign 0.5
@@ -131,23 +133,27 @@ screen wx_phone(standalone=False):
                                         else:
                                             use wx_scripted_chat_input_box()
 
-                                    imagebutton:
-                                        idle "images/wechat/bottom_emoji.png"
-                                        hover "images/wechat/bottom_emoji.png"
-                                        xpos 870
+                                    button:
+                                        xpos 955
                                         yalign 0.5
-                                        xsize 70
-                                        ysize 70
+                                        xysize (76, 76)
+                                        background None
+                                        hover_background None
                                         action SetScreenVariable("sticker_open", not sticker_open)
 
-                                    imagebutton:
-                                        idle "images/wechat/bottom_more.png"
-                                        hover "images/wechat/bottom_more.png"
-                                        xpos 950
+                                        add "images/wechat/bottom_emoji.png":
+                                            xysize (76, 76)
+
+                                    button:
+                                        xpos 1040
                                         yalign 0.5
-                                        xsize 70
-                                        ysize 70
+                                        xysize (76, 76)
+                                        background None
+                                        hover_background None
                                         action NullAction()
+
+                                        add "images/wechat/bottom_more.png":
+                                            xysize (76, 76)
 
 
 # 左侧导航栏。
