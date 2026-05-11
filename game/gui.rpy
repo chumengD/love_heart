@@ -50,7 +50,6 @@ define gui.hover_muted_color = '#003d7a'
 
 ## 对话和菜单选择文本使用的颜色。
 define gui.text_color = '#000000'
-define gui.text_size = 26
 define gui.interface_text_color = '#ffffff'
 
 
