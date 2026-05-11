@@ -981,10 +981,6 @@ screen file_slots(title):
                 textbutton _(">") action FilePageNext()
                 key "save_page_next" action FilePageNext()
 
-            if config.has_sync and CurrentScreenName() != "save":
-                textbutton _("下载同步"):
-                    action DownloadSync()
-                    xalign 0.5
 
     if main_menu:
         key "game_menu" action ShowMenu("main_menu")
