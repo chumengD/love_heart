@@ -704,6 +704,7 @@ label wx_scripted_chat_flow:
         while wx_scripted_has_pending_message():
             pause
             $ wx_reveal_next_pending_message()
+            with dissolve
             $ wx_narration = wx_get_last_narration()
             if wx_narration:
                 "[wx_narration]"
