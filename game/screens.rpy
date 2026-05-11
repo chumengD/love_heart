@@ -15,11 +15,11 @@ init python:
     def quick_menu_open_wechat_button(drag=None):
         global wx_phone_standalone_modal
 
-        if renpy.get_screen("wx_phone"):
-            return
-
         if quick_menu_phone_target == "takeaway_cg":
             renpy.show_screen("quick_menu_takeaway_cg")
+            return
+
+        if renpy.get_screen("wx_phone"):
             return
 
         wx_phone_standalone_modal = True

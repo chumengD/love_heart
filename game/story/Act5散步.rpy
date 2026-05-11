@@ -6,8 +6,6 @@
 #         flag =1
 
 label Act5_wander:
-    $ quick_menu_phone_target = "takeaway_cg"
-
     "几天过后，她的感冒彻底痊愈"
     "身体好转之后，她的语气重新变得轻快活泼"
     "隔着屏幕，我都能感受到她恢复元气的模样"
@@ -54,5 +52,4 @@ label Act5_wander:
 
     "晚风从河面吹来，把没有说出口的心事揉进夜色里。"
     "我开始意识到，靠近一个人不只是表达喜欢，也要学会认真听见她。"
-    $ quick_menu_phone_target = "ai"
     return
