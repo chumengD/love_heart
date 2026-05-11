@@ -762,7 +762,7 @@ screen memory_gallery():
                         use memory_gallery_card(cg)
 
                     for i in range(cg_fillers):
-                        null width 420 height 300
+                        null width 420 height 236
 
             else:
                 text _("没有找到 images/Act* 文件夹下的 CG。") style "memory_gallery_summary_text"
@@ -778,15 +778,10 @@ screen memory_gallery_card(cg):
         sensitive unlocked
         action ShowMenu("memory_gallery_view", cg)
 
-        vbox:
-            spacing 12
+        frame:
+            style "memory_gallery_thumb_frame"
 
-            frame:
-                style "memory_gallery_thumb_frame"
-
-                add Transform(preview, xysize=(420, 236), fit="cover")
-
-            text (cg["title"] if unlocked else _("未解锁")) style "memory_gallery_card_text"
+            add Transform(preview, xysize=(420, 236), fit="cover")
 
 
 screen memory_gallery_view(cg):
@@ -799,13 +794,17 @@ screen memory_gallery_view(cg):
         xalign 0.5
         yalign 0.5
 
+    button:
+        xfill True
+        yfill True
+        background None
+        action ShowMenu("memory_gallery")
+
     imagebutton:
         idle Transform("images/左箭头.png", zoom=0.8)
         hover Transform("images/左箭头.png", zoom=0.86)
         style "return_button"
         action ShowMenu("memory_gallery")
-
-    text cg["title"] style "memory_gallery_view_title"
 
     key "game_menu" action ShowMenu("memory_gallery")
 
@@ -822,9 +821,7 @@ style placeholder_text:
 
 style memory_gallery_summary_text is gui_text
 style memory_gallery_card is button
-style memory_gallery_card_text is gui_text
 style memory_gallery_thumb_frame is empty
-style memory_gallery_view_title is gui_text
 
 style memory_gallery_summary_text:
     size 34
@@ -832,7 +829,7 @@ style memory_gallery_summary_text:
 
 style memory_gallery_card:
     xsize 420
-    ysize 300
+    ysize 236
     padding (0, 0, 0, 0)
     background None
     hover_background Solid("#ffffff33")
@@ -842,19 +839,6 @@ style memory_gallery_thumb_frame:
     xsize 420
     ysize 236
     background Solid("#f8efe9")
-
-style memory_gallery_card_text:
-    xsize 420
-    size 30
-    color "#5c4a42"
-    textalign 0.5
-    xalign 0.5
-
-style memory_gallery_view_title:
-    xpos 210
-    ypos 62
-    size 48
-    color "#ffffff"
 
 
 ## 读取和保存屏幕 #####################################################################
