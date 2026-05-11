@@ -25,6 +25,9 @@ screen wx_phone(standalone=False):
     # 如果剧情没有提前初始化聊天，这里会自动加载默认聊天，避免空白。
     on "show" action Function(wx_ensure_default_state)
 
+    if standalone:
+        key "game_menu" action Hide("wx_phone")
+
     # 外侧黑色背景，对应截图中手机/窗口两边的黑边。
     add Solid("#000000")
 

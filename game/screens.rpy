@@ -267,33 +267,30 @@ screen quick_menu_wechat_button():
         draggable True
         droppable False
         drag_raise True
+        clicked [Function(wx_start_free_chat), Show("wx_phone", standalone=True)]
         xpos 0.9
         ypos 0.65
 
-        button:
+        fixed:
             xysize (72, 72)
-            padding (0, 0)
-            background Solid("#ffffffcc")
-            hover_background Solid("#e8f5ed")
-            action [Function(wx_start_free_chat), Show("wx_phone", standalone=True)]
 
-            fixed:
+            add Solid("#ffffffcc"):
                 xysize (72, 72)
 
-                add Solid("#2f3338"):
-                    xpos 23
-                    ypos 12
-                    xysize (26, 48)
+            add Solid("#2f3338"):
+                xpos 23
+                ypos 12
+                xysize (26, 48)
 
-                add Solid("#f8fafc"):
-                    xpos 26
-                    ypos 16
-                    xysize (20, 38)
+            add Solid("#f8fafc"):
+                xpos 26
+                ypos 16
+                xysize (20, 38)
 
-                add Solid("#2f3338"):
-                    xpos 33
-                    ypos 56
-                    xysize (6, 2)
+            add Solid("#2f3338"):
+                xpos 33
+                ypos 56
+                xysize (6, 2)
 
 
 ## 此代码确保只要用户没有主动隐藏界面，就会在游戏中显示 quick_menu 屏幕。
