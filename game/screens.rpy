@@ -737,11 +737,28 @@ init python:
     def memory_gallery_unlocked_count(items):
         return sum(1 for item in items if item["unlocked"])
 
+    def memory_gallery_unlocked_items(items):
+        return [item for item in items if item["unlocked"]]
+
+    def memory_gallery_index_by_path(items, path):
+        for index, item in enumerate(items):
+            if item["path"] == path:
+                return index
+
+        return 0
+
+    def memory_gallery_step_index(items, index, step):
+        if not items:
+            return 0
+
+        return (index + step) % len(items)
+
 
 screen memory_gallery():
 
     tag menu
     default cg_items = memory_gallery_items()
+    default unlocked_items = memory_gallery_unlocked_items(cg_items)
     default cg_cols = 3
     default cg_rows = (len(cg_items) + cg_cols - 1) // cg_cols
     default cg_fillers = (cg_cols - (len(cg_items) % cg_cols)) % cg_cols
@@ -759,7 +776,7 @@ screen memory_gallery():
                     spacing 30
 
                     for cg in cg_items:
-                        use memory_gallery_card(cg)
+                        use memory_gallery_card(cg, unlocked_items)
 
                     for i in range(cg_fillers):
                         null width 420 height 236
@@ -768,7 +785,7 @@ screen memory_gallery():
                 text _("没有找到 images/Act* 文件夹下的 CG。") style "memory_gallery_summary_text"
 
 
-screen memory_gallery_card(cg):
+screen memory_gallery_card(cg, unlocked_items):
 
     $ unlocked = cg["unlocked"]
     $ preview = cg["path"] if unlocked else memory_gallery_locked_image
@@ -776,7 +793,7 @@ screen memory_gallery_card(cg):
     button:
         style "memory_gallery_card"
         sensitive unlocked
-        action ShowMenu("memory_gallery_view", cg)
+        action ShowMenu("memory_gallery_view", unlocked_items, memory_gallery_index_by_path(unlocked_items, cg["path"]))
 
         frame:
             style "memory_gallery_thumb_frame"
@@ -784,28 +801,18 @@ screen memory_gallery_card(cg):
             add Transform(preview, xysize=(420, 236), fit="cover")
 
 
-screen memory_gallery_view(cg):
+screen memory_gallery_view(cg_items, cg_index=0):
 
     tag menu
+    default current_index = cg_index
+    $ cg = cg_items[current_index]
 
     add Solid("#111111")
 
-    add Transform(cg["path"], xysize=(1600, 900), fit="contain"):
-        xalign 0.5
-        yalign 0.5
+    add Transform(cg["path"], xysize=(config.screen_width, config.screen_height), fit="cover")
 
-    button:
-        xfill True
-        yfill True
-        background None
-        action ShowMenu("memory_gallery")
-
-    imagebutton:
-        idle Transform("images/左箭头.png", zoom=0.8)
-        hover Transform("images/左箭头.png", zoom=0.86)
-        style "return_button"
-        action ShowMenu("memory_gallery")
-
+    key "mousedown_4" action SetScreenVariable("current_index", memory_gallery_step_index(cg_items, current_index, -1))
+    key "mousedown_5" action SetScreenVariable("current_index", memory_gallery_step_index(cg_items, current_index, 1))
     key "game_menu" action ShowMenu("memory_gallery")
 
 
