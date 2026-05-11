@@ -9,6 +9,8 @@ transform wx_message_dissolve:
         alpha 0.0
         linear 0.25 alpha 1.0
 
+default wx_phone_standalone_modal = False
+
 # 主微信屏幕。
 # 剧本聊天演示：
 # $ wx_start_scripted_chat()
@@ -19,14 +21,15 @@ transform wx_message_dissolve:
 # call screen wx_phone
 screen wx_phone(standalone=False):
     tag wx_phone
-    modal standalone
+    modal wx_phone_standalone_modal
     default sticker_open = False
 
     # 如果剧情没有提前初始化聊天，这里会自动加载默认聊天，避免空白。
     on "show" action Function(wx_ensure_default_state)
+    on "hide" action SetVariable("wx_phone_standalone_modal", False)
 
     if standalone:
-        key "game_menu" action Hide("wx_phone")
+        key "game_menu" action [SetVariable("wx_phone_standalone_modal", False), Hide("wx_phone")]
 
     # 外侧黑色背景，对应截图中手机/窗口两边的黑边。
     add Solid("#000000")

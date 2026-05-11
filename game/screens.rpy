@@ -12,6 +12,12 @@ init python:
     if "mousedown_5" in config.keymap["rollforward"]:
         config.keymap["rollforward"].remove("mousedown_5")
 
+    def quick_menu_open_wechat_button(drag=None):
+        global wx_phone_standalone_modal
+        wx_phone_standalone_modal = True
+        wx_start_free_chat()
+        renpy.show_screen("wx_phone", standalone=True)
+
 ################################################################################
 ## 样式
 ################################################################################
@@ -267,7 +273,7 @@ screen quick_menu_wechat_button():
         draggable True
         droppable False
         drag_raise True
-        clicked [Function(wx_start_free_chat), Show("wx_phone", standalone=True)]
+        clicked quick_menu_open_wechat_button
         xpos 0.9
         ypos 0.65
 
