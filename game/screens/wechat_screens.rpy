@@ -246,7 +246,7 @@ screen wx_chat_page():
             for message in wx_chat_messages:
                 use wx_chat_message(message)
 
-    if wx_pending_messages:
+    if wx_pending_messages and wx_active_chat_mode == "free":
         timer WX_HEROINE_MESSAGE_DELAY action Function(wx_reveal_next_pending_message) repeat True
 
     if wx_chat_needs_scroll():

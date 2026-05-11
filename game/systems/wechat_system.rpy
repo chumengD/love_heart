@@ -19,7 +19,7 @@ default wx_active_message_index = 0
 # 用 default 保存，是为了让存档和回滚能记录当前聊天进度。
 default wx_chat_messages = []
 
-# 等待逐条显示的女主消息。
+# 等待逐条显示的消息。自由聊天里女主回复可自动出现，剧本聊天里由玩家点击逐条推进。
 default wx_pending_messages = []
 
 # 聊天框自动下滑用的版本号。每追加一条可见消息就递增一次。
@@ -134,7 +134,7 @@ init python:
         return wx_contact_side(message.get("speaker", WX_DEFAULT_CONTACT_ID))
 
 
-    # 女主消息逐条出现的间隔。
+    # 自由聊天里女主消息逐条出现的间隔。
     WX_HEROINE_MESSAGE_DELAY = 0.75
 
 
@@ -173,6 +173,7 @@ init python:
 
     def wx_reveal_next_pending_message():
         global wx_pending_messages
+        global wx_last_narration
 
         if not wx_pending_messages:
             return
@@ -180,6 +181,7 @@ init python:
         next_pending = list(wx_pending_messages)
         message = next_pending.pop(0)
         wx_pending_messages = next_pending
+        wx_last_narration = message.get("narration", "")
         wx_append_visible_message(message)
         renpy.restart_interaction()
 
@@ -194,7 +196,7 @@ init python:
         
     # 追加一条聊天消息到当前聊天记录。
     # 注意这里会复制 list 再赋值，方便 Ren'Py 的存档/回滚系统识别状态变化。
-    def wx_append_message(speaker, text, slow_heroine=True):
+    def wx_append_message(speaker, text, slow_heroine=True, narration=""):
         if not text:
             return
 
@@ -202,6 +204,9 @@ init python:
             "speaker": speaker,
             "text": str(text),
         }
+
+        if narration:
+            message["narration"] = str(narration)
 
         if slow_heroine and (speaker == WX_DEFAULT_CONTACT_ID or wx_pending_messages):
             wx_queue_message(message)
@@ -233,16 +238,14 @@ init python:
         wx_append_message(WX_DEFAULT_CONTACT_ID, "你还挺可爱的嘛。")
 
 
-    # 批量追加消息。选项后的 reply_messages 会走这里。
+    # 批量追加消息。自由聊天初始消息和通用追加会走这里。
     def wx_append_messages(messages):
-        global wx_last_narration
-
         for message in messages or []:
             wx_append_message(
                 message.get("speaker", WX_DEFAULT_CONTACT_ID),
                 message.get("text", ""),
+                narration=message.get("narration", ""),
             )
-            wx_last_narration = message.get("narration", "")
 
 
     # 打开剧本选项推进聊天。
@@ -276,6 +279,11 @@ init python:
     def wx_scripted_has_next_message():
         node = wx_get_scripted_node()
         return wx_active_message_index < len(node.get("messages", []))
+
+
+    # 选项后的玩家消息和女主回复会先进入这里，等待默认文本框点击逐条显示。
+    def wx_scripted_has_pending_message():
+        return wx_active_chat_mode == "scripted" and bool(wx_pending_messages)
 
 
     # 显示当前节点的下一条微信消息。
@@ -318,19 +326,23 @@ init python:
         if wx_scripted_has_next_message():
             return []
 
+        if wx_scripted_has_pending_message():
+            return []
+
         node = wx_get_scripted_node()
         return node.get("choices", [])
 
 
     # 玩家点击剧本选项后的统一入口。
     # 做的事按顺序是：
-    # 1. 把 player_text 追加成我的气泡。
+    # 1. 把 player_text 放进待显示队列，下一次点击才显示我的气泡。
     # 2. 读取 affection_delta，并调用隐藏好感度系统 lc_add_affection()。
-    # 3. 追加女主 reply_messages。
+    # 3. 把女主 reply_messages 也放进同一个队列，后续每点击一次只显示一条。
     # 4. 如果配置了 next_label，直接跳剧情 label；否则按 next 切到下一个聊天节点。
     def wx_choose_scripted_option(choice_index):
         global wx_active_node_id
         global wx_active_message_index
+        global wx_last_narration
 
         choices = wx_current_scripted_choices()
 
@@ -338,7 +350,13 @@ init python:
             return
 
         choice = choices[choice_index]
-        wx_append_message(WX_PLAYER_CONTACT_ID, choice.get("player_text", choice.get("text", "")))
+        wx_last_narration = ""
+        player_text = str(choice.get("player_text", choice.get("text", "")) or "")
+        if player_text:
+            wx_queue_message({
+                "speaker": WX_PLAYER_CONTACT_ID,
+                "text": player_text,
+            })
 
         # 剧本选项的好感变化只从数据字段 affection_delta 来。
         # 这里不新建微信自己的好感度变量，只调用方案一的 lc_add_affection()。
@@ -349,7 +367,14 @@ init python:
                 source="wechat:choice:{0}".format(choice_index),
             )
 
-        wx_append_messages(choice.get("reply_messages", []))
+        for message in choice.get("reply_messages", []):
+            reply_text = str(message.get("text", "") or "")
+            if reply_text:
+                wx_queue_message({
+                    "speaker": message.get("speaker", WX_DEFAULT_CONTACT_ID),
+                    "text": reply_text,
+                    "narration": message.get("narration", ""),
+                })
 
         # next_label 用于从微信选项直接跳回某段剧情。
         # 数据示例：{"next_label": "chapter_02_after_wechat"}。
@@ -661,6 +686,15 @@ init python:
 # call wx_scripted_chat_flow
 label wx_scripted_chat_flow:
     while True:
+        while wx_scripted_has_pending_message():
+            $ wx_reveal_next_pending_message()
+            with dissolve
+            $ wx_narration = wx_get_last_narration()
+            if wx_narration:
+                "[wx_narration]"
+            else:
+                pause
+
         while wx_scripted_has_next_message():
             $ wx_reveal_next_scripted_message()
             with dissolve
