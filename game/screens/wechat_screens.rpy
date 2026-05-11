@@ -19,7 +19,7 @@ transform wx_message_dissolve:
 # call screen wx_phone
 screen wx_phone(standalone=False):
     tag wx_phone
-    modal False
+    modal standalone
     default sticker_open = False
 
     # 如果剧情没有提前初始化聊天，这里会自动加载默认聊天，避免空白。
