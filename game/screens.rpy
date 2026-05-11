@@ -744,16 +744,11 @@ screen file_slots(title):
         action Return()
 
     text title style "save_title_text"
-    text "♡" style "save_sketch_mark" xpos 1520 ypos 72
-    text "♡" style "save_sketch_mark" xpos 1590 ypos 920
 
     fixed:
 
         ## 此代码确保输入控件在任意按钮执行前可以获取 enter 事件。
         order_reverse True
-
-        add Solid("#7a4a35") xpos 330 ypos 150 xsize 1260 ysize 3
-        add Solid("#d98a75") xpos 430 ypos 164 xsize 1060 ysize 2
 
         ## 页面名称，可以通过单击按钮进行编辑。
         button:
@@ -767,6 +762,8 @@ screen file_slots(title):
             input:
                 style "page_label_text"
                 value page_name_value
+                xalign 0.5
+                yalign 0.5
 
         ## 存档位网格。
         grid gui.file_slot_cols gui.file_slot_rows:
@@ -835,15 +832,10 @@ screen file_slots(title):
                 textbutton _(">") action FilePageNext()
                 key "save_page_next" action FilePageNext()
 
-            if config.has_sync:
-                if CurrentScreenName() == "save":
-                    textbutton _("上传同步"):
-                        action UploadSync()
-                        xalign 0.5
-                else:
-                    textbutton _("下载同步"):
-                        action DownloadSync()
-                        xalign 0.5
+            if config.has_sync and CurrentScreenName() != "save":
+                textbutton _("下载同步"):
+                    action DownloadSync()
+                    xalign 0.5
 
     if main_menu:
         key "game_menu" action ShowMenu("main_menu")
@@ -862,18 +854,19 @@ style slot_name_text is slot_button_text
 style slot_preview_frame is empty
 style save_return_button is navigation_button
 style save_title_text is gui_label_text
-style save_sketch_mark is gui_text
 
 style page_label:
     xsize 420
     ysize 62
     background Solid("#fff7d6d8")
     hover_background Solid("#ffe9bccc")
-    xpadding 30
-    ypadding 7
+    xpadding 0
+    ypadding 0
     xalign 0.5
 
 style page_label_text:
+    xalign 0.5
+    yalign 0.5
     textalign 0.5
     layout "subtitle"
     size 30
@@ -881,15 +874,17 @@ style page_label_text:
     hover_color "#d46f65"
 
 style page_button:
-    xminimum 46
-    yminimum 44
+    xsize 46
+    ysize 46
     background Solid("#fff7d600")
     hover_background Solid("#fff0c5cc")
     selected_background Solid("#e9927d99")
-    xpadding 9
-    ypadding 2
+    xpadding 0
+    ypadding 0
 
 style page_button_text:
+    xalign 0.5
+    yalign 0.5
     size 28
     color "#7a604d"
     hover_color "#8b3f35"
@@ -943,10 +938,6 @@ style save_title_text:
     color "#7a4a35"
     xpos 188
     ypos 65
-
-style save_sketch_mark:
-    size 46
-    color "#d98a75cc"
 
 
 ## 设置屏幕 ########################################################################
