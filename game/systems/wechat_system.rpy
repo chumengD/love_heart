@@ -734,7 +734,8 @@ label wx_scripted_chat_flow:
             if wx_narration:
                 "[wx_narration]"
         else:
-            return
+            hide screen wx_phone
+            jump Act3_encounter
 
 
 label wx_click_reveal_pending_message:
