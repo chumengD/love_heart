@@ -26,10 +26,12 @@ screen wx_phone(standalone=False):
 
     # 如果剧情没有提前初始化聊天，这里会自动加载默认聊天，避免空白。
     on "show" action Function(wx_ensure_default_state)
-    on "hide" action SetVariable("wx_phone_standalone_modal", False)
+    on "hide" action [SetVariable("wx_phone_standalone_modal", False), Function(wx_standalone_restore_window)]
 
     if standalone:
-        key "game_menu" action Return()
+        key "game_menu" action [SetVariable("wx_phone_standalone_modal", False), Hide("wx_phone")]
+        key "dismiss" action NullAction()
+        key "rollforward" action NullAction()
 
     # 外侧黑色背景，对应截图中手机/窗口两边的黑边。
     add Solid("#000000")
@@ -275,7 +277,9 @@ screen wx_chat_message(message):
                 color "#8b8b8f"
                 text_align 0.5
 
-        if side == "right":
+        if not message_text and not message_image:
+            pass
+        elif side == "right":
             # 右侧气泡：主视角我。文本左对齐，绿色气泡。
             hbox at wx_message_dissolve:
                 xalign 1.0

@@ -513,6 +513,37 @@ init python:
         wx_append_messages(wx_free_chat.get("initial_messages", []))
 
 
+    # 进入自由聊天（保留历史记录）。
+    # 首次进入时初始化聊天，再次进入时保留已有消息并添加时间分隔。
+    def wx_enter_free_chat():
+        global wx_current_view
+        global wx_active_chat_mode
+        global wx_free_input_text
+        global wx_last_narration
+
+        wx_current_view = "chat"
+        wx_active_chat_mode = "free"
+        wx_free_input_text = ""
+        wx_last_narration = ""
+
+        if not wx_chat_messages and not wx_pending_messages:
+            wx_start_free_chat()
+        else:
+            # 重新进入时添加当前时间作为分隔标记
+            import datetime
+            now = datetime.datetime.now().strftime("%H:%M")
+            wx_append_visible_message({
+                "speaker": "",
+                "text": "",
+                "time_text": now,
+            })
+
+    # 退出独立微信界面时恢复文本框自动显示。
+    def wx_standalone_restore_window():
+        store._window_auto = True
+        store._window = True
+
+
     # 当前自由聊天上下文。
     # 评分函数和 AI 回复函数都接收同一份 context，后续接 Ollama 时可以把 scene/scoring_rule 作为提示词材料。
     def wx_active_free_context():

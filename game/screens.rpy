@@ -23,17 +23,15 @@ init python:
             return
 
         if renpy.get_screen("wx_phone"):
+            renpy.hide_screen("wx_phone")
+            renpy.restart_interaction()
             return
 
-        renpy.call_in_new_context("wx_free_chat_entry")
-
-label wx_free_chat_entry:
-    window hide
-    $ wx_phone_standalone_modal = True
-    $ wx_start_free_chat()
-    call screen wx_phone(standalone=True)
-    window auto
-    return
+        wx_phone_standalone_modal = True
+        wx_enter_free_chat()
+        store._window = False
+        store._window_auto = False
+        renpy.show_screen("wx_phone", standalone=True)
 
 ################################################################################
 ## 样式
