@@ -33,83 +33,12 @@ define wx_contacts = {
 }
 
 # 剧本选项推进版聊天数据。
-# 这里已经去掉外层编号，当前只有一套演示剧本；以后要换成正式剧本，直接改 nodes。
-# start_node 是默认起始节点；nodes 里每个 key 是 node_id。
+# 默认不再放示例聊天；剧情内需要微信聊天时，由 story 文件自行调用 wx_queue_text_message() 推进。
+# 保留这个空数据壳，避免旧存档或兜底初始化读取 wx_scripted_chat 时报错。
 define wx_scripted_chat = {
-    "title": "微信聊天示例",
+    "title": "",
     "start_node": "1",
-    "nodes": {
-        "1": {
-            # messages 会被逐条显示，不会一次性全部出现。
-            # 玩家每点一次默认文本框，就推进一条微信消息，并用 dissolve 过渡显示。
-            # speaker 必须对应 wx_contacts 里的联系人 id；text 是气泡文字。
-            # narration 是底部默认文本框里显示的旁白或我的心理，不想显示就写空字符串。
-            "messages": [
-                {
-                    "speaker": "heroine",
-                    "text": "上司又乱朝我发脾气了",
-                    "narration": "手机屏幕亮起，是她发来的消息。",
-                },
-                {
-                    "speaker": "heroine",
-                    "text": "明明不是我的错",
-                    "narration": "她看起来真的很委屈。",
-                },
-                {
-                    "speaker": "player",
-                    "text": "不是你的错",
-                    "narration": "我得先让她知道，这件事不是她的问题。",
-                },
-            ],
-            # choices 是底部选项。只有当前节点 messages 全部显示完后，底部才会切换成选项。
-            # text：按钮上看到的文字。
-            # player_text：玩家点选后，我真正发出去的气泡文字。
-            # reply_messages：选项后女主追加回复。
-            # affection_delta：这次选择对好感度的影响，会调用 lc_add_affection()。
-            # next：跳到同一套剧本里的下一个 node_id。
-            # next_label：如果以后要直接跳剧情 label，可加这个字段，逻辑层会优先 renpy.jump(next_label)。
-            "choices": [
-                {
-                    "text": "明天出去玩吧",
-                    "player_text": "明天要不要出去玩？",
-                    "reply_messages": [
-                        {
-                            "speaker": "heroine",
-                            "text": "好啊，去哪里玩",
-                            "narration": "她愿意出门，也许心情会好一点。",
-                        },
-                    ],
-                    "affection_delta": 5,
-                    "next": "2",
-                },
-                {
-                    "text": "讲个笑话",
-                    "player_text": "这是一个笑话",
-                    "reply_messages": [
-                        {
-                            "speaker": "heroine",
-                            "text": "这个笑话有点冷。",
-                            "narration": "好像没怎么逗笑她。",
-                        },
-                    ],
-                    "affection_delta": -3,
-                    "next": "2",
-                },
-            ],
-        },
-        "2": {
-            # choices 为空时，演示流程会结束并进入自由聊天。
-            # 以后想让这个节点继续分支，就在 choices 里继续加选项字典。
-            "messages": [
-                {
-                    "speaker": "heroine",
-                    "text": "那就先这样，之后再聊。",
-                    "narration": "这段聊天先告一段落。",
-                },
-            ],
-            "choices": [],
-        },
-    },
+    "nodes": {},
 }
 
 # 自由输入聊天配置。

@@ -87,14 +87,6 @@ label start:
     call Act1_wedding
 
     call Act2_wx
-    
-    $ wx_start_scripted_chat()
-
-    show screen wx_phone
-
-    call wx_scripted_chat_flow
-
-    hide screen wx_phone
 
     # $ wx_start_free_chat()
 
