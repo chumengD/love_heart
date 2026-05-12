@@ -723,7 +723,7 @@ screen achievements():
 init python:
     import os
 
-    memory_gallery_locked_image = "C:/Users/LENOVO/Desktop/pic/logo.png"
+    memory_gallery_locked_image = "images/logo.png"
     memory_gallery_image_extensions = (".jpg", ".jpeg", ".png", ".webp", ".avif", ".svg")
 
     def memory_gallery_title(path):
