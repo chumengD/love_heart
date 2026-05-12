@@ -1,8 +1,9 @@
-
+image encounter ="images\\3_encounter.jpg"
 
 
 label Act3_encounter:
     #todo 这里应该是一个动画
+    show bird
     "微信断断续续聊天，我们分享生活、吐槽琐事、偶尔互发表情包。"
     "陌生感慢慢消散，聊天框里的语气也越来越自然。"
     "我总会忍不住点开她的朋友圈，一遍一遍翻看。"
@@ -12,6 +13,9 @@ label Act3_encounter:
     "晚风轻轻吹过，落日把地面拉出长长的人影。"
     "我站在路边，假装随意，视线却一直停留在路口。"
     #change  熟悉？ 
+    hide bird 
+    with dissolve
+    show encounter
     "没过多久,那个熟悉的身影慢慢出现在视线里"
     "她背着双肩包，发丝被风吹起，走路慢悠悠的，神色带着一点上课后的疲惫"
     m "看见了……真人比照片还要好看"
