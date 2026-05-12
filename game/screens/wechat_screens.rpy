@@ -29,7 +29,7 @@ screen wx_phone(standalone=False):
     on "hide" action SetVariable("wx_phone_standalone_modal", False)
 
     if standalone:
-        key "game_menu" action [SetVariable("wx_phone_standalone_modal", False), Hide("wx_phone")]
+        key "game_menu" action Return()
 
     # 外侧黑色背景，对应截图中手机/窗口两边的黑边。
     add Solid("#000000")
