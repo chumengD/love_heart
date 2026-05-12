@@ -104,6 +104,14 @@ label start:
 
     call Act3_heroine_view
 
+    call Act4_sick
+
+    call Act5_wander
+
+    call Act6_afternoon_tea
+
+    call Act7_amusement_confession
+
     # 此处为游戏结尾。
 
     return
