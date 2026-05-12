@@ -1,5 +1,5 @@
-image encounter ="images\\3_encounter.jpg"
-
+image encounter ="images/Act3/encounter.jpg"
+image sayHi ="images/Act3/sayHi.jpg"
 
 label Act3_encounter:
     #todo 这里应该是一个动画
@@ -22,10 +22,13 @@ label Act3_encounter:
     "心口咚咚作响,心跳开始乱了"
     "要不要上前搭话？"
     "我该怎么开口？"
-
+   
     menu:
         "你选择"
+       
         "好巧啊，你也走这条路？我刚好顺路":
+            hide encounter
+            show sayHi
             $ lc_add_affection(6)
             "（当前好感度：[4]）"
             m "好巧啊，你也走这条路？我刚好顺路"
@@ -35,6 +38,8 @@ label Act3_encounter:
             #change 我们一路畅谈,balabala
 
         "我特意等你的，就是想跟你多见一面":
+            hide encounter
+            show sayHi
             $ lc_add_affection(-5)
             "（当前好感度：[4]）"
             m "我特意等你的，就是想跟你多见一面"
@@ -43,6 +48,8 @@ label Act3_encounter:
             g "嗯......"
             #change 沉默悄然而至，为什么她不开口了？balabala
         "低头玩手机，假装没看见，等女主主动打招呼":
+            hide encounter
+            show sayHi
             "我紧张到不敢对视"
             "慌忙低下头假装滑动手机，刻意装作没有看见她"
             "好巧，你也在这里？"
@@ -50,6 +57,7 @@ label Act3_encounter:
             "哈哈哈真巧呀！那你先去忙吧，我先走了哦，拜拜！"
             #change 望着她渐行渐远的背影，我恨不得甩自己一巴掌
         
+    hide sayHi
         #todo 背包按钮？
         # "我打开背包，里面是一小袋甜甜的软糖。"
         # "我上前一步，轻轻把东西递到她面前。"

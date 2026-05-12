@@ -11,6 +11,7 @@ label Act4_sick:
     $ quick_menu_phone_target = "ai"
     $ act4_affection_before = lc_get_affection()
 
+    show bird
     if act4_affection_before >= 50:
         "自那次黄昏偶遇过后，我们之间的暧昧感愈发明显"
         "聊天不再是简单的客套寒暄，偶尔会互道晚安，分享深夜碎碎念"
@@ -22,11 +23,11 @@ label Act4_sick:
         "手指总会下意识停在她的聊天界面，却不敢主动打扰"
         "我希望走进她的世界"
         "但不清楚她对我是什么感觉，也不敢擅自揣测她的心意。"
+    hide bird
     "突然，她发来一条消息"
     #todo 微信聊天的内容
     $ wx_start_scripted_chat()
     show screen wx_phone
-    pause 0.4
     $ wx_queue_text_message("heroine", "我好像感冒发烧了，浑身难受。")
     call wx_click_reveal_pending_message
     $ quick_menu_phone_target = "takeaway_cg"
@@ -76,26 +77,26 @@ label Act4_sick:
             call wx_click_reveal_pending_message
             "她委婉拒绝了我的冲动，却还是能感受到我是真的着急。"
 
-    menu:
-        "要不要再做点实际的事？"
-        "点外卖送药和清淡小米粥":
-            $ lc_add_affection(12)
-            "我没有急着继续打字安慰，指尖点开手机里的外卖软件。"
-            "我认真挑选温和感冒药、退烧贴、暖胃的清淡小米粥，顺带加了几包暖宝宝和润喉糖。"
-            "备注一栏写下：喝了药早点休息哦，有需要就给我打电话。"
-            "半小时后，聊天框弹出一张实拍照片。"
-            $ wx_queue_text_message("heroine", "【照片】外卖袋整齐摆在桌面，药品、热粥摆放清晰，灯光柔和。")
-            call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "谢谢你……从来没有人对我这么细心....")
-            call wx_click_reveal_pending_message
-            "这一刻，只想好好守护她。"
-            "触发成就：【满分关怀】"
-        "先让她好好休息":
-            $ wx_queue_text_message("player", "那你先好好休息，醒了记得告诉我一声。")
-            call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "好。")
-            call wx_click_reveal_pending_message
-            "我把手机放在枕边，直到屏幕暗下去还在担心她。"
+    # menu:
+    #     "要不要再做点实际的事？"
+    #     "点外卖送药和清淡小米粥":
+    #         $ lc_add_affection(12)
+    #         "我没有急着继续打字安慰，指尖点开手机里的外卖软件。"
+    #         "我认真挑选温和感冒药、退烧贴、暖胃的清淡小米粥，顺带加了几包暖宝宝和润喉糖。"
+    #         "备注一栏写下：喝了药早点休息哦，有需要就给我打电话。"
+    #         "半小时后，聊天框弹出一张实拍照片。"
+    #         $ wx_queue_text_message("heroine", "【照片】外卖袋整齐摆在桌面，药品、热粥摆放清晰，灯光柔和。")
+    #         call wx_click_reveal_pending_message
+    #         $ wx_queue_text_message("heroine", "谢谢你……从来没有人对我这么细心....")
+    #         call wx_click_reveal_pending_message
+    #         "这一刻，只想好好守护她。"
+    #         "触发成就：【满分关怀】"
+    #     "先让她好好休息":
+    #         $ wx_queue_text_message("player", "那你先好好休息，醒了记得告诉我一声。")
+    #         call wx_click_reveal_pending_message
+    #         $ wx_queue_text_message("heroine", "好。")
+    #         call wx_click_reveal_pending_message
+    #         "我把手机放在枕边，直到屏幕暗下去还在担心她。"
 
     hide screen wx_phone
     $ quick_menu_phone_target = "ai"

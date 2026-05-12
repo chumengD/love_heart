@@ -5,7 +5,11 @@
 #     if (affection>50):
 #         flag =1
 
+image wandering ="images/Act5/wandering.png"
+
 label Act5_wander:
+    show bird
+    #todo 这里应该要展示的是微信聊天框
     "几天过后，她的感冒彻底痊愈"
     "身体好转之后，她的语气重新变得轻快活泼"
     "隔着屏幕，我都能感受到她恢复元气的模样"
@@ -16,10 +20,17 @@ label Act5_wander:
         "出乎意料，她没有犹豫，爽快答应。"
     else:
         "她犹豫了一下，最终还是答应了我的请求。"
+    hide bird
+    with dissolve
+    show wandering
+    with dissolve
 
     "夜色慢慢笼罩城市，路边路灯逐一点亮。"
     "我们并肩走在河边步道，晚风轻轻吹动发丝。"
-    "没有喧闹人群，没有嘈杂车流，只有安静的晚风、脚下的石板路。"
+    "没有喧闹人群，没有嘈杂车流"
+    "只有安静的晚风、脚下的石板路。"
+    "世界好像被隔绝在外，月光幽幽"
+    "只余两片沉默的身影与我们相伴"
     "这样的氛围太安静了，反而让我更加在意自己说出口的每一句话。"
 
     menu:
@@ -52,4 +63,6 @@ label Act5_wander:
 
     "晚风从河面吹来，把没有说出口的心事揉进夜色里。"
     "我开始意识到，靠近一个人不只是表达喜欢，也要学会认真听见她。"
+    hide wandering
+    with dissolve
     return

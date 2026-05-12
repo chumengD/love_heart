@@ -1,11 +1,24 @@
+image love ="images/Act7/love1.png"
+image love_ok1 ="images/Act7/love_ok1.png"
+image love_ok2 ="images/Act7/love_ok2.png"
+image love_fail ="images/Act7/love_fail2.png"
+
 label Act7_amusement_confession:
+    show bird
+    with dissolve
+    #todo 这里需要等待的cg，或者游乐园的背景
     "今天天气晴朗，风也温柔。"
     "我提前到达游乐园门口等她。"
     "没过多久，她缓缓走来，浅色系的衣服特别适合她。"
+    #change 这里不需要夸夸她吗？
+    #todo 游玩的cg呢
     "我们一起坐旋转木马，慢悠悠随着转盘起伏。"
     "我们一起逛文创小店，互相挑选可爱的小挂件。"
     "我们一起走在热闹的人群里，分享同一支冰淇淋。"
     "一路上说说笑笑，时间流逝得悄无声息。"
+    hide bird
+    with dissolve
+    show love
     "今天的最后一项行程，是游乐园最高的摩天轮。"
     "轿厢缓缓上升，窗外城市慢慢缩小，世间喧嚣全部远离。"
     "我的心跳却前所未有的剧烈。"
@@ -17,8 +30,11 @@ label Act7_amusement_confession:
     m "XX，我喜欢你。要不要做我的女朋友？"
 
     $ act7_final_affection = lc_get_affection()
+    hide love
+    with dissolve
 
     if act7_final_affection < 50:
+        show love_fail
         "她垂下眼眸，长睫毛轻轻颤动，沉默许久。"
         "她的语气轻柔，却带着清晰的距离感。"
         g "谢谢你这么认真地喜欢我。"
@@ -28,8 +44,10 @@ label Act7_amusement_confession:
         "摩天轮缓缓下降，晚霞依旧好看，只是我心里少了一束光。"
         "我们保留分寸，体面收场。"
         "解锁结局【遗憾擦肩】"
+        hide love_fail
 
     elif act7_final_affection < 80:
+        show love_ok2
         g "其实，我很喜欢你的细心和温柔。"
         g "和你相处很舒服、很安心。"
         g "只是我现在，还没有完全笃定自己的心意。"
@@ -39,8 +57,10 @@ label Act7_amusement_confession:
         "未来是否长久，无人知晓。"
         "但此刻，她愿意向我靠近一步。"
         "解锁结局【平淡相守】"
+        hide love_ok2
 
     else:
+        show love_ok1
         g "其实，我也是。"
         g "从婚礼那一次相撞开始，我就记住你了。"
         g "你的细心、你的温柔、你的小心翼翼，我全部都知道。"
@@ -49,7 +69,9 @@ label Act7_amusement_confession:
         "落日见证告白，摩天轮锁住心动。"
         "原来，双向奔赴，是全世界最温柔的事情。"
         "解锁结局【心动圆满】"
+        hide love_ok1
 
+    #todo 这里也需要cg
     "喜欢从不是一时兴起的冲动。"
     "而是认真、耐心、细心、真诚。"
     "学会爱人，学会珍惜。"

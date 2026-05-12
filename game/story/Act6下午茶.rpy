@@ -1,5 +1,8 @@
+image order ="images\Act6\order.png"
+
 label Act6_afternoon_tea:
     $ act6_affection_before = lc_get_affection()
+    show bird
 
     if act6_affection_before >= 65:
         "我们的距离越来越近，暧昧越来越浓。"
@@ -12,7 +15,7 @@ label Act6_afternoon_tea:
 
     "这是告白前最重要的一次约会。"
     "我不能搞砸。"
-
+    # change 这里应该描写一下男主的准备吧,太短了
     menu:
         "下午茶约会时，我要怎么安排？"
         "点她喜欢的饮品和甜品":
@@ -26,13 +29,18 @@ label Act6_afternoon_tea:
             "那些被认真记住的小细节，比直接说喜欢更让人心动。"
 
         "让她来决定，自己都可以":
+            hide bird 
+            with dissolve
+            show order
             "我拿着菜单犹豫了很久，最后还是把选择权交给她。"
             m "你随便点哦，我都可以的。"
             g "诶，这样吗，你有没有特别喜欢的呀？"
             m "我都可以啦，取决于你啦。"
             "她笑了笑，没有再追问。"
             "这场约会顺利进行，却少了一点被提前准备好的惊喜。"
-
+            hide order
+            
+    #todo 这里需要两人畅聊的cg
     "窗外阳光落在桌沿，咖啡馆里播放着轻柔的音乐。"
     "我们聊起最近的生活，聊起未来想去的地方。"
     "我看着她认真听我说话的样子，心里的答案变得越来越清晰。"
