@@ -144,7 +144,7 @@ label Act2_wx:
         "我忍住继续发消息的冲动，把手机放到枕边。"
 
     #change 应该有日期提醒吧
-    $ wx_queue_text_message("heroine", "这个水课老师好烦呐，只是念ppt，还不让我们看手机。")
+    $ wx_queue_text_message("heroine", "这个水课老师好烦呐，只是念ppt，还不让我们看手机。", time_text="10:07")
     call wx_click_reveal_pending_message
     $ wx_queue_text_message("player", "哈哈哈，老师也很想水掉这个课啊。")
     call wx_click_reveal_pending_message

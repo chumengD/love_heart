@@ -171,7 +171,7 @@ init python:
         wx_pending_messages = next_pending
 
 
-    def wx_queue_text_message(speaker, text, narration=""):
+    def wx_queue_text_message(speaker, text, narration="", time_text=""):
         if not text:
             return
 
@@ -182,6 +182,9 @@ init python:
 
         if narration:
             message["narration"] = str(narration)
+
+        if time_text:
+            message["time_text"] = str(time_text)
 
         wx_queue_message(message)
 
@@ -211,7 +214,7 @@ init python:
         
     # 追加一条聊天消息到当前聊天记录。
     # 注意这里会复制 list 再赋值，方便 Ren'Py 的存档/回滚系统识别状态变化。
-    def wx_append_message(speaker, text, slow_heroine=True, narration=""):
+    def wx_append_message(speaker, text, slow_heroine=True, narration="", time_text=""):
         if not text:
             return
 
@@ -222,6 +225,9 @@ init python:
 
         if narration:
             message["narration"] = str(narration)
+
+        if time_text:
+            message["time_text"] = str(time_text)
 
         if slow_heroine and (speaker == WX_DEFAULT_CONTACT_ID or wx_pending_messages):
             wx_queue_message(message)
@@ -260,6 +266,7 @@ init python:
                 message.get("speaker", WX_DEFAULT_CONTACT_ID),
                 message.get("text", ""),
                 narration=message.get("narration", ""),
+                time_text=message.get("time_text", ""),
             )
 
 
@@ -321,6 +328,7 @@ init python:
             message.get("speaker", WX_DEFAULT_CONTACT_ID),
             message.get("text", ""),
             slow_heroine=False,
+            time_text=message.get("time_text", ""),
         )
         wx_last_narration = message.get("narration", "")
         return True
@@ -389,6 +397,7 @@ init python:
                     "speaker": message.get("speaker", WX_DEFAULT_CONTACT_ID),
                     "text": reply_text,
                     "narration": message.get("narration", ""),
+                    "time_text": message.get("time_text", ""),
                 })
 
         # next_label 用于从微信选项直接跳回某段剧情。

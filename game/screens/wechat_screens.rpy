@@ -262,58 +262,70 @@ screen wx_chat_message(message):
     $ side = wx_message_side(message)
     $ message_text = message.get("text", "")
     $ message_image = message.get("image", "")
+    $ time_text = message.get("time_text", "")
 
-    if side == "right":
-        # 右侧气泡：主视角我。文本左对齐，绿色气泡。
-        hbox at wx_message_dissolve:
-            xalign 1.0
-            spacing 16
+    vbox:
+        xfill True
+        spacing 16
 
-            null:
-                xfill True
+        if time_text:
+            text time_text:
+                xalign 0.5
+                size 24
+                color "#8b8b8f"
+                text_align 0.5
 
-            if message_image:
-                add wx_clean_image_path(message_image):
-                    xysize (150, 220)
-            else:
-                frame:
-                    xmaximum 610
-                    padding (28, 18)
-                    background Solid("#b9e99d")
+        if side == "right":
+            # 右侧气泡：主视角我。文本左对齐，绿色气泡。
+            hbox at wx_message_dissolve:
+                xalign 1.0
+                spacing 16
 
-                    text message_text:
-                        size 31
-                        color "#2d3338"
-                        xmaximum 550
-                        text_align 0.0
-                        xalign 0.0
+                null:
+                    xfill True
 
-            use wx_avatar(speaker)
-    else:
-        # 左侧气泡：女主。文本左对齐，白色气泡。
-        hbox at wx_message_dissolve:
-            spacing 16
+                if message_image:
+                    add wx_clean_image_path(message_image):
+                        xysize (150, 220)
+                else:
+                    frame:
+                        xmaximum 610
+                        padding (28, 18)
+                        background Solid("#b9e99d")
 
-            use wx_avatar(speaker)
+                        text message_text:
+                            size 31
+                            color "#2d3338"
+                            xmaximum 550
+                            text_align 0.0
+                            xalign 0.0
 
-            if message_image:
-                add wx_clean_image_path(message_image):
-                    xysize (150, 220)
-            else:
-                frame:
-                    xmaximum 720
-                    padding (28, 18)
-                    background Solid("#ffffff")
+                use wx_avatar(speaker)
+        else:
+            # 左侧气泡：女主。文本左对齐，白色气泡。
+            hbox at wx_message_dissolve:
+                spacing 16
 
-                    text message_text:
-                        size 31
-                        color "#2d3338"
-                        xmaximum 660
-                        text_align 0.0
-                        xalign 0.0
+                use wx_avatar(speaker)
 
-            null:
-                xfill True
+                if message_image:
+                    add wx_clean_image_path(message_image):
+                        xysize (150, 220)
+                else:
+                    frame:
+                        xmaximum 720
+                        padding (28, 18)
+                        background Solid("#ffffff")
+
+                        text message_text:
+                            size 31
+                            color "#2d3338"
+                            xmaximum 660
+                            text_align 0.0
+                            xalign 0.0
+
+                null:
+                    xfill True
 
 
 # 头像组件。
