@@ -24,15 +24,15 @@ label Act2_wx:
     # hide m normal
     hide bird
     with dissolve
-    show peng
+    show get_flower2
     with pixellate
 
     "她泛红的脸颊、软软的声音，还有那束躺在她怀里的捧花。"
     "心跳又开始不受控制地加快。"
     #change 下定决心要发送
-    "算了，不可能一直等她先开口。"
-    hide peng
+    hide get_flower2
     with pixellate
+    "算了，不可能一直等她先开口。"
 
     $ wx_start_scripted_chat()
     show screen wx_phone
@@ -61,7 +61,7 @@ label Act2_wx:
             call wx_click_reveal_pending_message
             "对话很快停在了礼貌又尴尬的位置。"
             "她的回复不算冷淡，却也没有继续展开的意思。"
-            "触发成就：【尴尬破冰】"
+            # "触发成就：【尴尬破冰】"
 
         "白天撞疼你了吧？实在不好意思，婚礼人多太乱了":
             $ lc_add_affection(4)
@@ -137,11 +137,13 @@ label Act2_wx:
 
     pause
     if act2_sticker_break:
+        #todo 表情包
         "简单一句话，让我盯着屏幕傻笑了好久。"
         "触发成就：【表情包破冰】"
     else:
         "我忍住继续发消息的冲动，把手机放到枕边。"
 
+    #change 应该有日期提醒吧
     $ wx_queue_text_message("heroine", "这个水课老师好烦呐，只是念ppt，还不让我们看手机。")
     call wx_click_reveal_pending_message
     $ wx_queue_text_message("player", "哈哈哈，老师也很想水掉这个课啊。")
