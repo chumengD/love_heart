@@ -96,9 +96,9 @@ label start:
 
     hide screen wx_phone
 
-    $ wx_start_free_chat()
+    # $ wx_start_free_chat()
 
-    call screen wx_phone
+    # call screen wx_phone
 
     call Act3_encounter
 
