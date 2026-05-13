@@ -12,19 +12,34 @@ init python:
     if "mousedown_5" in config.keymap["rollforward"]:
         config.keymap["rollforward"].remove("mousedown_5")
 
+    def quick_menu_is_normal_wechat_chat_open():
+        return (
+            renpy.get_screen("wx_phone") is not None
+            and wx_current_view == "chat"
+            and wx_active_chat_mode == "scripted"
+        )
+
     def quick_menu_open_wechat_button(drag=None):
         global wx_phone_standalone_modal
 
         if not act1_wechat_unlocked:
+            renpy.notify("现在还是先专注于剧情吧")
             return
 
         if quick_menu_phone_target == "takeaway_cg":
             renpy.show_screen("quick_menu_takeaway_cg")
             return
 
-        if wx_phone_standalone_modal:
-            Hide("wx_phone")()
+        if quick_menu_is_normal_wechat_chat_open():
+            renpy.notify("现在还是先专注于剧情吧")
             return
+
+        if wx_phone_standalone_modal:
+            if renpy.get_screen("wx_phone") is not None:
+                Hide("wx_phone")()
+                return
+
+            wx_phone_standalone_modal = False
 
         wx_phone_standalone_modal = True
         wx_enter_free_chat()
