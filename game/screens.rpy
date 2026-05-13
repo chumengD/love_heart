@@ -303,37 +303,15 @@ screen quick_menu_wechat_button():
         droppable False
         drag_raise True
         drag_handle (0, 0, 72, 72)
+        clicked quick_menu_open_wechat_button
         xpos 0.9
         ypos 0.65
 
-        button:
+        fixed:
             xysize (72, 72)
-            background None
-            hover_background Solid("#ffffffee")
-            focus_mask None
-            keyboard_focus False
-            action Function(quick_menu_open_wechat_button)
 
-            fixed:
+            add "images/wechat/wechat_icon.png":
                 xysize (72, 72)
-
-                add Solid("#ffffffcc"):
-                    xysize (72, 72)
-
-                add Solid("#2f3338"):
-                    xpos 23
-                    ypos 12
-                    xysize (26, 48)
-
-                add Solid("#f8fafc"):
-                    xpos 26
-                    ypos 16
-                    xysize (20, 38)
-
-                add Solid("#2f3338"):
-                    xpos 33
-                    ypos 56
-                    xysize (6, 2)
 
 
 screen quick_menu_takeaway_cg():
