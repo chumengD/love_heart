@@ -37,6 +37,7 @@ init python:
         if wx_phone_standalone_modal:
             if renpy.get_screen("wx_phone") is not None:
                 Hide("wx_phone")()
+                renpy.restart_interaction()
                 return
 
             wx_phone_standalone_modal = False
@@ -46,6 +47,7 @@ init python:
         store._window = False
         store._window_auto = False
         renpy.show_screen("wx_phone", standalone=True)
+        renpy.restart_interaction()
 
 ################################################################################
 ## 样式
