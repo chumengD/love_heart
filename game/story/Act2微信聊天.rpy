@@ -7,6 +7,8 @@ image watch_phone = "images/Act2/watch_phone.png"
 image office = "images/Act2/office.png"
 
 label Act2_wx:
+    $ act1_wechat_unlocked = True
+
     scene black
     show watch_phone
     "婚礼结束回到家，窗外天色慢慢暗了下来。"
