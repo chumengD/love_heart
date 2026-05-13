@@ -428,12 +428,7 @@ init python:
         """
         try:
             # 构建系统提示词
-            system_prompt = context.get("system_prompt", "你是游戏中的女主角，一位温和沉静的女孩，正在读大三。你现在发圈丢了，和我诉苦中。回复如微信聊天一般简洁自然。")
-            scene_info = context.get("scene", "")
-
-            system_message = system_prompt
-            if scene_info:
-                system_message += f"\n当前场景：{scene_info}"
+            system_message = context.get("system_prompt", "你是小暖，21岁大三学生，性格温和细腻但有自己的脾气。回复如微信聊天一样自然随意，0~40字，可以用括号或星号描述动作表情。")
 
             # 构建对话历史上下文（取最近20条，避免 token 过多）
             api_messages = [{"role": "system", "content": system_message}]
