@@ -297,35 +297,39 @@ screen quick_menu():
 
 screen quick_menu_wechat_button():
 
-    drag:
-        drag_name "quick_menu_wechat_button"
-        draggable True
-        droppable False
-        drag_raise True
-        clicked quick_menu_open_wechat_button
+    fixed:
         xpos 0.9
         ypos 0.65
+        xysize (72, 72)
 
-        fixed:
+        button:
             xysize (72, 72)
+            background None
+            hover_background Solid("#ffffffee")
+            focus_mask None
+            keyboard_focus False
+            action Function(quick_menu_open_wechat_button)
 
-            add Solid("#ffffffcc"):
+            fixed:
                 xysize (72, 72)
 
-            add Solid("#2f3338"):
-                xpos 23
-                ypos 12
-                xysize (26, 48)
+                add Solid("#ffffffcc"):
+                    xysize (72, 72)
 
-            add Solid("#f8fafc"):
-                xpos 26
-                ypos 16
-                xysize (20, 38)
+                add Solid("#2f3338"):
+                    xpos 23
+                    ypos 12
+                    xysize (26, 48)
 
-            add Solid("#2f3338"):
-                xpos 33
-                ypos 56
-                xysize (6, 2)
+                add Solid("#f8fafc"):
+                    xpos 26
+                    ypos 16
+                    xysize (20, 38)
+
+                add Solid("#2f3338"):
+                    xpos 33
+                    ypos 56
+                    xysize (6, 2)
 
 
 screen quick_menu_takeaway_cg():
