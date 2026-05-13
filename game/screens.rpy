@@ -22,9 +22,8 @@ init python:
             renpy.show_screen("quick_menu_takeaway_cg")
             return
 
-        if renpy.get_screen("wx_phone"):
-            renpy.hide_screen("wx_phone")
-            renpy.restart_interaction()
+        if wx_phone_standalone_modal:
+            Hide("wx_phone")()
             return
 
         wx_phone_standalone_modal = True

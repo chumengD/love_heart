@@ -43,6 +43,9 @@ default wx_moment_comments = {}
 
 default wx_ai_waiting = False
 
+# 表情包是否允许发送。做选项时和做选项前为True，选完之后逐条出消息时为False。
+default wx_sticker_allowed = True
+
 
 init python:
     import os
@@ -52,6 +55,12 @@ init python:
     # Deepseek API 配置
     DEEPSEEK_API_KEY = "sk-d099bd19f811464fb98131b9fc084a7d"
     DEEPSEEK_API_URL = "https://api.deepseek.com/chat/completions"
+
+    # 格式化当前时间的工具函数。
+    def datetime_now_str():
+        import datetime as _dt
+        return _dt.datetime.now().strftime("%H:%M")
+
 
     # 通用数字 clamp 工具。
     # 微信自由输入评分用它限制在 -10 到 +10；剧本选项好感变化也会先转成整数。
@@ -251,6 +260,10 @@ init python:
         global act2_sticker_break
 
         if act2_sticker_break:
+            return
+
+        if not wx_sticker_allowed:
+            renpy.notify("看起来现在不是发送表情包的好时机，你错过了哦")
             return
 
         act2_sticker_break = True
@@ -529,19 +542,16 @@ init python:
         if not wx_chat_messages and not wx_pending_messages:
             wx_start_free_chat()
         else:
-            # 重新进入时添加当前时间作为分隔标记
-            import datetime
-            now = datetime.datetime.now().strftime("%H:%M")
+            now = datetime_now_str()
             wx_append_visible_message({
                 "speaker": "",
                 "text": "",
                 "time_text": now,
             })
 
-    # 退出独立微信界面时恢复文本框自动显示。
+    # 退出独立微信界面时恢复文本框自动管理（不强制显示）。
     def wx_standalone_restore_window():
         store._window_auto = True
-        store._window = True
 
 
     # 当前自由聊天上下文。
@@ -746,6 +756,8 @@ label wx_scripted_chat_flow:
             else:
                 pause
 
+        $ wx_sticker_allowed = True
+
         while wx_scripted_has_next_message():
             pause
             $ wx_reveal_next_scripted_message()
@@ -761,6 +773,7 @@ label wx_scripted_chat_flow:
             $ wx_choice_items = [(choice.get("text", ""), choice_index) for choice_index, choice in enumerate(wx_choices)]
             $ wx_choice_result = renpy.display_menu(wx_choice_items)
             $ wx_choose_scripted_option(wx_choice_result)
+            $ wx_sticker_allowed = False
             $ wx_narration = wx_get_last_narration()
             if wx_narration:
                 "[wx_narration]"
