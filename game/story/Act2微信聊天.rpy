@@ -3,9 +3,12 @@ default act2_sticker_break = False
 default act2_moments_unlocked = False
 define pause_time =1
 
+image watch_phone = "images/Act2/watch_phone.png"
+image office = "images/Act2/office.png"
+
 label Act2_wx:
     scene black
-    show bird
+    show watch_phone
     "婚礼结束回到家，窗外天色慢慢暗了下来。"
     "我躺在床上，反复点开微信界面。"
     "聊天框顶端，静静躺着她的头像，还没有备注。"
@@ -22,7 +25,7 @@ label Act2_wx:
     "脑海里又想起白天相撞的那一瞬间。"
 
     # hide m normal
-    hide bird
+    hide watch_phone
     with dissolve
     show get_flower2
     with pixellate
@@ -32,12 +35,11 @@ label Act2_wx:
     #change 下定决心要发送
     hide get_flower2
     with pixellate
-    "算了，不可能一直等她先开口。"
-
     $ wx_start_scripted_chat()
     show screen wx_phone
     pause pause_time
 
+    "算了，不可能一直等她先开口。"
     menu chat1:
         "要发什么……？"
         "你叫什么名字？也是大学生吗？":
@@ -147,7 +149,9 @@ label Act2_wx:
     else:
         "我忍住继续发消息的冲动，把手机放到枕边。"
 
-    #change 应该有日期提醒吧
+    #change 要描写一下男主工作，不然立马就切到女主上课的场景会有点突兀
+    show office
+
     $ wx_queue_text_message("heroine", "这个水课老师好烦呐，只是念ppt，还不让我们看手机。", time_text="10:07")
     call wx_click_reveal_pending_message
     $ wx_queue_text_message("player", "哈哈哈，老师也很想水掉这个课啊。")

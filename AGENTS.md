@@ -1,4 +1,4 @@
-生成图片时，画风要符合文件夹里的图片：C:\Users\LENOVO\Desktop\flavor
+生成图片时，画风要符合文件夹里的图片：C:\Users\LENOVO\Desktop\flavor，图片大小默认为1920x1080，图片格式为png
 
 renpy.exe在F:\Download\renpy-8.5.2-sdk文件夹下
 
