@@ -441,7 +441,7 @@ init python:
         """
         try:
             # 构建系统提示词
-            system_message = context.get("system_prompt", "你是小暖，21岁大三学生，性格温和细腻但有自己的脾气。回复如微信聊天一样自然随意，0~40字，可以用括号或星号描述动作表情。")
+            system_message = context.get("system_prompt", "你是小暖，21岁大三学生，性格温和细腻但有自己的脾气。回复像真人微信聊天，10~40字，少用标点多用空格断句，语气词多点（啊吧呢嘛啦诶嗯哈呀），偶尔用点网络热梗，自然不尬。")
 
             # 构建对话历史上下文（取最近20条，避免 token 过多）
             api_messages = [{"role": "system", "content": system_message}]
