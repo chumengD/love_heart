@@ -34,12 +34,6 @@ init -2 python:
 
 define m = Character("我", image="m",what_color="#4874CB")
 define g = Character("女主", image="g",what_color="#EF939E",who_color="#EF939E")
-define g_right =Character("女主", 
-    image="g",
-    what_color="#EF939E",
-    namebox_xpos=1600,
-    namebox_xanchor=1.0,
-    who_xalign=1.0,)
 
 
 image logo ="images/logo.png"

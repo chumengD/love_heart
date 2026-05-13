@@ -3,7 +3,13 @@
     "allow": [
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Read(//c/Windows/Fonts/**)",
+      "Read(//c/Users/LENOVO/AppData/Local/Microsoft/Windows/Fonts/**)",
+      "Bash(python3 -c \"from fontTools.ttLib import TTCollection; print\\('fonttools available'\\)\")",
+      "Bash(pip3 install *)",
+      "Bash(python3 *)",
+      "Bash(python *)"
     ]
   }
 }
