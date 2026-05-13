@@ -3,9 +3,12 @@ default act2_sticker_break = False
 default act2_moments_unlocked = False
 define pause_time =1
 
+image watch_phone = "images/Act2/watch_phone.png"
+image office = "images/Act2/office.png"
+
 label Act2_wx:
     scene black
-    show bird
+    show watch_phone
     "婚礼结束回到家，窗外天色慢慢暗了下来。"
     "我躺在床上，反复点开微信界面。"
     "聊天框顶端，静静躺着她的头像，还没有备注。"
@@ -22,7 +25,7 @@ label Act2_wx:
     "脑海里又想起白天相撞的那一瞬间。"
 
     # hide m normal
-    hide bird
+    hide watch_phone
     with dissolve
     show get_flower2
     with pixellate
@@ -32,17 +35,17 @@ label Act2_wx:
     #change 下定决心要发送
     hide get_flower2
     with pixellate
-    "算了，不可能一直等她先开口。"
-
     $ wx_start_scripted_chat()
     show screen wx_phone
     pause pause_time
 
+    "算了，不可能一直等她先开口。"
     menu chat1:
         "要发什么……？"
         "你叫什么名字？也是大学生吗？":
             $ lc_add_affection(-3)
             $ act2_flag = 1
+            $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "你叫什么名字？也是大学生吗？")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "嗯，我叫xx，在xx大学。")
@@ -66,6 +69,7 @@ label Act2_wx:
         "白天撞疼你了吧？实在不好意思，婚礼人多太乱了":
             $ lc_add_affection(4)
             $ act2_flag = 2
+            $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "白天撞疼你了吧？实在不好意思，婚礼人太乱了。")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "没事啦，我本来也往前挤嘛。")
@@ -102,6 +106,7 @@ label Act2_wx:
         "今天婚礼的捧花寓意超好，没想到我们这么有缘分":
             $ lc_add_affection(6)
             $ act2_flag = 3
+            $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "今天婚礼的捧花寓意超好，没想到我们这么有缘分。")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "我也觉得！第一次抢捧花还能撞到人，缘分拉满了哈哈。")
@@ -135,6 +140,7 @@ label Act2_wx:
             "她主动分享自己参加婚礼的感受和生活经历。"
             "聊天氛围比想象中更快升温。"
 
+    $ wx_sticker_allowed = True
     pause
     if act2_sticker_break:
         #todo 表情包
@@ -143,7 +149,9 @@ label Act2_wx:
     else:
         "我忍住继续发消息的冲动，把手机放到枕边。"
 
-    #change 应该有日期提醒吧
+    #change 要描写一下男主工作，不然立马就切到女主上课的场景会有点突兀
+    show office
+
     $ wx_queue_text_message("heroine", "这个水课老师好烦呐，只是念ppt，还不让我们看手机。", time_text="10:07")
     call wx_click_reveal_pending_message
     $ wx_queue_text_message("player", "哈哈哈，老师也很想水掉这个课啊。")
@@ -159,18 +167,21 @@ label Act2_wx:
         "她被课程和作业压得有点烦，我该怎么回？"
         "加油，坚持一下就下课啦":
             $ lc_add_affection(3)
+            $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "加油，坚持一下就下课啦。")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "嗯嗯，好哦。")
             call wx_click_reveal_pending_message
         "专业课确实很累，有需要我帮忙的就跟我说哦":
             $ lc_add_affection(5)
+            $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "专业课确实很累，慢慢写，不用着急，有需要我帮忙的就跟我说哦。")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "嘿嘿，好呀，谢谢你。")
             call wx_click_reveal_pending_message
         "别烦啦，给你分享一个搞笑短视频":
             $ lc_add_affection(4)
+            $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "别烦啦，给你分享一个搞笑短视频。")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("player", "【搞笑短视频】")

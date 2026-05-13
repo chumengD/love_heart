@@ -1,4 +1,4 @@
-image order ="images\Act6\order.png"
+image order ="images/Act6/order.png"
 
 label Act6_afternoon_tea:
     $ act6_affection_before = lc_get_affection()
