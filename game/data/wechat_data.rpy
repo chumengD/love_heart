@@ -105,14 +105,16 @@ define wx_moment_posts = (
         "images": (
             "images/wechat/moment_act2_gummy.png",
         ),
-        "comment_text": "听起来就很甜，我也想尝尝。",
+        "comment_text": "尝尝听起来就很甜，我也想。",
     },
     {
         "post_id": "moment_act2_music",
         "author": "heroine",
         "time": "前几天",
         "text": "今天循环到一首很适合傍晚听的歌。",
-        "images": (),
+        "images": (
+            "images/wechat/moments/music.png"
+        ),
         "comment_text": "求歌名，我也想听听。",
         "unlock_after_act2": True,
     },
