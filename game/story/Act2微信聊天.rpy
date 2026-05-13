@@ -43,6 +43,7 @@ label Act2_wx:
         "你叫什么名字？也是大学生吗？":
             $ lc_add_affection(-3)
             $ act2_flag = 1
+            $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "你叫什么名字？也是大学生吗？")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "嗯，我叫xx，在xx大学。")
@@ -66,6 +67,7 @@ label Act2_wx:
         "白天撞疼你了吧？实在不好意思，婚礼人多太乱了":
             $ lc_add_affection(4)
             $ act2_flag = 2
+            $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "白天撞疼你了吧？实在不好意思，婚礼人太乱了。")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "没事啦，我本来也往前挤嘛。")
@@ -102,6 +104,7 @@ label Act2_wx:
         "今天婚礼的捧花寓意超好，没想到我们这么有缘分":
             $ lc_add_affection(6)
             $ act2_flag = 3
+            $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "今天婚礼的捧花寓意超好，没想到我们这么有缘分。")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "我也觉得！第一次抢捧花还能撞到人，缘分拉满了哈哈。")
@@ -135,6 +138,7 @@ label Act2_wx:
             "她主动分享自己参加婚礼的感受和生活经历。"
             "聊天氛围比想象中更快升温。"
 
+    $ wx_sticker_allowed = True
     pause
     if act2_sticker_break:
         #todo 表情包
@@ -159,18 +163,21 @@ label Act2_wx:
         "她被课程和作业压得有点烦，我该怎么回？"
         "加油，坚持一下就下课啦":
             $ lc_add_affection(3)
+            $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "加油，坚持一下就下课啦。")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "嗯嗯，好哦。")
             call wx_click_reveal_pending_message
         "专业课确实很累，有需要我帮忙的就跟我说哦":
             $ lc_add_affection(5)
+            $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "专业课确实很累，慢慢写，不用着急，有需要我帮忙的就跟我说哦。")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "嘿嘿，好呀，谢谢你。")
             call wx_click_reveal_pending_message
         "别烦啦，给你分享一个搞笑短视频":
             $ lc_add_affection(4)
+            $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "别烦啦，给你分享一个搞笑短视频。")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("player", "【搞笑短视频】")
