@@ -297,10 +297,14 @@ screen quick_menu():
 
 screen quick_menu_wechat_button():
 
-    fixed:
+    drag:
+        drag_name "quick_menu_wechat_button"
+        draggable True
+        droppable False
+        drag_raise True
+        drag_handle (0, 0, 72, 72)
         xpos 0.9
         ypos 0.65
-        xysize (72, 72)
 
         button:
             xysize (72, 72)
