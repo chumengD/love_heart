@@ -43,8 +43,14 @@ default wx_moment_comments = {}
 
 default wx_ai_waiting = False
 
+# 女主被冒犯后触发退出标记
+default wx_heroine_exit = False
+
 # 表情包是否允许发送。做选项时和做选项前为True，选完之后逐条出消息时为False。
 default wx_sticker_allowed = True
+
+# 冒犯警告累计计数器。玩家在自由聊天中输入warning级别冒犯内容时递增，达到阈值则触发退出。
+default wx_offense_warnings = 0
 
 
 init python:
@@ -297,6 +303,8 @@ init python:
         global wx_chat_messages
         global wx_pending_messages
         global wx_last_narration
+        global wx_heroine_exit
+        global wx_offense_warnings
 
         start_node = str(node_id or wx_scripted_chat.get("start_node", "1"))
 
@@ -307,6 +315,8 @@ init python:
         wx_chat_messages = []
         wx_pending_messages = []
         wx_last_narration = ""
+        wx_heroine_exit = False
+        wx_offense_warnings = 0
 
 
     # 当前节点是否还有未显示的微信消息。
@@ -440,8 +450,31 @@ init python:
             女主的回复文本
         """
         try:
-            # 构建系统提示词
+            # 构建系统提示词，注入当前现实时间让AI感知早晚
             system_message = context.get("system_prompt", "你是小暖，21岁大三学生，性格温和细腻但有自己的脾气。回复像真人微信聊天，10~40字，少用标点多用空格断句，语气词多点（啊吧呢嘛啦诶嗯哈呀），偶尔用点网络热梗，自然不尬。")
+
+            import datetime as _api_dt
+            _now = _api_dt.datetime.now()
+            _weekday_map = ["一", "二", "三", "四", "五", "六", "日"]
+            _weekday_cn = _weekday_map[_now.weekday()]
+            _time_str = _now.strftime("%Y年%m月%d日 周{0} %H:%M".format(_weekday_cn))
+            _hour = _now.hour
+            if 5 <= _hour < 8:
+                _part = "清晨"
+            elif 8 <= _hour < 12:
+                _part = "上午"
+            elif 12 <= _hour < 14:
+                _part = "中午"
+            elif 14 <= _hour < 18:
+                _part = "下午"
+            elif 18 <= _hour < 22:
+                _part = "晚上"
+            elif 22 <= _hour < 24:
+                _part = "深夜"
+            else:
+                _part = "凌晨"
+
+            system_message += "\n\n现在的时间是{0}，属于{1}时段。".format(_time_str, _part)
 
             # 构建对话历史上下文（取最近20条，避免 token 过多）
             api_messages = [{"role": "system", "content": system_message}]
@@ -470,7 +503,7 @@ init python:
                 "model": "deepseek-chat",
                 "messages": api_messages,
                 "temperature": 0.7,
-                "max_tokens": 150,
+                "max_tokens": 300,
                 "stream": False
             }
             
@@ -482,8 +515,8 @@ init python:
             if "choices" in data and len(data["choices"]) > 0:
                 reply = data["choices"][0].get("message", {}).get("content", "").strip()
 
-                if len(reply) > 150:
-                    reply = reply[:150]
+                if len(reply) > 400:
+                    reply = reply[:400]
 
                 return reply
 
@@ -509,6 +542,8 @@ init python:
         global wx_pending_messages
         global wx_free_input_text
         global wx_last_narration
+        global wx_heroine_exit
+        global wx_offense_warnings
 
         wx_current_view = "chat"
         wx_active_chat_mode = "free"
@@ -518,6 +553,8 @@ init python:
         wx_pending_messages = []
         wx_free_input_text = ""
         wx_last_narration = ""
+        wx_heroine_exit = False
+        wx_offense_warnings = 0
         wx_append_messages(wx_free_chat.get("initial_messages", []))
 
 
@@ -528,11 +565,15 @@ init python:
         global wx_active_chat_mode
         global wx_free_input_text
         global wx_last_narration
+        global wx_heroine_exit
+        global wx_offense_warnings
 
         wx_current_view = "chat"
         wx_active_chat_mode = "free"
         wx_free_input_text = ""
         wx_last_narration = ""
+        wx_heroine_exit = False
+        wx_offense_warnings = 0
 
         if not wx_chat_messages and not wx_pending_messages:
             wx_start_free_chat()
@@ -587,6 +628,51 @@ init python:
         return wx_clamp(score, -10, 10)
 
 
+    # 本地冒犯检测函数。
+    # 在发送玩家消息给 AI 之前先做一层本地过滤，提高冒犯检测精度。
+    # 返回 ("severe", reply) / ("warning_exit", reply) / ("warning", None) / (None, None)
+    def wx_check_player_offense(text, context):
+        global wx_offense_warnings
+
+        offense_cfg = context.get("offense_detection", {})
+        if not offense_cfg:
+            return (None, None)
+
+        normalized = (text or "").strip().lower()
+        if not normalized:
+            return (None, None)
+
+        severe_keywords = offense_cfg.get("severe_keywords", [])
+        for kw in severe_keywords:
+            if kw and kw in normalized:
+                import random as _off_rnd
+                replies = offense_cfg.get("severe_reply", ["你说话能不能注意点"])
+                reply = _off_rnd.choice(replies) if replies else "你说话能不能注意点"
+                wx_offense_warnings = 0
+                return ("severe", reply)
+
+        warning_keywords = offense_cfg.get("warning_keywords", [])
+        hit_warning = False
+        for kw in warning_keywords:
+            if kw and kw in normalized:
+                hit_warning = True
+                break
+
+        if hit_warning:
+            wx_offense_warnings += 1
+            threshold = offense_cfg.get("warning_threshold", 3)
+            if wx_offense_warnings >= threshold:
+                wx_offense_warnings = 0
+                import random as _off_rnd2
+                replies = offense_cfg.get("warning_reply", ["我觉得我们需要换种方式聊天"])
+                reply = _off_rnd2.choice(replies) if replies else "我觉得我们需要换种方式聊天"
+                return ("warning_exit", reply)
+            else:
+                return ("warning", None)
+
+        return (None, None)
+
+
     # AI 回复生成函数。
     # 它只负责“女主怎么回”，不负责好感度评分；好感变化由 wx_score_player_input() 单独处理。
     # 女主可见回复只来自 AI 接口；接口失败时不追加本地预设回复。
@@ -614,8 +700,9 @@ init python:
     def wx_send_free_chat(text=None):
         global wx_free_input_text
         global wx_ai_waiting
+        global wx_heroine_exit
 
-        if wx_ai_waiting:
+        if wx_ai_waiting or wx_heroine_exit:
             return
 
         player_text = wx_free_input_text if text is None else text
@@ -625,6 +712,30 @@ init python:
             return
 
         context = dict(wx_active_free_context())
+
+        # 本地冒犯检测——在调用 AI 之前先过滤
+        offense_level, offense_reply = wx_check_player_offense(player_text, context)
+
+        if offense_level in ("severe", "warning_exit"):
+            wx_append_message(WX_PLAYER_CONTACT_ID, player_text)
+            wx_free_input_text = ""
+
+            if offense_reply:
+                # 直接追加女主退出消息，不分段
+                wx_append_visible_message({
+                    "speaker": WX_DEFAULT_CONTACT_ID,
+                    "text": offense_reply,
+                })
+
+            penalty = -20 if offense_level == "severe" else -15
+            lc_add_affection(penalty, source="wechat:offense_local:" + offense_level)
+            wx_heroine_exit = True
+            renpy.restart_interaction()
+            return
+
+        if offense_level == "warning":
+            # 警告级别：正常发送消息，但扣少量好感
+            lc_add_affection(-3, source="wechat:offense_warning")
 
         wx_append_message(WX_PLAYER_CONTACT_ID, player_text)
         wx_free_input_text = ""
@@ -652,10 +763,46 @@ init python:
     # wx_send_free_chat 的配套函数2：回到主线程追加女主气泡。
     def wx_receive_ai_reply(reply):
         global wx_ai_waiting
+        global wx_heroine_exit
 
         reply_text = (reply or "").strip()
-        if reply_text:
-            wx_append_message(WX_DEFAULT_CONTACT_ID, reply_text)
+        if not reply_text:
+            wx_ai_waiting = False
+            renpy.restart_interaction()
+            return
+
+        segments = [seg.strip() for seg in reply_text.split("|||") if seg.strip()]
+
+        if not segments:
+            wx_ai_waiting = False
+            renpy.restart_interaction()
+            return
+
+        # 检查最后一个段是否为 EXIT 信号
+        exit_triggered = segments[-1].upper() == "EXIT"
+        if exit_triggered:
+            segments = segments[:-1]
+            if not segments:
+                segments = ["算了不说了"]
+
+        wx_append_visible_message({
+            "speaker": WX_DEFAULT_CONTACT_ID,
+            "text": segments[0],
+        })
+
+        # 退出模式：剩余消息全部直接显示，不等逐条弹出
+        if exit_triggered:
+            for seg in segments[1:]:
+                wx_append_visible_message({
+                    "speaker": WX_DEFAULT_CONTACT_ID,
+                    "text": seg,
+                })
+
+            lc_add_affection(-15, source="wechat:heroine_exit")
+            wx_heroine_exit = True
+        else:
+            for seg in segments[1:]:
+                wx_queue_text_message(WX_DEFAULT_CONTACT_ID, seg)
 
         wx_ai_waiting = False
         renpy.restart_interaction()

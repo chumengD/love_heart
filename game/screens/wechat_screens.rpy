@@ -254,6 +254,10 @@ screen wx_chat_page():
     if wx_chat_needs_scroll():
         timer 0.01 action [Scroll("wx_chat_viewport", "vertical increase", amount=1000000, delay=0.12), Function(wx_mark_chat_scrolled)]
 
+    if wx_heroine_exit:
+        timer 0.15 action [Notify("对方感觉你不礼貌，表示不想和你聊天"), SetVariable("wx_heroine_exit", False)]
+        timer 0.5 action Hide("wx_phone")
+
 
 # 单条聊天气泡。
 # side 来自 wx_contacts[contact_id]["side"]：
