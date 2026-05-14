@@ -9,12 +9,15 @@ label Act7_amusement_confession:
     #todo 这里需要等待的cg，或者游乐园的背景
     "今天天气晴朗，风也温柔。"
     "我提前到达游乐园门口等她。"
-    "没过多久，她缓缓走来，浅色系的衣服特别适合她。"
+    "没过多久，她缓缓走来，浅色系的衣服显得她好可爱。"
+    m "你今天......真好看。这件浅色系的衣服很适合你。"
+    "她微微歪头一笑，脸颊上染上淡淡的粉色。"
+    g "嘿嘿，谢谢你~"
     #change 这里不需要夸夸她吗？
     #todo 游玩的cg呢
     "我们一起坐旋转木马，慢悠悠随着转盘起伏。"
     "我们一起逛文创小店，互相挑选可爱的小挂件。"
-    "我们一起走在热闹的人群里，分享同一支冰淇淋。"
+    "我们一起走在热闹的人群里，吃着冰淇淋。"
     "一路上说说笑笑，时间流逝得悄无声息。"
     hide bird
     with dissolve
@@ -43,7 +46,6 @@ label Act7_amusement_confession:
         "我压下心底酸涩，勉强扯出笑容，点头表示理解。"
         "摩天轮缓缓下降，晚霞依旧好看，只是我心里少了一束光。"
         "我们保留分寸，体面收场。"
-        $ lc_grant_achievement("regret_passing")
         "解锁结局【遗憾擦肩】"
         hide love_fail
 
@@ -57,7 +59,6 @@ label Act7_amusement_confession:
         "我轻轻点头，没有强迫她立刻百分百心动。"
         "未来是否长久，无人知晓。"
         "但此刻，她愿意向我靠近一步。"
-        $ lc_grant_achievement("plain_together")
         "解锁结局【平淡相守】"
         hide love_ok2
 
@@ -70,7 +71,6 @@ label Act7_amusement_confession:
         "掌心相贴，心跳共鸣。"
         "落日见证告白，摩天轮锁住心动。"
         "原来，双向奔赴，是全世界最温柔的事情。"
-        $ lc_grant_achievement("happy_ending")
         "解锁结局【心动圆满】"
         hide love_ok1
 
