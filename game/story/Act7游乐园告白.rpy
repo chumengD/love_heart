@@ -43,6 +43,7 @@ label Act7_amusement_confession:
         "我压下心底酸涩，勉强扯出笑容，点头表示理解。"
         "摩天轮缓缓下降，晚霞依旧好看，只是我心里少了一束光。"
         "我们保留分寸，体面收场。"
+        $ lc_grant_achievement("regret_passing")
         "解锁结局【遗憾擦肩】"
         hide love_fail
 
@@ -56,6 +57,7 @@ label Act7_amusement_confession:
         "我轻轻点头，没有强迫她立刻百分百心动。"
         "未来是否长久，无人知晓。"
         "但此刻，她愿意向我靠近一步。"
+        $ lc_grant_achievement("plain_together")
         "解锁结局【平淡相守】"
         hide love_ok2
 
@@ -68,6 +70,7 @@ label Act7_amusement_confession:
         "掌心相贴，心跳共鸣。"
         "落日见证告白，摩天轮锁住心动。"
         "原来，双向奔赴，是全世界最温柔的事情。"
+        $ lc_grant_achievement("happy_ending")
         "解锁结局【心动圆满】"
         hide love_ok1
 

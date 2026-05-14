@@ -7,6 +7,8 @@ image watch_phone = "images/Act2/watch_phone.png"
 image office = "images/Act2/office.png"
 
 label Act2_wx:
+    $ act1_wechat_unlocked = True
+
     scene black
     show watch_phone
     "婚礼结束回到家，窗外天色慢慢暗了下来。"
@@ -18,7 +20,6 @@ label Act2_wx:
     # show m normal at left
     m "怎么办……要不要先发消息？"
     m "第一次主动加女生微信，我完全不知道该说什么。"
-    #change 是不是写一下打完字又删的样子？
     "我在输入框里打下“你好”，又觉得太生硬，慢慢删掉。"
     "换成“在吗”，看起来又像有急事，只好再次清空。"
     "指尖悬停在屏幕上方，迟迟不敢按下发送。"
@@ -31,6 +32,7 @@ label Act2_wx:
     with pixellate
 
     "她泛红的脸颊、软软的声音，还有那束躺在她怀里的捧花。"
+    "一切都是那么美好，那么浪漫，那么甜蜜。"
     "心跳又开始不受控制地加快。"
     #change 下定决心要发送
     hide get_flower2
@@ -64,7 +66,7 @@ label Act2_wx:
             call wx_click_reveal_pending_message
             "对话很快停在了礼貌又尴尬的位置。"
             "她的回复不算冷淡，却也没有继续展开的意思。"
-            # "触发成就：【尴尬破冰】"
+            $ lc_grant_achievement("awkward_break_ice")
 
         "白天撞疼你了吧？实在不好意思，婚礼人多太乱了":
             $ lc_add_affection(4)
@@ -145,7 +147,7 @@ label Act2_wx:
     if act2_sticker_break:
         #todo 表情包
         "简单一句话，让我盯着屏幕傻笑了好久。"
-        "触发成就：【表情包破冰】"
+        $ lc_grant_achievement("sticker_break_ice")
     else:
         "我忍住继续发消息的冲动，把手机放到枕边。"
 

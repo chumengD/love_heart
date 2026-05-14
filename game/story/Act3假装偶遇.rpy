@@ -1,5 +1,6 @@
 image encounter ="images/Act3/encounter.jpg"
 image sayHi ="images/Act3/sayHi.jpg"
+image give_candy = "images/Act3/give_candy.png"
 
 label Act3_encounter:
     #todo 这里应该是一个动画
@@ -46,6 +47,7 @@ label Act3_encounter:
             g "啊……这样吗？"
             m "刚下课吗？"
             g "嗯......"
+            $ lc_grant_achievement("clumsy_encounter")
             #change 沉默悄然而至，为什么她不开口了？balabala
         "低头玩手机，假装没看见，等女主主动打招呼":
             hide encounter
@@ -58,12 +60,21 @@ label Act3_encounter:
             #change 望着她渐行渐远的背影，我恨不得甩自己一巴掌
         
     hide sayHi
-        #todo 背包按钮？
-        # "我打开背包，里面是一小袋甜甜的软糖。"
-        # "我上前一步，轻轻把东西递到她面前。"
-        # m "看你放学挺累的，补充点能量。"
-        # g "谢谢你……你也太细心了。"
-        # #change 羞涩的神态？
-        # m "哈哈哈对呀。你看晚霞，是不是很漂亮呀？"     
-        # $ lc_add_affection(8)
 
+    menu:
+        "要不要拿出准备好的软糖？"
+        "把软糖递给她":
+            show give_candy
+            with dissolve
+            "我打开背包，里面是一小袋甜甜的软糖。"
+            "我上前一步，轻轻把东西递到她面前。"
+            m "看你放学挺累的，补充点能量。"
+            g "谢谢你……你也太细心了。"
+            m "哈哈哈对呀。你看晚霞，是不是很漂亮呀？"
+            $ lc_add_affection(8)
+            $ lc_grant_achievement("warm_encounter")
+            hide give_candy
+            with dissolve
+
+        "还是先自然聊天":
+            "我把手放回口袋，决定先让这次偶遇保持自然。"

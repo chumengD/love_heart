@@ -11,26 +11,46 @@ init python:
 
     if "mousedown_5" in config.keymap["rollforward"]:
         config.keymap["rollforward"].remove("mousedown_5")
+<<<<<<< Updated upstream
+
+    def quick_menu_is_normal_wechat_chat_open():
+        return (
+            renpy.get_screen("wx_phone") is not None
+            and wx_current_view == "chat"
+            and wx_active_chat_mode == "scripted"
+        )
 
     def quick_menu_open_wechat_button(drag=None):
         global wx_phone_standalone_modal
 
         if not act1_wechat_unlocked:
+            renpy.notify("现在还是先专注于剧情吧")
             return
 
         if quick_menu_phone_target == "takeaway_cg":
             renpy.show_screen("quick_menu_takeaway_cg")
             return
 
-        if wx_phone_standalone_modal:
-            Hide("wx_phone")()
+        if quick_menu_is_normal_wechat_chat_open():
+            renpy.notify("现在还是先专注于剧情吧")
             return
+
+        if wx_phone_standalone_modal:
+            if renpy.get_screen("wx_phone") is not None:
+                Hide("wx_phone")()
+                renpy.restart_interaction()
+                return
+
+            wx_phone_standalone_modal = False
 
         wx_phone_standalone_modal = True
         wx_enter_free_chat()
         store._window = False
         store._window_auto = False
         renpy.show_screen("wx_phone", standalone=True)
+        renpy.restart_interaction()
+=======
+>>>>>>> Stashed changes
 
 ################################################################################
 ## 样式
@@ -287,6 +307,7 @@ screen quick_menu_wechat_button():
         draggable True
         droppable False
         drag_raise True
+        drag_handle (0, 0, 72, 72)
         clicked quick_menu_open_wechat_button
         xpos 0.9
         ypos 0.65
@@ -294,23 +315,8 @@ screen quick_menu_wechat_button():
         fixed:
             xysize (72, 72)
 
-            add Solid("#ffffffcc"):
+            add "images/wechat/wechat_icon.png":
                 xysize (72, 72)
-
-            add Solid("#2f3338"):
-                xpos 23
-                ypos 12
-                xysize (26, 48)
-
-            add Solid("#f8fafc"):
-                xpos 26
-                ypos 16
-                xysize (20, 38)
-
-            add Solid("#2f3338"):
-                xpos 33
-                ypos 56
-                xysize (6, 2)
 
 
 screen quick_menu_takeaway_cg():
@@ -387,7 +393,7 @@ screen main_menu_navigation():
         hbox:
             style "main_menu_sketch_row"
             text "♡" style "main_menu_sketch_heart"
-            textbutton _("成就") action ShowMenu("achievements") style "main_menu_sketch_button"
+            textbutton _("成就系统") action ShowMenu("achievements") style "main_menu_sketch_button"
 
         hbox: 
             style "main_menu_sketch_row"
@@ -713,14 +719,7 @@ screen achievements():
 
     tag menu
 
-    use game_menu(_("成就"), scroll="viewport"):
-
-        vbox:
-            style_prefix "placeholder"
-            spacing 24
-
-            label _("成就")
-            text _("这里是成就页面的占位内容。之后可以在这里接入成就列表、解锁状态和完成条件。")
+    use lc_achievement_menu_content
 
 
 init python:

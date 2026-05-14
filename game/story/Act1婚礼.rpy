@@ -107,7 +107,7 @@ label Act1_wedding:
     g "呀！"
     "两声惊呼同时响起"
     "我踉跄着往后退了半步，手还下意识扶住了对方的胳膊"
-    hide peng 
+    hide peng
     with dissolve
     show sorry1
 
@@ -160,5 +160,5 @@ label Act1_wedding:
     #我觉得这里不用再描写动作，
     $ lc_set_affection(25)
     $ act1_wechat_unlocked = True
-    #todo 成就【初遇心动】
+    $ lc_grant_achievement("first_encounter")
     return 
