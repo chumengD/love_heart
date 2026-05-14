@@ -390,7 +390,7 @@ screen main_menu_navigation():
         hbox:
             style "main_menu_sketch_row"
             text "♡" style "main_menu_sketch_heart"
-            textbutton _("成就") action ShowMenu("achievements") style "main_menu_sketch_button"
+            textbutton _("成就系统") action ShowMenu("achievements") style "main_menu_sketch_button"
 
         hbox: 
             style "main_menu_sketch_row"
@@ -716,14 +716,7 @@ screen achievements():
 
     tag menu
 
-    use game_menu(_("成就"), scroll="viewport"):
-
-        vbox:
-            style_prefix "placeholder"
-            spacing 24
-
-            label _("成就")
-            text _("这里是成就页面的占位内容。之后可以在这里接入成就列表、解锁状态和完成条件。")
+    use lc_achievement_menu_content
 
 
 init python:

@@ -88,7 +88,7 @@ label start:
 
     call Act3_encounter
 
-    # call Act3_heroine_view
+    call Act3_heroine_view
 
     call Act4_sick
 

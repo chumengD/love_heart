@@ -117,7 +117,7 @@ label Act3_heroine_view:
     if act3_heroine_affection >= 45:
         "这些回忆一点点叠起来，心动的答案已经变得很清楚。"
         g "原来我早就开始期待下一次见面了。"
-        "触发成就：【心动回响】"
+        $ lc_grant_achievement("heartbeat_echo")
     elif act3_heroine_affection >= 25:
         "这些回忆一点点叠起来，我还不能完全确定他的心意。"
         g "可是只要想到他，心里还是会变得柔软。"

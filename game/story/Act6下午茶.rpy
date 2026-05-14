@@ -27,6 +27,7 @@ label Act6_afternoon_tea:
             m "之前聊天时你提过，我就记下来了。"
             "她低头抿了一口果茶，眼角慢慢弯起来。"
             "那些被认真记住的小细节，比直接说喜欢更让人心动。"
+            $ lc_grant_achievement("knows_taste")
 
         "让她来决定，自己都可以":
             hide bird 
@@ -38,6 +39,7 @@ label Act6_afternoon_tea:
             m "我都可以啦，取决于你啦。"
             "她笑了笑，没有再追问。"
             "这场约会顺利进行，却少了一点被提前准备好的惊喜。"
+            $ lc_grant_achievement("no_opinion")
             hide order
             
     #todo 这里需要两人畅聊的cg

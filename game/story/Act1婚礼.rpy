@@ -160,5 +160,5 @@ label Act1_wedding:
     #我觉得这里不用再描写动作，
     $ lc_set_affection(25)
     $ act1_wechat_unlocked = True
-    #todo 成就【初遇心动】
+    $ lc_grant_achievement("first_encounter")
     return 
