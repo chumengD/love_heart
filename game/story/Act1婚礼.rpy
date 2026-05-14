@@ -107,7 +107,7 @@ label Act1_wedding:
     g "呀！"
     "两声惊呼同时响起"
     "我踉跄着往后退了半步，手还下意识扶住了对方的胳膊"
-    hide peng 
+    hide peng
     with dissolve
     show sorry1
 
