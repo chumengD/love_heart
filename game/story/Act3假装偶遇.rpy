@@ -3,13 +3,18 @@ image sayHi ="images/Act3/sayHi.jpg"
 image give_candy = "images/Act3/give_candy.png"
 
 label Act3_encounter:
-    #todo 这里应该是一个动画
-    show bird
+    show watch_phone
+    with dissolve
+
     "微信断断续续聊天，我们分享生活、吐槽琐事、偶尔互发表情包。"
     "陌生感慢慢消散，聊天框里的语气也越来越自然。"
     "我总会忍不住点开她的朋友圈，一遍一遍翻看。"
     m "好想见她一面……哪怕只是短短一会儿也好。"
     "我悄悄向表哥打听，记下了她下课回宿舍的必经路线。"
+    
+    hide watch_phone
+    with dissolve
+    show encounter
     "为了制造偶遇，今天傍晚，我刻意提前半小时来到这条街道。"
     "晚风轻轻吹过，落日把地面拉出长长的人影。"
     "我站在路边，假装随意，视线却一直停留在路口。"
