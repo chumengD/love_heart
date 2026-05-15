@@ -11,7 +11,7 @@ image office2 = "images/Act2/office_phone_message.png"
 
 label Act2_wx:
     $ act1_wechat_unlocked = True
-    $ renpy.music.play(bg_music3, channel="music", fadeout=1.0, relative_volume=0.4, loop=True)
+    $ renpy.music.play(bg_music3, channel="music", fadeout=2.0, relative_volume=0.3, loop=True)
     scene black
     show watch_phone
     "婚礼结束回到家，窗外天色慢慢暗了下来。"
@@ -54,11 +54,11 @@ label Act2_wx:
             $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "你叫什么名字？也是大学生吗？")
             call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "嗯，我叫xx，在xx大学。")
+            $ wx_queue_text_message("heroine", "嗯，我叫xx，在中国计量大学。")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("player", "你在哪个专业？平时喜欢做啥？")
             call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "啊，我在xx专业。")
+            $ wx_queue_text_message("heroine", "啊，我在计算机专业。")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "平时...看看小说听听音乐什么的吧。")
             call wx_click_reveal_pending_message
@@ -101,9 +101,9 @@ label Act2_wx:
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "你最近在忙些什么呀？你是大学生吗？")
             call wx_click_reveal_pending_message
-            $ wx_queue_text_message("player", "我是A大学的大四学生，最近已经在实习了......")
+            $ wx_queue_text_message("player", "我是杭州电子科技大学的大四学生，最近已经在实习了......")
             call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "对呀，我是B大学XX专业大三的学生。")
+            $ wx_queue_text_message("heroine", "对呀，我是中国计量大学计算机专业大三的学生。")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "毕竟大三了嘛，在很紧张地写论文呢。")
             call wx_click_reveal_pending_message
@@ -139,11 +139,12 @@ label Act2_wx:
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "你最近在忙些什么呀？你是大学生吗？")
             call wx_click_reveal_pending_message
-            $ wx_queue_text_message("player", "我是A大学的大四学生，最近已经在实习了......")
+            $ wx_queue_text_message("player", "我是杭州电子科技大学的大四学生，最近已经在实习了......")
             call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "对呀，我是B大学XX专业大三的学生。")
+            $ wx_queue_text_message("heroine", "这样呀，我是中国计量大学计算机专业大三的学生。")
             call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "毕竟大三了嘛，在很紧张地写论文呢。你呢？")
+            $ wx_queue_text_message("heroine", "毕竟大三了嘛，在很紧张地写论文呢。")
+
             call wx_click_reveal_pending_message
             "她主动分享自己参加婚礼的感受和生活经历。"
             "聊天氛围比想象中更快升温。"
@@ -257,11 +258,11 @@ label act2_chat1_bouquet_branch:
     call wx_click_reveal_pending_message
     $ wx_queue_text_message("heroine", "你最近在忙些什么呀？你是大学生吗？")
     call wx_click_reveal_pending_message
-    $ wx_queue_text_message("player", "我是A大学的大四学生，最近已经在实习了......")
+    $ wx_queue_text_message("player", "我是杭州电子科技大学的大四学生，最近已经在实习了......")
     call wx_click_reveal_pending_message
-    $ wx_queue_text_message("heroine", "对呀，我是B大学XX专业大三的学生。")
+    $ wx_queue_text_message("heroine", "这样呀，我是中国计量大学计算机专业大三的学生。")
     call wx_click_reveal_pending_message
-    $ wx_queue_text_message("heroine", "毕竟大三了嘛，在很紧张地写论文呢。你呢？")
+    $ wx_queue_text_message("heroine", "大三了嘛，我在很紧张地写论文呢。你呢？")
     call wx_click_reveal_pending_message
     "她主动分享自己参加婚礼的感受和生活经历。"
     "聊天氛围比想象中更快升温。"

@@ -86,7 +86,6 @@ label Act3_encounter:
             show sayHi
             $ lc_add_affection(-5)
             $ lc_set_choice_flag("act3_encounter", "direct_wait")
-            "（当前好感度：[4]）"
             m "我特意等你的，就是想跟你多见一面"
             g "啊……这样吗？"
             m "刚下课吗？"

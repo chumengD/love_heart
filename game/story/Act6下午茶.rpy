@@ -27,15 +27,19 @@ label Act6_afternoon_tea:
             $ lc_add_affection(8)
             "我牢牢记住她偏爱少糖、温热果茶，喜欢奶香慕斯甜品。"
             "我提前一点到店，点好菜品，找好靠窗安静位置。"
+            hide caffe
+            show drink
+            with dissolve
             "她推门走进咖啡馆，看见桌上摆放好的甜品饮品，微微愣住。"
             g "你还记得我喜欢的口味？"
             m "之前聊天时你提过，我就记下来了。"
             "她低头抿了一口果茶，眼角慢慢弯起来。"
             "那些被认真记住的小细节，比直接说喜欢更让人心动。"
             $ lc_grant_achievement("knows_taste")
+            hide drink
 
         "让她来决定，自己都可以":
-            hide bird 
+            hide caffe
             with dissolve
             show order
             "我拿着菜单犹豫了很久，最后还是把选择权交给她。"
@@ -48,8 +52,11 @@ label Act6_afternoon_tea:
             hide order
             
     #todo 这里需要两人畅聊的cg
+    show drink
     "窗外阳光落在桌沿，咖啡馆里播放着轻柔的音乐。"
     "我们聊起最近的生活，聊起未来想去的地方。"
     "我看着她认真听我说话的样子，心里的答案变得越来越清晰。"
     "下一次见面，我想把这份喜欢好好说出口。"
+    hide drink
+    with dissolve
     return

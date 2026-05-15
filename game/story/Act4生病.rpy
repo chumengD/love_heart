@@ -5,7 +5,7 @@
 #     if (affection>50):
 #         flag =1
 
-
+image takeaway = "images/Act4/takeaway.png"
 
 label Act4_sick:
     $ quick_menu_phone_target = "ai"
@@ -22,8 +22,9 @@ label Act4_sick:
         "手指总会下意识停在她的聊天界面，却不敢主动打扰"
         "我希望走进她的世界"
         "但不清楚她对我是什么感觉，也不敢擅自揣测她的心意。"
+        "突然，她发来一条消息"
     hide watch_phone
-    "突然，她发来一条消息"
+   
     $ wx_start_scripted_chat()
     show screen wx_phone
     $ wx_queue_text_message("heroine", "我好像感冒发烧了，浑身难受。")
@@ -70,16 +71,33 @@ label Act4_sick:
             "关掉微信聊天界面后，我还是静不下来"
             "一想到她一个人躺在床上难受，我就急得像热锅上的蚂蚁"
             "翻来覆去后，我决定做点实际的事"
-            show 
+            hide watch_phone
+            show takeaway
+            with dissolve
             "我点开手机里的外卖软件，认真地挑选温和感冒药、退烧贴、暖胃的清淡小米粥，顺带加了几包暖宝宝和润喉糖。"
             "并在备注一栏写下：喝了药早点休息哦，有需要就给我打电话。"
             "我再次打开微信"
+            hide takeaway
+            with dissolve
             show screen wx_phone
-            $ wx_queue_text_message("player", "都怪我没早点关心你，我现在就去找你。")
-
-
-
-
+            $ wx_queue_text_message("player", "我刚刚给你点了外卖，里面有药和粥，还有暖宝宝，你记得吃了药早点休息哦。")
+            call wx_click_reveal_pending_message
+            $ wx_queue_text_message("heroine", "谢谢你……从来没有人对我这么细心....")
+            call wx_click_reveal_pending_message
+            "看到这条信息，我的心脏猛地一跳"
+            "血液奔涌过全身，心里的慌乱被激动的大军冲乱了阵脚"
+            "我从床上蹦起，在房间里转了几步，才让自己稍微冷静下来。"
+            m "冷静，冷静啊我！"
+            m "现在不是高兴的时候，要去担心她才对呀!"
+            "我再度看向手机"
+            $ wx_queue_text_message("player", "没事没事")
+            call wx_click_reveal_pending_message
+            $ wx_queue_text_message("player", "你能感受到我的这份关心，好好养病就好了")
+            call wx_click_reveal_pending_message
+            $ wx_queue_text_message("heroine", "好....")
+            call wx_click_reveal_pending_message
+            "我放下手机，望着天花板，心里久久不能平静。"
+            pause
         "都怪我没早点关心你，我现在就去找你":
             $ lc_add_affection(5)
             $ lc_set_choice_flag("act4_sick_reply", "rush_over")
@@ -92,28 +110,6 @@ label Act4_sick:
             $ wx_queue_text_message("heroine", "我休息一晚就好。")
             call wx_click_reveal_pending_message
             "她委婉拒绝了我的冲动，却还是能感受到我是真的着急。"
-
-        "要不要再做点实际的事？"
-        "点外卖送药和清淡小米粥":
-            $ lc_add_affection(12)
-            $ lc_set_choice_flag("act4_takeaway", True)
-            "我没有急着继续打字安慰，指尖点开手机里的外卖软件。"
-            "我认真挑选温和感冒药、退烧贴、暖胃的清淡小米粥，顺带加了几包暖宝宝和润喉糖。"
-            "备注一栏写下：喝了药早点休息哦，有需要就给我打电话。"
-            "半小时后，聊天框弹出一张实拍照片。"
-            $ wx_queue_text_message("heroine", "【照片】外卖袋整齐摆在桌面，药品、热粥摆放清晰，灯光柔和。")
-            call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "谢谢你……从来没有人对我这么细心....")
-            call wx_click_reveal_pending_message
-            "这一刻，只想好好守护她。"
-            $ lc_grant_achievement("perfect_care")
-
-        "先让她好好休息":
-            $ wx_queue_text_message("player", "那你先好好休息，醒了记得告诉我一声。")
-            call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "好。")
-            call wx_click_reveal_pending_message
-            "我把手机放在枕边，直到屏幕暗下去还在担心她。"
 
     hide screen wx_phone
     return

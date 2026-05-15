@@ -27,7 +27,6 @@ label Act5_wander:
         "她犹豫了一下，最终还是答应了我的请求。"
  
     hide wandering_bg
-    with dissolve
     show wandering
     with dissolve
     
@@ -41,7 +40,7 @@ label Act5_wander:
 
     menu:
         "深夜谈心时，我要怎么把控聊天节奏？"
-        "全程聊自己的工作、学习和爱好":
+        "聊自己的工作、学习和爱好":
             $ lc_add_affection(-4)
             $ lc_set_choice_flag("act5_walk_reply", "self_talk")
             "紧张之下，我不停寻找话题。"
@@ -61,7 +60,7 @@ label Act5_wander:
             "她嘴角一直保持浅浅笑意，说话语气越来越放松。"
             "两个人距离悄悄拉近，暧昧气息包裹在晚风之中。"
 
-        "刻意讨好，不停夸赞她":
+        "刻意讨好，夸赞她":
             $ lc_add_affection(-6)
             $ lc_set_choice_flag("act5_walk_reply", "overpraise")
             "害怕气氛冷淡，我刻意寻找夸奖的话术。"

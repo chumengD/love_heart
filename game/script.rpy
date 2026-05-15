@@ -2,8 +2,9 @@
 
 # 声明此游戏使用的角色。颜色参数可使角色姓名着色。
 
-image m normal ="images/Characters/_asuka.png"
-image g normal = "images/Characters/_ayalin.png"
+image m normal ="images/characters/player.png"
+image g normal ="images/characters/heroine.png"
+
 
 transform left:
     zoom 0.65
