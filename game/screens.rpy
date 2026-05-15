@@ -303,7 +303,7 @@ screen quick_menu():
 
 
 screen quick_menu_wechat_button():
-    $ quick_menu_wechat_icon = "pic/背包.png" if act3_bag_choice_ready else "images/wechat/wechat_icon.png"
+    $ quick_menu_wechat_icon = "images/背包.png" if act3_bag_choice_ready else "images/wechat/wechat_icon.png"
 
     drag:
         drag_name "quick_menu_wechat_button"

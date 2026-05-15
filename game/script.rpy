@@ -46,6 +46,9 @@ define bg_music2 = "audio/暖かな時間 - 松本文紀.mp3"
 define bg_music3 = "audio/親愛なるあの日々へ - 松本文紀.mp3"
 
 
+
+
+
 #转场效果SceneTransition("src") src为转场图片链接
 init python:
 
@@ -89,7 +92,7 @@ label start:
 
     call Act3_encounter
 
-    call Act3_heroine_view
+    # call Act3_heroine_view
 
     call Act4_sick
 

@@ -1,35 +1,35 @@
-image chapter3_heroine_view:
-    contains:
-        Solid("#FFFFFF")
+# image chapter3_heroine_view:
+#     contains:
+#         Solid("#FFFFFF")
 
-    contains:
-        Text(
-            "Act 3.5",
-            color="#000000",
-            size=100,
-            font="fonts/aa幸运星.ttf"
-        )
-        xalign 0.5
-        yalign 0.41
+#     contains:
+#         Text(
+#             "Act 3.5",
+#             color="#000000",
+#             size=100,
+#             font="fonts/aa幸运星.ttf"
+#         )
+#         xalign 0.5
+#         yalign 0.41
 
-    contains:
-        Text(
-            "女主视角・心动回响",
-            color="#000000",
-            size=120,
-            font="fonts/aa幸运星.ttf"
-        )
-        xalign 0.5
-        yalign 0.52
+#     contains:
+#         Text(
+#             "女主视角・心动回响",
+#             color="#000000",
+#             size=120,
+#             font="fonts/aa幸运星.ttf"
+#         )
+#         xalign 0.5
+#         yalign 0.52
 
-    contains:
-        Text(
-            "・",
-            color="#000000",
-            size=80
-        )
-        xalign 0.382
-        yalign 0.52
+#     contains:
+#         Text(
+#             "・",
+#             color="#000000",
+#             size=80
+#         )
+#         xalign 0.382
+#         yalign 0.52
 
 image heroine_inner_cg_placeholder:
     contains:
@@ -55,10 +55,10 @@ image heroine_inner_cg_placeholder:
 label Act3_heroine_view:
     scene black
 
-    show chapter3_heroine_view
-    with Dissolve(0.8)
-    pause 2.0
-    hide chapter3_heroine_view
+    # show chapter3_heroine_view
+    # with Dissolve(0.8)
+    # pause 2.0
+    # hide chapter3_heroine_view
     with dissolve
 
     show heroine_inner_cg_placeholder

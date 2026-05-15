@@ -6,13 +6,18 @@
 #         flag =1
 
 image wandering ="images/Act5/wandering.png"
+image learn = "images/Act5/学习.png"
+image wandering_bg = "images/Act5/wandering_bg.png"
 
 label Act5_wander:
-    show bird
-    #todo 这里应该要展示的是微信聊天框
+    show learn
+    with dissolve
     "几天过后，她的感冒彻底痊愈"
     "身体好转之后，她的语气重新变得轻快活泼"
     "隔着屏幕，我都能感受到她恢复元气的模样"
+    hide learn
+    with dissolve
+    show wandering_bg
     "抓住天气舒适的傍晚，我鼓起勇气发出散步邀约"
     $ act5_affection_before = lc_get_affection()
 
@@ -20,11 +25,12 @@ label Act5_wander:
         "出乎意料，她没有犹豫，爽快答应。"
     else:
         "她犹豫了一下，最终还是答应了我的请求。"
-    hide bird
+ 
+    hide wandering_bg
     with dissolve
     show wandering
     with dissolve
-
+    
     "夜色慢慢笼罩城市，路边路灯逐一点亮。"
     "我们并肩走在河边步道，晚风轻轻吹动发丝。"
     "没有喧闹人群，没有嘈杂车流"

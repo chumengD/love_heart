@@ -1,8 +1,11 @@
 image order ="images/Act6/order.png"
+image caffe ="images/Act6/caffe.png"
+image drink ="images/Act6/drink.png"
 
 label Act6_afternoon_tea:
     $ act6_affection_before = lc_get_affection()
-    show bird
+    show caffe 
+    with dissolve  
 
     if act6_affection_before >= 65:
         "我们的距离越来越近，暧昧越来越浓。"
@@ -18,7 +21,6 @@ label Act6_afternoon_tea:
     "前一天晚上我翻来覆去睡不着,反复确认咖啡馆的位置与环境。"
     "出门前对着镜子整理了好几次衣服，连发型都悄悄梳理了好几遍。"
     "这毕竟算是最正式的一场约会了，我既紧张又期待。"
-    # change 这里应该描写一下男主的准备吧,太短了
     menu:
         "下午茶约会时，我要怎么安排？"
         "点她喜欢的饮品和甜品":
