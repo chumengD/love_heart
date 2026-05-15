@@ -46,6 +46,7 @@ default act1_wechat_unlocked = False
 
 label Act1_wedding:
     #结婚场景
+    play music wedding_music
     scene black
 
     show chapter1
@@ -156,7 +157,7 @@ label Act1_wedding:
     hide m
     hide bird 
     with dissolve
-
+    stop music
     #我觉得这里不用再描写动作，
     $ lc_set_affection(25)
     $ act1_wechat_unlocked = True
