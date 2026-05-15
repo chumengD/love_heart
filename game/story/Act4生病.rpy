@@ -28,7 +28,6 @@ label Act4_sick:
     show screen wx_phone
     $ wx_queue_text_message("heroine", "我好像感冒发烧了，浑身难受。")
     call wx_click_reveal_pending_message
-    $ quick_menu_phone_target = "takeaway_cg"
     #change 这里是不是有点奇怪，我们根本就没有正在输入中
     "聊天界面上方一直显示着“对方正在输入中”。"
     "隔着屏幕什么都做不了，我到底该怎么回复她？"
@@ -117,5 +116,4 @@ label Act4_sick:
             "我把手机放在枕边，直到屏幕暗下去还在担心她。"
 
     hide screen wx_phone
-    $ quick_menu_phone_target = "ai"
     return
