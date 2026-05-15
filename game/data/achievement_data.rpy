@@ -25,7 +25,7 @@ define LC_ACHIEVEMENTS = (
     {
         "id": "clumsy_encounter",
         "name": "弄巧成拙",
-        "icon": LC_ACHIEVEMENT_PLACEHOLDER_ICON,
+        "icon": "images/achievement/chocotable.jpg",
         "act": 3,
     },
     {
@@ -49,37 +49,37 @@ define LC_ACHIEVEMENTS = (
     {
         "id": "perfect_care",
         "name": "满分关怀",
-        "icon": LC_ACHIEVEMENT_PLACEHOLDER_ICON,
+        "icon": "images/achievement/full_point_care.jpg",
         "act": 4,
     },
     {
         "id": "knows_taste",
         "name": "深谙喜好",
-        "icon": LC_ACHIEVEMENT_PLACEHOLDER_ICON,
+        "icon": "images/achievement/konw_you_love.jpg",
         "act": 6,
     },
     {
         "id": "no_opinion",
         "name": "没有主见",
-        "icon": LC_ACHIEVEMENT_PLACEHOLDER_ICON,
+        "icon": "images/achievement/have_no_mind.jpg",
         "act": 6,
     },
     {
         "id": "regret_passing",
         "name": "遗憾擦肩",
-        "icon": LC_ACHIEVEMENT_PLACEHOLDER_ICON,
+        "icon": "images/achievement/a_missed_encounter.jpg",
         "act": 7,
     },
     {
         "id": "plain_together",
         "name": "平淡相守",
-        "icon": LC_ACHIEVEMENT_PLACEHOLDER_ICON,
+        "icon": "images/achievement/peaceful_companionship.jpg",
         "act": 7,
     },
     {
         "id": "happy_ending",
         "name": "心动圆满",
-        "icon": LC_ACHIEVEMENT_PLACEHOLDER_ICON,
+        "icon": "images/achievement/heartthrob_fulfilled.jpg",
         "act": 7,
     },
 )
