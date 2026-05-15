@@ -39,6 +39,7 @@ screen wx_phone(standalone=False):
     $ wx_show_bottom_bar = wx_current_view == "chat" and wx_active_chat_mode in ("free", "scripted")
     $ wx_bottom_height = 112 if wx_active_chat_mode == "scripted" else 150
     $ wx_chat_height = 668 if wx_active_chat_mode == "scripted" else 886
+    $ wx_main_height = wx_chat_height if wx_show_bottom_bar else wx_chat_height + wx_bottom_height
 
     # 中间微信主体：左侧栏 110px + 内容区 1160px。
     vbox:
@@ -50,14 +51,14 @@ screen wx_phone(standalone=False):
 
         hbox:
             xsize 1270
-            ysize wx_chat_height
+            ysize wx_main_height
 
             use wx_sidebar()
 
             # 内容区。wx_current_view 决定显示聊天还是朋友圈。
             frame:
                 xsize 1160
-                ysize wx_chat_height
+                ysize wx_main_height
                 padding (25, 20)
                 background Solid("#f4f4f4")
 
