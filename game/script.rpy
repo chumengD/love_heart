@@ -40,7 +40,7 @@ image logo ="images/logo.png"
 define trans="images/转场.png"
 
 define titanic = "audio/My Heart Will Go On (Love Theme from Titanic) - Céline Dion、James Horner.mp3"
-define wedding_music = "audio/婚礼进行曲 - Felix Mendelssohn.mp3"
+define audio.wedding_music = "audio/婚礼进行曲 - Felix Mendelssohn.mp3"
 define bg_music1 = "audio/小森林 - Soulloom苏洛牧.mp3"
 define bg_music2 = "audio/暖かな時間 - 松本文紀.mp3"
 define bg_music3 = "audio/親愛なるあの日々へ - 松本文紀.mp3"
