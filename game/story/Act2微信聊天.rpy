@@ -154,10 +154,12 @@ label act2_after_chat1:
         "我忍住继续发消息的冲动，把手机放到枕边。"
 
     #change 要描写一下男主工作，不然立马就切到女主上课的场景会有点突兀
+    show office
+    with dissolve
     "微信那头的对话框，终于不再是冷冰冰的系统提示。"
     "日子一天天过去，我们的聊天渐渐从 “礼貌问候” 变成了 “日常习惯”。"
     "从偶尔聊几句，到每天都会说上几句话；从简单问答，到愿意把小事都讲给对方听。"
-    show office
+    
 
     $ wx_queue_text_message("heroine", "这个水课老师好烦呐，只是念ppt，还不让我们看手机。", time_text="10:07")
     call wx_click_reveal_pending_message

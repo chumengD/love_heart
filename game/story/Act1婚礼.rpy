@@ -155,7 +155,7 @@ label Act1_wedding:
     g "你来扫我吧"
     hide g
     hide m
-    hide bird 
+    # hide bird 
     with dissolve
     stop music fadeout 1.0
     #我觉得这里不用再描写动作，
