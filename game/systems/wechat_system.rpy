@@ -673,6 +673,25 @@ init python:
         return (None, None)
 
 
+    # 根据 AI 返回的情绪标签计算好感度变化。
+    # 喜/乐：+5~15，怒：-15~-5，哀：-10~-5，常：不变。
+    def wx_get_emotion_affection(emotion_tag):
+        import random as _emo_rnd
+
+        emotion_scores = {
+            "喜": (5, 15),
+            "乐": (5, 15),
+            "怒": (-15, -5),
+            "哀": (-10, -5),
+            "常": (0, 0),
+        }
+
+        score_range = emotion_scores.get(emotion_tag, (0, 0))
+        if score_range[0] == score_range[1]:
+            return score_range[0]
+        return _emo_rnd.randint(score_range[0], score_range[1])
+
+
     # AI 回复生成函数。
     # 它只负责“女主怎么回”，不负责好感度评分；好感变化由 wx_score_player_input() 单独处理。
     # 女主可见回复只来自 AI 接口；接口失败时不追加本地预设回复。
@@ -778,6 +797,19 @@ init python:
             renpy.restart_interaction()
             return
 
+        # 解析 AI 返回的情绪标签 [喜/怒/哀/乐/常]
+        import re as _emo_re
+        emotion_tag = "常"
+        emotion_match = _emo_re.match(r'^\[(喜|怒|哀|乐|常)\]', segments[0])
+        if emotion_match:
+            emotion_tag = emotion_match.group(1)
+            segments[0] = segments[0][emotion_match.end():].strip()
+            if not segments[0]:
+                segments.pop(0)
+
+        if not segments:
+            segments = ["嗯"]
+
         # 检查最后一个段是否为 EXIT 信号
         exit_triggered = segments[-1].upper() == "EXIT"
         if exit_triggered:
@@ -789,6 +821,11 @@ init python:
             "speaker": WX_DEFAULT_CONTACT_ID,
             "text": segments[0],
         })
+
+        # 根据 AI 判断的情绪调整好感度 5~15
+        emotion_delta = wx_get_emotion_affection(emotion_tag)
+        if emotion_delta:
+            lc_add_affection(emotion_delta, source="wechat:emotion:" + emotion_tag)
 
         # 退出模式：剩余消息全部直接显示，不等逐条弹出
         if exit_triggered:
