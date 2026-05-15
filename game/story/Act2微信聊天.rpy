@@ -111,10 +111,6 @@ label Act2_wx:
             $ lc_add_affection(6)
             $ act2_flag = 3
             $ wx_sticker_allowed = False
-            if act2_sticker_break:
-                $ wx_queue_text_message("heroine", "噗")
-                $ wx_queue_text_message("heroine", "你还蛮可爱的嘛")
-                "简单一句话，让我忍不住傻笑了出来。"
             $ wx_queue_text_message("player", "今天婚礼的捧花寓意超好，没想到我们这么有缘分。")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "我也觉得！第一次抢捧花还能撞到人，缘分拉满了哈哈。")
@@ -222,6 +218,12 @@ label act2_chat1_bouquet_branch:
     $ lc_add_affection(6)
     $ act2_flag = 3
     $ wx_sticker_allowed = False
+    if act2_sticker_break:
+        $ wx_queue_text_message("heroine", "噗")
+        call wx_click_reveal_pending_message
+        $ wx_queue_text_message("heroine", "你还蛮可爱的嘛")
+        call wx_click_reveal_pending_message
+        "简单一句话，让我忍不住傻笑了出来。"
     $ wx_queue_text_message("player", "今天婚礼的捧花寓意超好，没想到我们这么有缘分。")
     call wx_click_reveal_pending_message
     $ wx_queue_text_message("heroine", "我也觉得！第一次抢捧花还能撞到人，缘分拉满了哈哈。")
