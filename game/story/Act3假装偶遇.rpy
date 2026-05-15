@@ -2,30 +2,34 @@ image encounter ="images/Act3/encounter.jpg"
 image encounter_bg ="images/Act3/encounter_bg.jpg"
 image sayHi ="images/Act3/sayHi.jpg"
 image give_candy = "images/Act3/give_candy.png"
+define act3_flag=False
 
 label act3_encounter_first_branch:
     hide encounter
     show sayHi
     $ lc_add_affection(6)
-    "（当前好感度：[4]）"
     m "好巧啊，你也走这条路？我刚好顺路"
     g "哇，好巧！你也这边回去吗！"
     m "哈哈哈对呀。今天正好在你学校附近帮领导办事，没想到能遇见你。"
     g "看来我们真的真的很有缘分呢！"
-    "我们一路并肩走着，晚风轻轻吹过，气氛温柔又轻松。"
-    "从校园里的趣事聊到日常的小烦恼，从喜欢的食物说到最近的心情......"
-    "每一句对话都像早就约定好一样舒服自在。"
-    #change 我们一路畅谈,balabala
+    if act3_flag==False:
+        "我们一路并肩走着，晚风轻轻吹过，气氛温柔又轻松。"
+        "从校园里的趣事聊到日常的小烦恼，从喜欢的食物说到最近的心情......"
+        "每一句对话都像早就约定好一样舒服自在。"
     return
 
 label act3_encounter_give_candy:
     show give_candy
     with dissolve
+
     "我打开背包，里面是一小袋甜甜的软糖。"
     "我上前一步，轻轻把东西递到她面前。"
     m "看你放学挺累的，补充点能量。"
     g "谢谢你……你也太细心了。"
-    m "哈哈哈对呀。你看晚霞，是不是很漂亮呀？"
+    m "哈哈哈对呀。你看晚霞，是不是很漂亮呀？
+    "我们一路并肩走着，晚风轻轻吹过，气氛温柔又轻松。"
+    "从校园里的趣事聊到日常的小烦恼，从喜欢的食物说到最近的心情......"
+    "每一句对话都像早就约定好一样舒服自在。""
     $ lc_add_affection(8)
     $ lc_grant_achievement("warm_encounter")
     hide give_candy
