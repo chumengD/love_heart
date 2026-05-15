@@ -22,6 +22,11 @@ init python:
     def quick_menu_open_wechat_button(drag=None):
         global wx_phone_standalone_modal
 
+        if act3_bag_choice_ready:
+            store.act3_bag_choice_ready = False
+            renpy.jump("act3_encounter_bag_branch")
+            return
+
         if not act1_wechat_unlocked:
             renpy.notify("现在还是先专注于剧情吧")
             return
@@ -298,6 +303,7 @@ screen quick_menu():
 
 
 screen quick_menu_wechat_button():
+    $ quick_menu_wechat_icon = "pic/背包.png" if act3_bag_choice_ready else "images/wechat/wechat_icon.png"
 
     drag:
         drag_name "quick_menu_wechat_button"
@@ -312,7 +318,7 @@ screen quick_menu_wechat_button():
         fixed:
             xysize (72, 72)
 
-            add "images/wechat/wechat_icon.png":
+            add quick_menu_wechat_icon:
                 xysize (72, 72)
 
 
@@ -348,6 +354,7 @@ init python:
 
 default quick_menu = True
 default quick_menu_phone_target = "ai"
+default act3_bag_choice_ready = False
 
 style quick_menu is hbox
 style quick_button is default

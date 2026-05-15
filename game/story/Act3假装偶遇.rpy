@@ -3,7 +3,44 @@ image encounter_bg ="images/Act3/encounter_bg.jpg"
 image sayHi ="images/Act3/sayHi.jpg"
 image give_candy = "images/Act3/give_candy.png"
 
+label act3_encounter_first_branch:
+    hide encounter
+    show sayHi
+    $ lc_add_affection(6)
+    "（当前好感度：[4]）"
+    m "好巧啊，你也走这条路？我刚好顺路"
+    g "哇，好巧！你也这边回去吗！"
+    m "哈哈哈对呀。今天正好在你学校附近帮领导办事，没想到能遇见你。"
+    g "看来我们真的真的很有缘分呢！"
+    "我们一路并肩走着，晚风轻轻吹过，气氛温柔又轻松。"
+    "从校园里的趣事聊到日常的小烦恼，从喜欢的食物说到最近的心情......"
+    "每一句对话都像早就约定好一样舒服自在。"
+    #change 我们一路畅谈,balabala
+    return
+
+label act3_encounter_give_candy:
+    show give_candy
+    with dissolve
+    "我打开背包，里面是一小袋甜甜的软糖。"
+    "我上前一步，轻轻把东西递到她面前。"
+    m "看你放学挺累的，补充点能量。"
+    g "谢谢你……你也太细心了。"
+    m "哈哈哈对呀。你看晚霞，是不是很漂亮呀？"
+    $ lc_add_affection(8)
+    $ lc_grant_achievement("warm_encounter")
+    hide give_candy
+    with dissolve
+    return
+
+label act3_encounter_bag_branch:
+    $ act3_bag_choice_ready = False
+    call act3_encounter_first_branch
+    call act3_encounter_give_candy
+    hide sayHi
+    return
+
 label Act3_encounter:
+    $ act3_bag_choice_ready = False
     show watch_phone
     with dissolve
 
@@ -28,25 +65,17 @@ label Act3_encounter:
     "心口咚咚作响,心跳开始乱了"
     "要不要上前搭话？"
     "我该怎么开口？"
+    $ act3_bag_choice_ready = True
    
     menu:
         "你选择"
        
         "好巧啊，你也走这条路？我刚好顺路":
-            hide encounter
-            show sayHi
-            $ lc_add_affection(6)
-            "（当前好感度：[4]）"
-            m "好巧啊，你也走这条路？我刚好顺路"
-            g "哇，好巧！你也这边回去吗！"
-            m "哈哈哈对呀。今天正好在你学校附近帮领导办事，没想到能遇见你。"
-            g "看来我们真的真的很有缘分呢！"
-            "我们一路并肩走着，晚风轻轻吹过，气氛温柔又轻松。"
-            "从校园里的趣事聊到日常的小烦恼，从喜欢的食物说到最近的心情......"
-            "每一句对话都像早就约定好一样舒服自在。"
-            #change 我们一路畅谈,balabala
+            $ act3_bag_choice_ready = False
+            call act3_encounter_first_branch
 
         "我特意等你的，就是想跟你多见一面":
+            $ act3_bag_choice_ready = False
             hide encounter
             show sayHi
             $ lc_add_affection(-5)
@@ -61,6 +90,7 @@ label Act3_encounter:
             "我偷偷看她，她低着头，手指轻轻绞着书包带，似乎对这次相遇并不比惊喜"
             #change 沉默悄然而至，为什么她不开口了？balabala
         "低头玩手机，假装没看见，等女主主动打招呼":
+            $ act3_bag_choice_ready = False
             hide encounter
             show sayHi
             "我紧张到不敢对视"
@@ -73,23 +103,6 @@ label Act3_encounter:
             "明明来之前在心里演练了一百遍开场白，结果真的见到她，却连一句打招呼的话都说不出口。"
             "她的背影越走越远，我站在原地，只剩下满心的懊恼和后悔。"
             #change 望着她渐行渐远的背影，我恨不得甩自己一巴掌
-        
+
+    $ act3_bag_choice_ready = False
     hide sayHi
-
-    menu:
-        "要不要拿出准备好的软糖？"
-        "把软糖递给她":
-            show give_candy
-            with dissolve
-            "我打开背包，里面是一小袋甜甜的软糖。"
-            "我上前一步，轻轻把东西递到她面前。"
-            m "看你放学挺累的，补充点能量。"
-            g "谢谢你……你也太细心了。"
-            m "哈哈哈对呀。你看晚霞，是不是很漂亮呀？"
-            $ lc_add_affection(8)
-            $ lc_grant_achievement("warm_encounter")
-            hide give_candy
-            with dissolve
-
-        "还是先自然聊天":
-            "我把手放回口袋，决定先让这次偶遇保持自然。"
