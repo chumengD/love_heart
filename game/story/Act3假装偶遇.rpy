@@ -1,4 +1,5 @@
 image encounter ="images/Act3/encounter.jpg"
+image encounter_bg ="images/Act3/encounter_bg.jpg"
 image sayHi ="images/Act3/sayHi.jpg"
 image give_candy = "images/Act3/give_candy.png"
 
@@ -14,13 +15,12 @@ label Act3_encounter:
     
     hide watch_phone
     with dissolve
-    show encounter
+    show encounter_bg
+    with dissolve
     "为了制造偶遇，今天傍晚，我刻意提前半小时来到这条街道。"
     "晚风轻轻吹过，落日把地面拉出长长的人影。"
-    "我站在路边，假装随意，视线却一直停留在路口。"
-    #change  熟悉？ 
-    hide bird 
-    with dissolve
+    "我站在路边，假装随意，视线却一直停留在路口。" 
+    hide encounter_bg
     show encounter
     "没过多久,那个小小的身影慢慢出现在视线里"
     "她背着双肩包，发丝被风吹起，走路慢悠悠的，神色带着一点上课后的疲惫"

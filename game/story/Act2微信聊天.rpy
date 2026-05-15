@@ -43,6 +43,7 @@ label Act2_wx:
     show screen wx_phone
     pause pause_time
 
+
     "算了，不可能一直等她先开口。"
     menu chat1:
         "要发什么……？"
@@ -167,6 +168,7 @@ label act2_after_chat1:
     with dissolve
     "就在我重新低头专注工作时，桌角的手机忽然轻轻一震，屏幕骤然亮起。"
     "我猛地停下手里的动作，微微前倾身子，看向那行弹出的新消息，心跳在这一刻，悄悄乱了节拍。"
+    hide office2
     
     show screen wx_phone
     pause pause_time
