@@ -96,6 +96,7 @@ label Act4_sick:
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "好....")
             call wx_click_reveal_pending_message
+            $ lc_grant_achievement("perfect_care")
             "我放下手机，望着天花板，心里久久不能平静。"
             pause
         "都怪我没早点关心你，我现在就去找你":
