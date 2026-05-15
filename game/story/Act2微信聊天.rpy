@@ -8,7 +8,7 @@ image office = "images/Act2/office.png"
 
 label Act2_wx:
     $ act1_wechat_unlocked = True
-
+    $ renpy.music.play(bg_music3, channel="music", fadeout=1.0, relative_volume=0.4, loop=True)
     scene black
     show watch_phone
     "婚礼结束回到家，窗外天色慢慢暗了下来。"
@@ -19,7 +19,7 @@ label Act2_wx:
     "聊天框上干干净净，只有系统提示：你们已成为好友，可以开始聊天。"
     # show m normal at left
     m "怎么办……要不要先发消息？"
-    m "第一次主动加女生微信，我完全不知道该说什么。"
+    m "第一次主动加女生微信，完全不知道该说什么啊......"
     "我在输入框里打下“你好”，又觉得太生硬，慢慢删掉。"
     "换成“在吗”，看起来又像有急事，只好再次清空。"
     "指尖悬停在屏幕上方，迟迟不敢按下发送。"

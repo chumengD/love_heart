@@ -46,7 +46,7 @@ default act1_wechat_unlocked = False
 
 label Act1_wedding:
     #结婚场景
-    $ renpy.music.play(audio.wedding_music, channel="music", relative_volume=0.6)
+    $ renpy.music.play(audio.wedding_music, channel="music", relative_volume=0.4,fadein=1.0)
     scene black
 
     show chapter1
@@ -157,7 +157,7 @@ label Act1_wedding:
     hide m
     hide bird 
     with dissolve
-    stop music
+    stop music fadeout 1.0
     #我觉得这里不用再描写动作，
     $ lc_set_affection(25)
     $ act1_wechat_unlocked = True
