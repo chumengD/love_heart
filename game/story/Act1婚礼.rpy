@@ -46,7 +46,7 @@ default act1_wechat_unlocked = False
 
 label Act1_wedding:
     #结婚场景
-    play music wedding_music
+    $ renpy.music.play(audio.wedding_music, channel="music", relative_volume=0.6)
     scene black
 
     show chapter1
