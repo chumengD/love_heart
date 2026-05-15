@@ -1,10 +1,35 @@
 default act2_flag = 0
 default act2_sticker_break = False
+default act2_sticker_redirect_target = None
 default act2_moments_unlocked = False
 define pause_time =1
 
 image watch_phone = "images/Act2/watch_phone.png"
 image office = "images/Act2/office.png"
+
+init 10 python:
+    _act2_base_send_milk_tea_sticker = wx_send_milk_tea_sticker
+
+    def wx_send_milk_tea_sticker():
+        global act2_sticker_break, act2_sticker_redirect_target, wx_sticker_allowed
+
+        if act2_sticker_redirect_target:
+            if act2_sticker_break:
+                return
+
+            if not wx_sticker_allowed:
+                renpy.notify("看起来现在不是发送表情包的好时机，你错过了哦")
+                return
+
+            target = act2_sticker_redirect_target
+            act2_sticker_redirect_target = None
+            wx_sticker_allowed = False
+            act2_sticker_break = True
+            wx_append_sticker(WX_PLAYER_CONTACT_ID, "images/wechat/milk_tea_sticker.png")
+            lc_add_affection(8, source="wechat:sticker:milk_tea")
+            renpy.jump(target)
+
+        _act2_base_send_milk_tea_sticker()
 
 label Act2_wx:
     $ act1_wechat_unlocked = True
@@ -42,6 +67,7 @@ label Act2_wx:
     pause pause_time
 
     "算了，不可能一直等她先开口。"
+    $ act2_sticker_redirect_target = "act2_chat1_bouquet_branch"
     menu chat1:
         "要发什么……？"
         "你叫什么名字？也是大学生吗？":
@@ -106,42 +132,10 @@ label Act2_wx:
             "她主动接话，没有刻意结束聊天。"
 
         "今天婚礼的捧花寓意超好，没想到我们这么有缘分":
-            $ lc_add_affection(6)
-            $ act2_flag = 3
-            $ wx_sticker_allowed = False
-            $ wx_queue_text_message("player", "今天婚礼的捧花寓意超好，没想到我们这么有缘分。")
-            call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "我也觉得！第一次抢捧花还能撞到人，缘分拉满了哈哈。")
-            call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "对啦，你是新娘新郎的朋友吗？")
-            call wx_click_reveal_pending_message
-            $ wx_queue_text_message("player", "嗯嗯，新郎是我表哥呢。")
-            call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "这样呀，我是新娘的好闺蜜！")
-            call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "哈哈哈，当初和她还比赛谁先能找到对象呢。")
-            call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "结果她都结婚了我还是母胎solo。")
-            call wx_click_reveal_pending_message
-            $ wx_queue_text_message("player", "其实我今天本来是来凑凑热闹的哈哈。")
-            call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "那我跟你不一样呢！")
-            call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "我闺蜜一开始非要我做伴娘。")
-            call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "但是我这几天实在是太忙了，没时间准备什么，只能作为婚礼宾客送祝福啦。")
-            call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "你最近在忙些什么呀？你是大学生吗？")
-            call wx_click_reveal_pending_message
-            $ wx_queue_text_message("player", "我是A大学的大四学生，最近已经在实习了......")
-            call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "对呀，我是B大学XX专业大三的学生。")
-            call wx_click_reveal_pending_message
-            $ wx_queue_text_message("heroine", "毕竟大三了嘛，在很紧张地写论文呢。你呢？")
-            call wx_click_reveal_pending_message
-            "她主动分享自己参加婚礼的感受和生活经历。"
-            "聊天氛围比想象中更快升温。"
+            jump act2_chat1_bouquet_branch
 
+label act2_after_chat1:
+    $ act2_sticker_redirect_target = None
     $ wx_sticker_allowed = True
     pause
     if act2_sticker_break:
@@ -199,3 +193,42 @@ label Act2_wx:
     $ act2_moments_unlocked = True
     hide screen wx_phone
     return
+
+label act2_chat1_bouquet_branch:
+    $ act2_sticker_redirect_target = None
+    $ lc_add_affection(6)
+    $ act2_flag = 3
+    $ wx_sticker_allowed = False
+    $ wx_queue_text_message("player", "今天婚礼的捧花寓意超好，没想到我们这么有缘分。")
+    call wx_click_reveal_pending_message
+    $ wx_queue_text_message("heroine", "我也觉得！第一次抢捧花还能撞到人，缘分拉满了哈哈。")
+    call wx_click_reveal_pending_message
+    $ wx_queue_text_message("heroine", "对啦，你是新娘新郎的朋友吗？")
+    call wx_click_reveal_pending_message
+    $ wx_queue_text_message("player", "嗯嗯，新郎是我表哥呢。")
+    call wx_click_reveal_pending_message
+    $ wx_queue_text_message("heroine", "这样呀，我是新娘的好闺蜜！")
+    call wx_click_reveal_pending_message
+    $ wx_queue_text_message("heroine", "哈哈哈，当初和她还比赛谁先能找到对象呢。")
+    call wx_click_reveal_pending_message
+    $ wx_queue_text_message("heroine", "结果她都结婚了我还是母胎solo。")
+    call wx_click_reveal_pending_message
+    $ wx_queue_text_message("player", "其实我今天本来是来凑凑热闹的哈哈。")
+    call wx_click_reveal_pending_message
+    $ wx_queue_text_message("heroine", "那我跟你不一样呢！")
+    call wx_click_reveal_pending_message
+    $ wx_queue_text_message("heroine", "我闺蜜一开始非要我做伴娘。")
+    call wx_click_reveal_pending_message
+    $ wx_queue_text_message("heroine", "但是我这几天实在是太忙了，没时间准备什么，只能作为婚礼宾客送祝福啦。")
+    call wx_click_reveal_pending_message
+    $ wx_queue_text_message("heroine", "你最近在忙些什么呀？你是大学生吗？")
+    call wx_click_reveal_pending_message
+    $ wx_queue_text_message("player", "我是A大学的大四学生，最近已经在实习了......")
+    call wx_click_reveal_pending_message
+    $ wx_queue_text_message("heroine", "对呀，我是B大学XX专业大三的学生。")
+    call wx_click_reveal_pending_message
+    $ wx_queue_text_message("heroine", "毕竟大三了嘛，在很紧张地写论文呢。你呢？")
+    call wx_click_reveal_pending_message
+    "她主动分享自己参加婚礼的感受和生活经历。"
+    "聊天氛围比想象中更快升温。"
+    jump act2_after_chat1
