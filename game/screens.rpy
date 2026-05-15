@@ -11,7 +11,6 @@ init python:
 
     if "mousedown_5" in config.keymap["rollforward"]:
         config.keymap["rollforward"].remove("mousedown_5")
-
     def quick_menu_is_normal_wechat_chat_open():
         return (
             renpy.get_screen("wx_phone") is not None

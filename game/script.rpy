@@ -2,8 +2,8 @@
 
 # 声明此游戏使用的角色。颜色参数可使角色姓名着色。
 
-# image m normal = "images/Characters/_asuka.png"
-# image g normal = "images/Characters/_ayalin.png"
+image m normal ="images/Characters/_asuka.png"
+image g normal = "images/Characters/_ayalin.png"
 
 transform left:
     zoom 0.65
@@ -26,7 +26,6 @@ init -2 python:
 
     config.tag_layer["m"] = "character_front"
     config.tag_layer["g"] = "character_front"
-
     config.tag_zorder["m"] = 100
     config.tag_zorder["g"] = 100
 
@@ -34,6 +33,12 @@ init -2 python:
 
 define m = Character("我", image="m",what_color="#4874CB")
 define g = Character("女主", image="g",what_color="#EF939E",who_color="#EF939E")
+define g_right =Character("女主",
+    image="g",
+    what_color="#EF939E",
+    namebox_xpos=1600,
+    namebox_xanchor=1.0,
+    who_xalign=1.0,)
 
 
 image logo ="images/logo.png"
