@@ -286,4 +286,4 @@ init 10 python:
             lc_add_affection(8, source="wechat:sticker:milk_tea")
             renpy.jump("act2_chat1_bouquet_branch")
 
-        _act2_base_send_milk_tea_sticker()
+        renpy.notify("看起来现在不是发送表情包的好时机，你错过了哦")
