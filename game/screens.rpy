@@ -560,6 +560,8 @@ style main_menu_version:
 
 screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
 
+    on "show" action Stop("music")
+
     style_prefix "game_menu"
 
     add gui.game_menu_background
@@ -907,6 +909,8 @@ screen load():
 
 
 screen file_slots(title):
+
+    on "show" action Stop("music")
 
     default page_name_value = FilePageNameInputValue(pattern=_("第 {} 页"), auto=_("自动存档"), quick=_("快速存档"))
 
