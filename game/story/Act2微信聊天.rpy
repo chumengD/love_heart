@@ -49,6 +49,7 @@ label Act2_wx:
         "要发什么……？"
         "你叫什么名字？也是大学生吗？":
             $ lc_add_affection(-3)
+            $ lc_set_choice_flag("act2_first_chat", "ask_identity")
             $ act2_flag = 1
             $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "你叫什么名字？也是大学生吗？")
@@ -73,6 +74,7 @@ label Act2_wx:
 
         "白天撞疼你了吧？实在不好意思，婚礼人多太乱了":
             $ lc_add_affection(4)
+            $ lc_set_choice_flag("act2_first_chat", "apology_care")
             $ act2_flag = 2
             $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "白天撞疼你了吧？实在不好意思，婚礼人太乱了。")
@@ -110,6 +112,7 @@ label Act2_wx:
 
         "今天婚礼的捧花寓意超好，没想到我们这么有缘分":
             $ lc_add_affection(6)
+            $ lc_set_choice_flag("act2_first_chat", "bouquet_fate")
             $ act2_flag = 3
             $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "今天婚礼的捧花寓意超好，没想到我们这么有缘分。")
@@ -188,6 +191,7 @@ label act2_after_chat1:
         "她被课程和作业压得有点烦，我该怎么回？"
         "加油，坚持一下就下课啦":
             $ lc_add_affection(3)
+            $ lc_set_choice_flag("act2_class_reply", "simple_comfort")
             $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "加油，坚持一下就下课啦。")
             call wx_click_reveal_pending_message
@@ -195,6 +199,7 @@ label act2_after_chat1:
             call wx_click_reveal_pending_message
         "专业课确实很累，有需要我帮忙的就跟我说哦":
             $ lc_add_affection(5)
+            $ lc_set_choice_flag("act2_class_reply", "empathy_help")
             $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "专业课确实很累，慢慢写，不用着急，有需要我帮忙的就跟我说哦。")
             call wx_click_reveal_pending_message
@@ -202,6 +207,7 @@ label act2_after_chat1:
             call wx_click_reveal_pending_message
         "别烦啦，给你分享一个搞笑短视频":
             $ lc_add_affection(4)
+            $ lc_set_choice_flag("act2_class_reply", "funny_video")
             $ wx_sticker_allowed = False
             $ wx_queue_text_message("player", "别烦啦，给你分享一个搞笑短视频。")
             call wx_click_reveal_pending_message
@@ -218,6 +224,7 @@ label act2_after_chat1:
 
 label act2_chat1_bouquet_branch:
     $ lc_add_affection(6)
+    $ lc_set_choice_flag("act2_first_chat", "bouquet_fate")
     $ act2_flag = 3
     $ wx_sticker_allowed = False
     if act2_sticker_break:
@@ -284,6 +291,7 @@ init 10 python:
 
             wx_sticker_allowed = False
             act2_sticker_break = True
+            lc_set_choice_flag("act2_sticker", True)
             wx_append_sticker(WX_PLAYER_CONTACT_ID, "images/wechat/milk_tea_sticker.png")
             lc_add_affection(8, source="wechat:sticker:milk_tea")
             renpy.jump("act2_chat1_bouquet_branch")

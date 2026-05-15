@@ -98,6 +98,8 @@ label start:
 
     call Act5_wander
 
+    call Act3_heroine_view
+
     call Act6_afternoon_tea
 
     call Act7_amusement_confession

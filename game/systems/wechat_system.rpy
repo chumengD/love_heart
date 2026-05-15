@@ -34,11 +34,11 @@ default wx_last_narration = ""
 default wx_free_input_text = ""
 
 # 朋友圈点赞状态，格式是 {"post_id": True/False}。
-# 这里只影响红心显示，不调用 lc_add_affection()，不会影响剧情和结局。
+# 首次点赞会记录女主视角 flag，并通过 lc_add_moment_affection() 增加好感度。
 default wx_moment_likes = {}
 
 # 朋友圈评论状态，格式是 {"post_id": "玩家评论文本"}。
-# 这里只显示预设评论，不调用 lc_add_affection()，不会影响剧情和结局。
+# 首次评论会记录女主视角 flag，并通过 lc_add_moment_affection() 增加好感度。
 default wx_moment_comments = {}
 
 default wx_ai_waiting = False
@@ -675,14 +675,19 @@ init python:
 
 
     # 切换朋友圈点赞状态。
-    # 点赞只改变 wx_moment_likes[post_id] 的 True/False，不调用 lc_add_affection()。
+    # 只有第一次点亮爱心会给好感；取消和重复点赞不重复刷分。
     def wx_toggle_moment_like(post_id):
         global wx_moment_likes
 
         key = str(post_id)
         next_likes = dict(wx_moment_likes)
-        next_likes[key] = not bool(next_likes.get(key, False))
+        liked = not bool(next_likes.get(key, False))
+        next_likes[key] = liked
         wx_moment_likes = next_likes
+
+        if liked:
+            lc_set_choice_flag("moments_liked", True)
+            lc_add_moment_affection("like")
 
 
     # 查询某条朋友圈是否已点赞，供屏幕决定显示空心还是实心爱心图片。
@@ -702,6 +707,8 @@ init python:
         next_comments = dict(wx_moment_comments)
         next_comments[key] = text
         wx_moment_comments = next_comments
+        lc_set_choice_flag("moments_commented", True)
+        lc_add_moment_affection("comment")
 
 
     # 查询某条朋友圈的玩家评论。

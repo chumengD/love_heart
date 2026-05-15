@@ -7,6 +7,7 @@ label act3_encounter_first_branch:
     hide encounter
     show sayHi
     $ lc_add_affection(6)
+    $ lc_set_choice_flag("act3_encounter", "natural_route")
     m "好巧啊，你也走这条路？我刚好顺路"
     g "哇，好巧！你也这边回去吗！"
     m "哈哈哈对呀。今天正好在你学校附近帮领导办事，没想到能遇见你。"
@@ -29,6 +30,7 @@ label act3_encounter_give_candy:
     g "谢谢你……你也太细心了。"
     m "哈哈哈对呀。你看晚霞，是不是很漂亮呀？"
     $ lc_add_affection(8)
+    $ lc_set_choice_flag("act3_give_candy", True)
     $ lc_grant_achievement("warm_encounter")
     hide give_candy
     with dissolve
@@ -83,6 +85,7 @@ label Act3_encounter:
             hide encounter
             show sayHi
             $ lc_add_affection(-5)
+            $ lc_set_choice_flag("act3_encounter", "direct_wait")
             "（当前好感度：[4]）"
             m "我特意等你的，就是想跟你多见一面"
             g "啊……这样吗？"
@@ -95,6 +98,7 @@ label Act3_encounter:
             #change 沉默悄然而至，为什么她不开口了？balabala
         "低头玩手机，假装没看见，等女主主动打招呼":
             $ act3_bag_choice_ready = False
+            $ lc_set_choice_flag("act3_encounter", "avoid_eye")
             hide encounter
             show sayHi
             "我紧张到不敢对视"

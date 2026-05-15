@@ -6,6 +6,13 @@
 # 以后不要在普通 .py 文件里另建第二套好感度变量，剧情、微信、结局都应该通过下面的 lc_* 函数访问。
 default lc_affection = 0
 
+# 剧情选择记录。
+# key 用来标记章节选项，例如 "act2_first_chat"；value 可以是字符串或 True/False。
+default lc_choice_flags = {}
+
+# 朋友圈互动给好感度的累计值，整体最多 5。
+default lc_moment_affection_bonus = 0
+
 init python:
     # 把外部传入的值转成整数。
     # 这样剧情里写 lc_add_affection("5") 也能工作；如果完全不能转，会抛出明确错误。
@@ -79,6 +86,50 @@ init python:
         lc_affection = new_value
         _lc_log_affection_change(old_value, new_value, source)
         return lc_affection
+
+
+    # 写入剧情选择记录。复制 dict 再赋值，方便存档和回滚识别变化。
+    def lc_set_choice_flag(key, value=True):
+        global lc_choice_flags
+
+        flag_key = str(key)
+        next_flags = dict(lc_choice_flags)
+        next_flags[flag_key] = value
+        lc_choice_flags = next_flags
+        return value
+
+
+    # 读取剧情选择记录。
+    def lc_get_choice_flag(key, default=False):
+        return lc_choice_flags.get(str(key), default)
+
+
+    # 朋友圈好感加成：点赞最多记 2，评论最多记 3，整体封顶 5。
+    def lc_add_moment_affection(kind):
+        global lc_moment_affection_bonus
+
+        kind_key = str(kind)
+        delta_map = {
+            "like": 2,
+            "comment": 3,
+        }
+
+        if kind_key not in delta_map:
+            return 0
+
+        bonus_key = "moments_{0}_bonus_given".format(kind_key)
+        if lc_get_choice_flag(bonus_key, False):
+            return 0
+
+        remaining = max(0, 5 - int(lc_moment_affection_bonus))
+        delta = min(delta_map[kind_key], remaining)
+        lc_set_choice_flag(bonus_key, True)
+
+        if delta:
+            lc_moment_affection_bonus += delta
+            lc_add_affection(delta, source="moments:{0}".format(kind_key))
+
+        return delta
 
 
     # 获取当前好感分层 key。

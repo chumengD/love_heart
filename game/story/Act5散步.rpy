@@ -43,6 +43,7 @@ label Act5_wander:
         "深夜谈心时，我要怎么把控聊天节奏？"
         "全程聊自己的工作、学习和爱好":
             $ lc_add_affection(-4)
+            $ lc_set_choice_flag("act5_walk_reply", "self_talk")
             "紧张之下，我不停寻找话题。"
             "我下意识只顾着讲述自己的学习压力、日常趣事、个人爱好。"
             "我滔滔不绝，没有留意她的状态。"
@@ -52,6 +53,7 @@ label Act5_wander:
 
         "认真倾听她说话，适时回应":
             $ lc_add_affection(10)
+            $ lc_set_choice_flag("act5_walk_reply", "listen")
             "我刻意放慢语速，把说话的主动权交给她。"
             "我安静听她讲述小时候的趣事、喜欢的音乐、对未来的小期待。"
             "在她停顿的时候，我简单附和、温柔回应，偶尔分享相似经历。"
@@ -61,6 +63,7 @@ label Act5_wander:
 
         "刻意讨好，不停夸赞她":
             $ lc_add_affection(-6)
+            $ lc_set_choice_flag("act5_walk_reply", "overpraise")
             "害怕气氛冷淡，我刻意寻找夸奖的话术。"
             "我过度夸赞她的长相、性格、穿搭，言语直白又刻意。"
             "空洞又泛滥的赞美，没有一丝真诚。"

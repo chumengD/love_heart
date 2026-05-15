@@ -38,6 +38,7 @@ label Act4_sick:
         "怎么关心她？"
         "多喝热水，好好休息，早点睡觉":
             $ lc_add_affection(-6)
+            $ lc_set_choice_flag("act4_sick_reply", "hot_water")
             $ wx_queue_text_message("player", "多喝热水，好好休息，早点睡觉。")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "......好。")
@@ -48,6 +49,7 @@ label Act4_sick:
 
         "发烧严重吗？有没有吃药？要不要去医院？":
             $ lc_add_affection(10)
+            $ lc_set_choice_flag("act4_sick_reply", "care_questions")
             $ wx_queue_text_message("player", "发烧严重吗？有没有吃药？要不要去医院？")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "我好像只是低烧，暂时还没有吃退烧药。")
@@ -68,6 +70,7 @@ label Act4_sick:
 
         "都怪我没早点关心你，我现在就去找你":
             $ lc_add_affection(5)
+            $ lc_set_choice_flag("act4_sick_reply", "rush_over")
             $ wx_queue_text_message("player", "都怪我没早点关心你，我现在就去找你。")
             call wx_click_reveal_pending_message
             $ wx_queue_text_message("heroine", "不用啦，现在太晚了。")
@@ -82,6 +85,7 @@ label Act4_sick:
         "要不要再做点实际的事？"
         "点外卖送药和清淡小米粥":
             $ lc_add_affection(12)
+            $ lc_set_choice_flag("act4_takeaway", True)
             "我没有急着继续打字安慰，指尖点开手机里的外卖软件。"
             "我认真挑选温和感冒药、退烧贴、暖胃的清淡小米粥，顺带加了几包暖宝宝和润喉糖。"
             "备注一栏写下：喝了药早点休息哦，有需要就给我打电话。"
