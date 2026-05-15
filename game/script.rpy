@@ -87,10 +87,6 @@ label start:
 
     call Act2_wx
 
-    # $ wx_start_free_chat()
-
-    # call screen wx_phone
-
     call Act3_encounter
 
     call Act3_heroine_view
