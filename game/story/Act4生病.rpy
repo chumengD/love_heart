@@ -11,11 +11,10 @@ label Act4_sick:
     $ quick_menu_phone_target = "ai"
     $ act4_affection_before = lc_get_affection()
 
-    show bird
+    show watch_phone
     if act4_affection_before >= 50:
         "自那次黄昏偶遇过后，我们之间的暧昧感愈发明显"
         "聊天不再是简单的客套寒暄，偶尔会互道晚安，分享深夜碎碎念"
-        #change 感觉这里也得添加一些微信聊天动画
         "我躺在床上，漫无目的滑动手机，习惯性等待她的消息。"
     else:
         "自那次黄昏偶遇过后，我们之间的距离悄悄拉近，却又保持着恰到好处的分寸。"
@@ -23,14 +22,14 @@ label Act4_sick:
         "手指总会下意识停在她的聊天界面，却不敢主动打扰"
         "我希望走进她的世界"
         "但不清楚她对我是什么感觉，也不敢擅自揣测她的心意。"
-    hide bird
+    hide watch_phone
     "突然，她发来一条消息"
-    #todo 微信聊天的内容
     $ wx_start_scripted_chat()
     show screen wx_phone
     $ wx_queue_text_message("heroine", "我好像感冒发烧了，浑身难受。")
     call wx_click_reveal_pending_message
     $ quick_menu_phone_target = "takeaway_cg"
+    #change 这里是不是有点奇怪，我们根本就没有正在输入中
     "聊天界面上方一直显示着“对方正在输入中”。"
     "隔着屏幕什么都做不了，我到底该怎么回复她？"
 
@@ -48,7 +47,7 @@ label Act4_sick:
             $ lc_grant_achievement("straight_guy")
 
         "发烧严重吗？有没有吃药？要不要去医院？":
-            $ lc_add_affection(10)
+            $ lc_add_affection(15)
             $ lc_set_choice_flag("act4_sick_reply", "care_questions")
             $ wx_queue_text_message("player", "发烧严重吗？有没有吃药？要不要去医院？")
             call wx_click_reveal_pending_message
@@ -67,6 +66,20 @@ label Act4_sick:
             $ wx_queue_text_message("heroine", "嗯嗯。")
             call wx_click_reveal_pending_message
             "她耐心回应着每一句，像是真的从我的关心里得到了一点安慰。"
+            hide screen wx_phone
+            show watch_phone
+            "关掉微信聊天界面后，我还是静不下来"
+            "一想到她一个人躺在床上难受，我就急得像热锅上的蚂蚁"
+            "翻来覆去后，我决定做点实际的事"
+            show 
+            "我点开手机里的外卖软件，认真地挑选温和感冒药、退烧贴、暖胃的清淡小米粥，顺带加了几包暖宝宝和润喉糖。"
+            "并在备注一栏写下：喝了药早点休息哦，有需要就给我打电话。"
+            "我再次打开微信"
+            show screen wx_phone
+            $ wx_queue_text_message("player", "都怪我没早点关心你，我现在就去找你。")
+
+
+
 
         "都怪我没早点关心你，我现在就去找你":
             $ lc_add_affection(5)
@@ -81,7 +94,6 @@ label Act4_sick:
             call wx_click_reveal_pending_message
             "她委婉拒绝了我的冲动，却还是能感受到我是真的着急。"
 
-    menu:
         "要不要再做点实际的事？"
         "点外卖送药和清淡小米粥":
             $ lc_add_affection(12)

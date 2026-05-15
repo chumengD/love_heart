@@ -10,6 +10,10 @@ A Ren'Py visual novel (romance/dating sim) at 1920×1080 resolution, written in 
 
 Open the project in the Ren'Py Launcher (point it at `D:\renpy_game\prtactice`). Use the Launcher to lint, build distributions, or launch the game. There are no CLI test/build commands — Ren'Py projects are managed through the Launcher GUI.
 
+Ren'Py SDK 路径：`F:\Download\renpy-8.5.2-sdk`（renpy.exe 在此目录下）。
+
+Ren'Py 官方文档：https://www.renpy.org/doc/html/
+
 ## File init order (critical for correctness)
 
 Ren'Py loads `.rpy` files in Unicode sort order within each directory. Files use `init offset` to control execution order:
@@ -55,3 +59,27 @@ Acts are called sequentially from `label start` in `script.rpy`: Act1 → Act2 (
 - Image paths in data should be relative to `game/` (e.g., `"images/wechat/heroine_avatar.png"`).
 - `wx_clean_image_path` strips `@` prefix from paths (used in data examples); absolute paths are rejected by `wx_image_loadable`.
 - VS Code settings exclude `.rpyc`, `.rpymc`, `.rpa`, and `cache/` from the file tree.
+- 只修改用户明确提到的地方，不擅自改动其他结构体、函数或无关代码。
+
+## Git 工作流
+
+- 修改文件前，如果有未提交的改动，先 commit 再开始修改。
+- 修改完文件后也要 commit。
+- Commit 信息必须用中文写。
+- 不要使用 `git add -A` 或 `git add .`，而是按文件名精确暂存。
+
+## 模块拆分规范
+
+- 不要默认把所有代码塞进 `gui.rpy`、`options.rpy`、`screens.rpy`、`script.rpy` 这 4 个模板文件。Ren'Py 会读取 `game/` 目录及其子目录中的 `.rpy` 文件，项目变大时应按职责拆分。
+- 默认保留 4 个模板文件的职责：`options.rpy` 放项目配置，`gui.rpy` 放 GUI 基础参数，`screens.rpy` 放默认或通用界面，`script.rpy` 放入口流程和主线跳转。
+- 新增内容优先按模块拆分：`characters.rpy` 放角色定义，`defaults.rpy` 放 `default` 存档变量，`story/` 放章节剧情，`screens/` 放自定义界面，`systems/` 放玩法系统逻辑，`data/` 放静态数据。
+- 拆分剧情时用清晰的 `label` 配合 `jump` / `call` 串联流程；不要重复定义同名 `label`、`screen`、`transform`、`style` 或 Python 名称。
+- 需要固定加载顺序时，用清晰的文件名前缀或 Ren'Py 的 `init` 优先级处理，不要使用 `00_` 这类 Ren'Py 内部保留风格的文件名前缀。
+- Python 逻辑较多时优先放在 `.rpy` 的 `init python` 或单独系统文件中；只有纯工具逻辑才考虑普通 `.py` 模块。玩家状态、好感度、背包等需要存档和回滚的数据不要放进普通 `.py` 模块。
+- 移动、删除或改名 `.rpy` 文件后，如果旧逻辑仍被执行，检查并清理对应的 `.rpyc` 缓存文件。
+- 如需新增文件或目录来完成模块拆分，先列出目标文件清单并征询用户意见，得到确认后再修改。
+
+## 图片生成
+
+- 需要生成图片时，画风参考 `C:\Users\LENOVO\Desktop\flavor` 目录中的图片。
+- 输出格式为 PNG。
