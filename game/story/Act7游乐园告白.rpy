@@ -3,10 +3,13 @@ image love_ok1 ="images/Act7/love_ok1.png"
 image love_ok2 ="images/Act7/love_ok2.png"
 image love_fail ="images/Act7/love_fail2.png"
 image park ="images/Act7/amusement_park.png"
+image play ="images/Act7/play.png"
 
 label Act7_amusement_confession:
     show park
     with dissolve
+    "终于迎来了告白的日子。"
+    "我约她出来一起去游乐园玩。"
     "今天天气晴朗，风也温柔。"
     "我提前到达游乐园门口等她。"
     show g normal at left
@@ -15,14 +18,16 @@ label Act7_amusement_confession:
     m "你今天......真好看。这件浅色系的衣服很适合你。"
     "她微微歪头一笑，脸颊上染上淡淡的粉色。"
     g "嘿嘿，谢谢你~"
-    #todo 游玩的cg呢
+    hide g normal
+    with dissolve
+    show play
+    with dissolve
     "我们一起坐旋转木马，慢悠悠随着转盘起伏。"
     "我们一起逛文创小店，互相挑选可爱的小挂件。"
     "我们一起走在热闹的人群里，吃着冰淇淋。"
     "一路上说说笑笑，时间流逝得悄无声息。"
+    hide play
     hide park
-    hide g normal
-    with dissolve
     show love
     "今天的最后一项行程，是游乐园最高的摩天轮。"
     "轿厢缓缓上升，窗外城市慢慢缩小，世间喧嚣全部远离。"

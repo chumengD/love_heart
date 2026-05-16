@@ -3,15 +3,15 @@
 # 声明此游戏使用的角色。颜色参数可使角色姓名着色。
 
 image m normal ="images/characters/player.png"
-image g normal ="images/characters/heroine.png"
+image g normal ="images/characters/hiroine.png"
 
 
 transform left:
     zoom 0.65
     xanchor 0.5
     yanchor 0.5
-    xpos 180
-    ypos 1150
+    xpos 960
+    ypos 860
 
 transform right:
     zoom 0.65
@@ -21,14 +21,14 @@ transform right:
     ypos 1150
 
 
-#使角色图层高于文本框   
-init -2 python:
-    renpy.add_layer("character_front", above="screens")
+# #使角色图层高于文本框   
+# init -2 python:
+#     renpy.add_layer("character_front", above="screens")
 
-    config.tag_layer["m"] = "character_front"
-    config.tag_layer["g"] = "character_front"
-    config.tag_zorder["m"] = 100
-    config.tag_zorder["g"] = 100
+#     config.tag_layer["m"] = "character_front"
+#     config.tag_layer["g"] = "character_front"
+#     config.tag_zorder["m"] = 100
+#     config.tag_zorder["g"] = 100
 
 
 

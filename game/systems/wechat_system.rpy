@@ -578,12 +578,15 @@ init python:
         if not wx_chat_messages and not wx_pending_messages:
             wx_start_free_chat()
         else:
-            now = datetime_now_str()
-            wx_append_visible_message({
-                "speaker": "",
-                "text": "",
-                "time_text": now,
-            })
+            # 如果最后一条已经是时间分隔，不再重复追加，避免连续进出堆叠多条。
+            last_msg = wx_chat_messages[-1] if wx_chat_messages else {}
+            if not (last_msg.get("speaker") == "" and last_msg.get("text") == "" and last_msg.get("time_text")):
+                now = datetime_now_str()
+                wx_append_visible_message({
+                    "speaker": "",
+                    "text": "",
+                    "time_text": now,
+                })
 
     # 退出独立微信界面时恢复文本框自动管理（不强制显示）。
     def wx_standalone_restore_window():

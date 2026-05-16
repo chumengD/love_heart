@@ -1,6 +1,7 @@
 image order ="images/Act6/order.png"
 image caffe ="images/Act6/caffe.png"
 image drink ="images/Act6/drink.png"
+image p_order ="images/Act6/player_order.png"
 
 label Act6_afternoon_tea:
     $ act6_affection_before = lc_get_affection()
@@ -28,11 +29,13 @@ label Act6_afternoon_tea:
             "我牢牢记住她偏爱少糖、温热果茶，喜欢奶香慕斯甜品。"
             "我提前一点到店，点好菜品，找好靠窗安静位置。"
             hide caffe
-            show drink
+            show p_order
             with dissolve
             "她推门走进咖啡馆，看见桌上摆放好的甜品饮品，微微愣住。"
             g "你还记得我喜欢的口味？"
             m "之前聊天时你提过，我就记下来了。"
+            hide p_order
+            show drink
             "她低头抿了一口果茶，眼角慢慢弯起来。"
             "那些被认真记住的小细节，比直接说喜欢更让人心动。"
             $ lc_grant_achievement("knows_taste")
